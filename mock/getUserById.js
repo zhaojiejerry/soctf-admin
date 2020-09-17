@@ -1,0 +1,43 @@
+module.exports = {
+  "code": 0,
+  "msg": "成功",
+  "data": {
+    address: "反对大沙发刻录机",
+    age: null,
+    area: 370211,
+    areaName: "黄岛区",
+    cardNo: null,
+    city: 370200,
+    cityName: "青岛市",
+    createBy: "430086113063997452",
+    createTime: "2019-09-25 01:59:23",
+    email: null,
+    gender: null,
+    id: "442437627531104256",
+    lastLoginTime: null,
+    parentId: "3",
+    parentName: "青岛水清沟医院",
+    password: "$2a$10$aSCvXsPPfr7jOsJI656vM.466sHks7tzDkNEiuxj5Ex7rQ3Eioxka",
+    phone: "18354214075",
+    province: 370000,
+    provinceName: "山东省",
+    realName: "青岛xx驾校",
+    remark: "发撒打发打发士大夫",
+    roleList: [{
+      createBy: null,
+      createTime: null,
+      description: null,
+      id: 1,
+      roleName: "管理员",
+      updateBy: null,
+      updateTime: null
+    }],
+    status: 1,
+    statusName: null,
+    type: 4,
+    typeName: null,
+    updateBy: "430086113063997452",
+    updateTime: "2019-09-26 17:05:09",
+    username: "lixin"
+  }
+}

@@ -1,0 +1,282 @@
+{
+  "id": "1414690",
+  "name": "zztjj-2.0",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "体检机医务端2.0版本",
+  "glyphs": [
+    {
+      "icon_id": "5665873",
+      "name": "account",
+      "font_class": "user",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "10945257",
+      "name": "消息",
+      "font_class": "message",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "10945539",
+      "name": "搜索",
+      "font_class": "search",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "10945542",
+      "name": "新建",
+      "font_class": "add",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "10945978",
+      "name": "对号",
+      "font_class": "pass",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "10946374",
+      "name": "更多筛选",
+      "font_class": "more",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "10985290",
+      "name": "角色管理列表-删除角色",
+      "font_class": "delete",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "10985327",
+      "name": "角色管理列表-编辑角色",
+      "font_class": "edit",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "10985417",
+      "name": "叉号",
+      "font_class": "error",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "10985460",
+      "name": "定位",
+      "font_class": "location",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "10986759",
+      "name": "医院装饰",
+      "font_class": "hospital",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "10987060",
+      "name": "下拉",
+      "font_class": "dropdown",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "11034680",
+      "name": "首页",
+      "font_class": "home",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "11116805",
+      "name": "复制设备编码",
+      "font_class": "copy",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "11205488",
+      "name": "搜索-全部",
+      "font_class": "all",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "11205499",
+      "name": "搜索-体检单号",
+      "font_class": "dingdan",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "11205519",
+      "name": "搜索-身份证号",
+      "font_class": "idcard",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "11205524",
+      "name": "搜索-姓名",
+      "font_class": "name",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "11205525",
+      "name": "搜索-设备编码",
+      "font_class": "bianma",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "11205864",
+      "name": "设备信息-相纸",
+      "font_class": "xiangce",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "11425203",
+      "name": "最大化",
+      "font_class": "zuidahua",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "11425219",
+      "name": "最小化",
+      "font_class": "zuixiaohua",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "11425245",
+      "name": "音量",
+      "font_class": "yinliang",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "11457499",
+      "name": "导航-账号管理",
+      "font_class": "system",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "11732156",
+      "name": "导航-功能配置",
+      "font_class": "function",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "11732167",
+      "name": "导航-订单管理",
+      "font_class": "order",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "11732180",
+      "name": "导航-设备管理",
+      "font_class": "device",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "11732191",
+      "name": "导航-信息管理",
+      "font_class": "info",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "11732201",
+      "name": "导航-数据分析",
+      "font_class": "analysis",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "11738618",
+      "name": "审核状态-待审核",
+      "font_class": "need-check",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "11738622",
+      "name": "审核状态-通过",
+      "font_class": "check-pass",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "11738624",
+      "name": "审核状态-自动驳回",
+      "font_class": "auto-reject",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "11757938",
+      "name": "选择时间",
+      "font_class": "calendar",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "12133806",
+      "name": "搜索-订单编号",
+      "font_class": "dingdan1",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "12133824",
+      "name": "搜索-业务编号",
+      "font_class": "yewu",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "12137631",
+      "name": "个人-退出",
+      "font_class": "geren-tuichu",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "12137633",
+      "name": "个人-修改密码",
+      "font_class": "geren-xiugaimima",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "12137639",
+      "name": "个人-个人中心",
+      "font_class": "geren-gerenzhongxin",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "12184540",
+      "name": "向上",
+      "font_class": "xiangshang",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    }
+  ]
+}

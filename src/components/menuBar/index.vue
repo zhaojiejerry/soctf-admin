@@ -2,9 +2,9 @@
 <template>
   <div class="wx-menu">
     <div class="sys-name">
-      <img class="icon-logo" src="./logo.png">
-      {{ sysName }}
+      <img class="icon-logo" src="./logo.png" />
 
+      {{ sysName }}
     </div>
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
@@ -14,14 +14,26 @@
         background-color="#333333"
         text-color="#fff"
         active-text-color="#FD7715"
-        :unique-opened="true">
-        <menu-one v-for="route in permissionRoutes" :key="route.path" :item="route" :base-path="route.path" />
+        :unique-opened="true"
+      >
+        <menu-one
+          v-for="route in permissionRoutes"
+          :key="route.path"
+          :item="route"
+          :base-path="route.path"
+        />
       </el-menu>
     </el-scrollbar>
     <div class="tips-user">
       <!-- <el-button class="tips-one" size="small" icon="iconfont icon-message tips-icon" type="text">消息</el-button>
-      <i class="split"></i> -->
-      <el-button class="tips-one" size="small" icon="iconfont icon-user tips-icon" type="text" @click.stop="userDialog = !userDialog">{{ userName }}</el-button>
+      <i class="split"></i>-->
+      <el-button
+        class="tips-one"
+        size="small"
+        icon="iconfont icon-user tips-icon"
+        type="text"
+        @click.stop="userDialog = !userDialog"
+      >{{ userName }}</el-button>
     </div>
     <div v-show="userDialog" class="user-dialog" v-clickoutside="outClose">
       <p class="user-item" @click="handleChangeCommand('personalCenter')">个人中心</p>
@@ -37,17 +49,49 @@
       title="修改密码"
       custom-class="pass-dialog"
       @close="closePassDialog"
-      :show-close="true">
-      <el-form ref="passForm" :model="passForm" :rules="passRules" label-width="90px" label-position="right" class="pass-form">
+      :show-close="true"
+    >
+      <el-form
+        ref="passForm"
+        :model="passForm"
+        :rules="passRules"
+        label-width="90px"
+        label-position="right"
+        class="pass-form"
+      >
         <el-form-item label="原密码：" prop="oldPass">
-          <el-input type="password" show-password size="small" :maxlength="16" v-model="passForm.oldPass" placeholder="请输入原密码" autocomplete="off"></el-input>
+          <el-input
+            type="password"
+            show-password
+            size="small"
+            :maxlength="16"
+            v-model="passForm.oldPass"
+            placeholder="请输入原密码"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item id="loginStateone" label="新密码：" prop="newPass">
-          <el-input type="password" size="small" :maxlength="16" @blur="loginblurState"  @focus="changeFocus" v-model="passForm.newPass" placeholder="请输入新密码" autocomplete="off"></el-input>
+          <el-input
+            type="password"
+            size="small"
+            :maxlength="16"
+            @blur="loginblurState"
+            @focus="changeFocus"
+            v-model="passForm.newPass"
+            placeholder="请输入新密码"
+            autocomplete="off"
+          ></el-input>
           <div v-if="loginFocusState" class="el-form-item__tips">8-16位数字、字母、符号的组合，且至少使用其中两种</div>
         </el-form-item>
         <el-form-item label="确认密码：" prop="confirmPass">
-          <el-input type="password" size="small" :maxlength="16" v-model="passForm.confirmPass" placeholder="请确认新密码" autocomplete="off"></el-input>
+          <el-input
+            type="password"
+            size="small"
+            :maxlength="16"
+            v-model="passForm.confirmPass"
+            placeholder="请确认新密码"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="my-footer">
@@ -64,25 +108,48 @@
       title="修改签字签章"
       custom-class="sign-dialog"
       @open="openSignDialog"
-      :show-close="true">
+      :show-close="true"
+    >
       <div class="sign-input">
         <div class="input-suffix">
           <span class="input-title">医生姓名：</span>
-          <el-input size="small" placeholder="请输入值班医生姓名" :maxlength="10" v-model="signForm.doctorName" />
+          <el-input
+            size="small"
+            placeholder="请输入值班医生姓名"
+            :maxlength="10"
+            v-model="signForm.doctorName"
+          />
         </div>
         <div class="input-suffix">
           <span class="input-title">医院名称：</span>
-          <el-input size="small" placeholder="请输入医院名称" :maxlength="20"  v-model="signForm.hospitalName" />
+          <el-input
+            size="small"
+            placeholder="请输入医院名称"
+            :maxlength="20"
+            v-model="signForm.hospitalName"
+          />
         </div>
       </div>
       <div class="sign-container">
         <div class="sign-one">
           <div class="title">医师签字</div>
           <div class="upload-area" @mouseenter="enterUserSign = true">
-            <input class="file-upload" type="file" id="userSign"   accept="image/png, image/jpeg, image/jpg" @change="uploadImg($event, 'userSign')"/>
+            <input
+              class="file-upload"
+              type="file"
+              id="userSign"
+              accept="image/png, image/jpeg, image/jpg"
+              @change="uploadImg($event, 'userSign')"
+            />
             <img v-if="signForm.userSign" :src="signForm.userSign" />
-            <label v-else for="userSign" class="upload-content"><i class="el-icon-plus"></i></label>
-            <div class="float-layer" v-if="enterUserSign && signForm.userSign" @mouseleave="enterUserSign = false">
+            <label v-else for="userSign" class="upload-content">
+              <i class="el-icon-plus"></i>
+            </label>
+            <div
+              class="float-layer"
+              v-if="enterUserSign && signForm.userSign"
+              @mouseleave="enterUserSign = false"
+            >
               <i class="el-icon-zoom-in" @click="previewImage('userSign')"></i>
               <label for="userSign" class="el-icon-edit-outline"></label>
               <i class="el-icon-delete" @click="signForm.userSign = ''"></i>
@@ -92,10 +159,22 @@
         <div class="sign-one">
           <div class="title">机构签章</div>
           <div class="upload-area" @mouseenter="enterHospitalSign = true">
-            <input class="file-upload" type="file" id="hospitalSign" accept="image/png, image/jpeg, image/jpg" @change="uploadImg($event, 'hospitalSign')"/>
+            <input
+              class="file-upload"
+              type="file"
+              id="hospitalSign"
+              accept="image/png, image/jpeg, image/jpg"
+              @change="uploadImg($event, 'hospitalSign')"
+            />
             <img v-if="signForm.hospitalSign" :src="signForm.hospitalSign" />
-            <label v-else for="hospitalSign" class="upload-content"><i class="el-icon-plus"></i></label>
-            <div class="float-layer" v-if="enterHospitalSign && signForm.hospitalSign" @mouseleave="enterHospitalSign = false">
+            <label v-else for="hospitalSign" class="upload-content">
+              <i class="el-icon-plus"></i>
+            </label>
+            <div
+              class="float-layer"
+              v-if="enterHospitalSign && signForm.hospitalSign"
+              @mouseleave="enterHospitalSign = false"
+            >
               <i class="el-icon-zoom-in" @click="previewImage('hospitalSign')"></i>
               <label for="hospitalSign" class="el-icon-edit-outline"></label>
               <i class="el-icon-delete" @click="signForm.hospitalSign = ''"></i>
@@ -114,7 +193,8 @@
       :append-to-body="true"
       width="488px"
       custom-class="preview-dialog-2"
-      :show-close="true">
+      :show-close="true"
+    >
       <img class="preview-img" :src="previewImg" />
     </el-dialog>
     <span class="version">v{{version}}</span>
@@ -122,13 +202,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import menuOne from './menuOne'
-import md5 from 'js-md5'
-import { editPassword, getSign, updateSign } from '@/api/login.js'
-import { fileUpload } from '@/api/common.js'
-import { getCookie, removeCookie } from '@/utils/auth'
-import { clickoutside } from '@/utils/directives'
+import { mapGetters } from "vuex";
+import menuOne from "./menuOne";
+import md5 from "js-md5";
+import { editPassword, getSign, updateSign } from "@/api/login.js";
+import { fileUpload } from "@/api/common.js";
+import { getCookie, removeCookie } from "@/utils/auth";
+import { clickoutside } from "@/utils/directives";
 
 export default {
   components: {
@@ -139,38 +219,38 @@ export default {
   },
   data() {
     const validateOldPass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入原密码'))
+      if (value === "") {
+        callback(new Error("请输入原密码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateNewPass = (rule, value, callback) => {
-      const reg = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)/
-      this.loginFocusState = false
+      const reg = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)/;
+      this.loginFocusState = false;
       if ((value.length > 16 || value.length < 8) && reg.test(value)) {
-        callback(new Error('长度8-16位'))
+        callback(new Error("长度8-16位"));
       } else if (value.length <= 16 && value.length >= 8 && !reg.test(value)) {
-        callback(new Error('数字、字母、符号的组合，且至少使用其中两种'))
+        callback(new Error("数字、字母、符号的组合，且至少使用其中两种"));
       } else if ((value.length > 16 || value.length < 8) && !reg.test(value)) {
         if (!reg.test(value)) {
           callback(
-            new Error('8-16位数字、字母、符号的组合，且至少使用其中两种')
-          )
+            new Error("8-16位数字、字母、符号的组合，且至少使用其中两种")
+          );
         }
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateConfirmPass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入新密码'))
+      if (value === "") {
+        callback(new Error("请再次输入新密码"));
       } else if (value !== this.passForm.newPass) {
-        callback(new Error('两次输入密码不一致!'))
+        callback(new Error("两次输入密码不一致!"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginFocusState: false,
       sysName: window.HaiboCONF.sysName,
@@ -178,96 +258,96 @@ export default {
       userDialog: false,
       passDialog: false,
       passForm: {
-        oldPass: '',
-        newPass: '',
-        confirmPass: ''
+        oldPass: "",
+        newPass: "",
+        confirmPass: ""
       },
       passRules: {
-        oldPass: [{ validator: validateOldPass, trigger: 'blur' }],
-        newPass: [{ validator: validateNewPass, trigger: 'blur' }],
-        confirmPass: [{ validator: validateConfirmPass, trigger: 'blur' }]
+        oldPass: [{ validator: validateOldPass, trigger: "blur" }],
+        newPass: [{ validator: validateNewPass, trigger: "blur" }],
+        confirmPass: [{ validator: validateConfirmPass, trigger: "blur" }]
       },
       signDialog: false, // 签章弹框
       previewDialog: false,
       signForm: {
-        signId: '',
-        userSign: '',
-        hospitalSign: '',
-        doctorName: '',
-        hospitalName: ''
+        signId: "",
+        userSign: "",
+        hospitalSign: "",
+        doctorName: "",
+        hospitalName: ""
       },
       enterUserSign: false,
       enterHospitalSign: false,
-      previewImg: ''
-    }
+      previewImg: ""
+    };
   },
   computed: {
-    ...mapGetters(['permissionRoutes', 'user']),
+    ...mapGetters(["permissionRoutes", "user"]),
     userName() {
-      return getCookie('Account') || ''
+      return getCookie("Account") || "";
     },
     activeMenu() {
-      const route = this.$route
-      const { meta, path } = route
+      const route = this.$route;
+      const { meta, path } = route;
       // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
-        return meta.activeMenu
+        return meta.activeMenu;
       }
-      return path
+      return path;
     }
   },
   methods: {
     loginblurState() {
-      this.loginFocusState = false
+      this.loginFocusState = false;
     },
     changeFocus() {
-      const state = document.getElementById('loginStateone')
-      const stateClass = state.getElementsByClassName('el-form-item__error')[0]
+      const state = document.getElementById("loginStateone");
+      const stateClass = state.getElementsByClassName("el-form-item__error")[0];
       if (!stateClass) {
-        this.loginFocusState = true
+        this.loginFocusState = true;
       }
     },
     handleChangeCommand(command) {
-      this.userDialog = false
+      this.userDialog = false;
       switch (command) {
-        case 'personalCenter':
+        case "personalCenter":
           if (this.user.type == 0) {
             this.$router.push({
-              name: 'subAccountPersonal',
+              name: "subAccountPersonal",
               query: {
                 subUserId: this.user.id,
                 isPersonalCenter: true
               }
-            })
+            });
           } else {
             this.$router.push({
-              name: 'personalDetail',
+              name: "personalDetail",
               query: {
                 userId: this.user.id,
                 isPersonalCenter: true
               }
-            })
+            });
           }
-          break
-        case 'editInfo':
-          this.signDialog = true
-          break
-        case 'editPassword':
-          this.passDialog = true
-          break
-        case 'logout':
-          this.logout()
-          break
+          break;
+        case "editInfo":
+          this.signDialog = true;
+          break;
+        case "editPassword":
+          this.passDialog = true;
+          break;
+        case "logout":
+          this.logout();
+          break;
       }
     },
     closePassDialog() {
-      this.passForm.oldPass = ''
-      this.passForm.newPass = ''
-      this.passForm.confirmPass = ''
-      this.$refs.passForm.resetFields()
+      this.passForm.oldPass = "";
+      this.passForm.newPass = "";
+      this.passForm.confirmPass = "";
+      this.$refs.passForm.resetFields();
     },
     savePassword(formName) {
-      const _this = this
+      const _this = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 请求成功
@@ -276,121 +356,121 @@ export default {
             newPassword: md5(_this.passForm.newPass)
           }).then(res => {
             if (res.code == 0) {
-              _this.$alert('密码修改成功，请重新登录', '提示', {
-                confirmButtonText: '确定',
+              _this.$alert("密码修改成功，请重新登录", "提示", {
+                confirmButtonText: "确定",
                 callback: async action => {
-                  await _this.$store.dispatch('logout')
+                  await _this.$store.dispatch("logout");
                   _this.$router.push({
-                    name: 'login',
+                    name: "login",
                     params: { disableBtn: true }
-                  })
+                  });
                 }
-              })
+              });
             }
-          })
+          });
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
     logout() {
-      const _this = this
-      this.$confirm('确认要退出登录吗?', '退出', {
+      const _this = this;
+      this.$confirm("确认要退出登录吗?", "退出", {
         distinguishCancelAndClose: true,
-        confirmButtonText: '取消',
-        cancelButtonText: '退出',
-        customClass: 'redConfirm',
-        confirmButtonClass: 'rightBtn',
-        cancelButtonClass: 'leftBtn'
+        confirmButtonText: "取消",
+        cancelButtonText: "退出",
+        customClass: "redConfirm",
+        confirmButtonClass: "rightBtn",
+        cancelButtonClass: "leftBtn"
       })
         .then()
         .catch(async action => {
-          if (action === 'cancel') {
-            await _this.$store.dispatch('logout')
-            _this.$router.push({ name: 'login', params: { disableBtn: true } })
+          if (action === "cancel") {
+            await _this.$store.dispatch("logout");
+            _this.$router.push({ name: "login", params: { disableBtn: true } });
           }
-        })
+        });
     },
     outClose() {
-      this.userDialog = false
+      this.userDialog = false;
     },
     uploadImg(e, id) {
-      const file = e.target.files[0]
+      const file = e.target.files[0];
       if (!/\.(jpg|jpeg|png|JPG|JPEG|PNG)$/.test(e.target.value)) {
-        this.$message.error('图片类型错误')
-        return false
+        this.$message.error("图片类型错误");
+        return false;
       }
       if (file.size / 1024 > 500) {
-        this.$message.error('图片文件过大')
-        return false
+        this.$message.error("图片文件过大");
+        return false;
       }
-      let formdata = new FormData()
-      formdata.append('file', file)
+      let formdata = new FormData();
+      formdata.append("file", file);
       fileUpload(formdata).then(res => {
         if (res.code == 0) {
-          this.signForm[id] = res.data
-          this.enterUserSign = false
-          this.enterHospitalSign = false
+          this.signForm[id] = res.data;
+          this.enterUserSign = false;
+          this.enterHospitalSign = false;
         }
-      })
-      let reader = new FileReader()
+      });
+      let reader = new FileReader();
       reader.onload = e => {
-        document.getElementById(id).value = '' // 解决同一张图片上传两次，第二次不触发change事件
-      }
+        document.getElementById(id).value = ""; // 解决同一张图片上传两次，第二次不触发change事件
+      };
       // 转化为base64
-      reader.readAsDataURL(file)
+      reader.readAsDataURL(file);
     },
     previewImage(str) {
-      this.previewImg = this.signForm[str]
-      this.previewDialog = true
+      this.previewImg = this.signForm[str];
+      this.previewDialog = true;
     },
     openSignDialog() {
-      this.enterUserSign = false
-      this.enterHospitalSign = false
+      this.enterUserSign = false;
+      this.enterHospitalSign = false;
       getSign()
         .then(res => {
           if (res.code == 0) {
             this.signForm.signId =
-              (res.data && res.data.length > 0 && res.data[0].id) || ''
+              (res.data && res.data.length > 0 && res.data[0].id) || "";
             this.signForm.userSign =
-              (res.data && res.data.length > 0 && res.data[0].doctorSign) || ''
+              (res.data && res.data.length > 0 && res.data[0].doctorSign) || "";
             this.signForm.hospitalSign =
-              (res.data && res.data.length > 0 && res.data[0].orgSign) || ''
+              (res.data && res.data.length > 0 && res.data[0].orgSign) || "";
             this.signForm.doctorName =
-              (res.data && res.data.length > 0 && res.data[0].doctorName) || ''
+              (res.data && res.data.length > 0 && res.data[0].doctorName) || "";
             this.signForm.hospitalName =
               (res.data && res.data.length > 0 && res.data[0].hospitalName) ||
-              ''
+              "";
           } else {
-            this.signForm.signId = ''
-            this.signForm.userSign = ''
-            this.signForm.hospitalSign = ''
-            this.signForm.doctorName = ''
-            this.signForm.hospitalName = ''
+            this.signForm.signId = "";
+            this.signForm.userSign = "";
+            this.signForm.hospitalSign = "";
+            this.signForm.doctorName = "";
+            this.signForm.hospitalName = "";
           }
         })
         .catch(() => {
-          this.signForm.signId = ''
-          this.signForm.userSign = ''
-          this.signForm.hospitalSign = ''
-          this.signForm.doctorName = ''
-          this.signForm.hospitalName = ''
-        })
+          this.signForm.signId = "";
+          this.signForm.userSign = "";
+          this.signForm.hospitalSign = "";
+          this.signForm.doctorName = "";
+          this.signForm.hospitalName = "";
+        });
     },
     saveSign() {
-      const reg = /^[A-Za-z\u4e00-\u9fa5]+$/
+      const reg = /^[A-Za-z\u4e00-\u9fa5]+$/;
       if (this.signForm.doctorName) {
         if (!reg.test(this.signForm.doctorName)) {
-          this.$message.closeAll()
-          this.$message.error('医生姓名只允许输入中英文')
-          return false
+          this.$message.closeAll();
+          this.$message.error("医生姓名只允许输入中英文");
+          return false;
         }
       }
       if (this.signForm.hospitalName) {
         if (!reg.test(this.signForm.hospitalName)) {
-          this.$message.closeAll()
-          this.$message.error('医院名称只允许输入中英文')
-          return false
+          this.$message.closeAll();
+          this.$message.error("医院名称只允许输入中英文");
+          return false;
         }
       }
       updateSign({
@@ -401,14 +481,14 @@ export default {
         hospitalName: this.signForm.hospitalName
       }).then(res => {
         if (res.code == 0) {
-          this.$message.success('修改签字签章成功')
-          this.signDialog = false
+          this.$message.success("修改签字签章成功");
+          this.signDialog = false;
         }
-      })
+      });
     }
   },
   created() {}
-}
+};
 </script>
 
 <style lang="scss">

@@ -23,11 +23,13 @@ Vue.use(Element)
 Vue.use(VueClipboard)
 
 Vue.prototype.$echarts = Echarts
-/* eslint-disable no-new */
+    /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  components: { App },
-  template: '<App/>'
+    el: '#app',
+    router,
+    store,
+    components: {
+        App
+    },
+    template: '<App/>'
 })

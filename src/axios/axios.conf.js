@@ -7,6 +7,7 @@ import {
     getCookie,
     removeCookie
 } from '@/utils/auth'
+import router from '@/router'
 
 const Axios = axios.create({
     /* eslint-disable no-undef */
@@ -91,7 +92,9 @@ Axios.interceptors.response.use(response => {
                 type: 'warning'
             }).then(() => {
                 removeCookie('Token')
-                location.reload()
+                router.push({
+                    path: '/login'
+                })
             })
         }
         return res

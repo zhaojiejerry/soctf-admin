@@ -1,61 +1,52 @@
 <template>
   <div class="hb-home">
     <wx-header>
-      <span slot="headerTitle">{{userName}},欢迎您</span>
-      <span
-        class="second-font"
-        slot="headerOther"
-      >(当前登录: {{user.currentLoginTime}}，上次登录: {{user.lastLoginTime}})</span>
+      <span slot="headerTitle">{{ userName }},欢迎您</span>
+      <span slot="headerOther" class="second-font">(当前登录: {{ user.currentLoginTime }}，上次登录: {{ user.lastLoginTime }})</span>
     </wx-header>
 
-    <div
-      class="init-info"
-      v-show="btnPermissions.indexOf('1000404') == -1
-                                    && btnPermissions.indexOf('1000207') == -1
-                                    && btnPermissions.indexOf('1000101') == -1"
-    >
-      <img src="./lg.png" />
+    <div v-show="btnPermissions.indexOf('1000404') == -1
+        && btnPermissions.indexOf('1000207') == -1
+      && btnPermissions.indexOf('1000101') == -1" class="init-info">
+      <img src="./lg.png">
       <p class="home-title" style="font-weight:bold;">欢迎使用，体检机后台管理系统</p>
     </div>
 
-    <div
-      v-show="btnPermissions.indexOf('1000404') != -1
-                    || btnPermissions.indexOf('1000207') != -1
-                    || btnPermissions.indexOf('1000101') != -1"
-      class="statistics-info"
-    >
-      <div class="statistics-info-item" v-if="btnPermissions.indexOf('1000404') != -1">
-        <img src="./tjsk.png" alt />
+    <div v-show="btnPermissions.indexOf('1000404') != -1
+        || btnPermissions.indexOf('1000207') != -1
+      || btnPermissions.indexOf('1000101') != -1" class="statistics-info">
+      <div v-if="btnPermissions.indexOf('1000404') != -1" class="statistics-info-item">
+        <img src="./tjsk.png" alt>
         <span class="statistics-info-item-title">今日体检收款</span>
         <div class="statistics-info-item-num">
-          <span class="statistics-info-item-tjsk">{{tjsk}}</span>单
+          <span class="statistics-info-item-tjsk">{{ tjsk }}</span>单
         </div>
         <el-button @click="handleViewDetail('tj')">查看详情</el-button>
       </div>
 
-      <div class="statistics-info-item" v-if="btnPermissions.indexOf('1000404') != -1">
-        <img src="./zxsk.png" alt />
+      <div v-if="btnPermissions.indexOf('1000404') != -1" class="statistics-info-item">
+        <img src="./zxsk.png" alt>
         <span class="statistics-info-item-title">今日照相收款</span>
         <div class="statistics-info-item-num">
-          <span class="statistics-info-item-tjsk">{{zxsk}}</span>单
+          <span class="statistics-info-item-tjsk">{{ zxsk }}</span>单
         </div>
         <el-button @click="handleViewDetail('zx')">查看详情</el-button>
       </div>
 
-      <div class="statistics-info-item" v-if="btnPermissions.indexOf('1000207') != -1">
-        <img src="./dshtj.png" alt />
+      <div v-if="btnPermissions.indexOf('1000207') != -1" class="statistics-info-item">
+        <img src="./dshtj.png" alt>
         <span class="statistics-info-item-title">待审核体检</span>
         <div class="statistics-info-item-num">
-          <span class="statistics-info-item-tjsk">{{dshtj}}</span>单
+          <span class="statistics-info-item-tjsk">{{ dshtj }}</span>单
         </div>
         <el-button @click="handleViewDetail('dshtj')">查看详情</el-button>
       </div>
 
-      <div class="statistics-info-item" v-if="btnPermissions.indexOf('1000101') != -1">
-        <img src="./sbgl.png" alt />
+      <div v-if="btnPermissions.indexOf('1000101') != -1" class="statistics-info-item">
+        <img src="./sbgl.png" alt>
         <span class="statistics-info-item-title">管理设备</span>
         <div class="statistics-info-item-num">
-          <span class="statistics-info-item-tjsk">{{sbgl}}</span>台
+          <span class="statistics-info-item-tjsk">{{ sbgl }}</span>台
         </div>
         <el-button @click="handleViewDetail('glsb')">查看详情</el-button>
       </div>
@@ -74,7 +65,7 @@ export default {
   components: {
     wxHeader
   },
-  data () {
+  data() {
     return {
       tjsk: 0,
       zxsk: 0,
@@ -83,16 +74,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'user',
-      'btnPermissions'
-    ]),
-    userName () {
+    ...mapGetters(['user', 'btnPermissions']),
+    userName() {
       return getCookie('Account') || ''
     }
   },
+  created() {
+    this.getDeviceStatistics()
+    this.getHealthReportStatistics()
+  },
   methods: {
-    handleViewDetail (type) {
+    handleViewDetail(type) {
       if (type == 'tj') {
         this.$router.push({
           name: 'business',
@@ -121,52 +113,55 @@ export default {
         })
       }
     },
-    getDeviceStatistics () {
-      (this.btnPermissions.indexOf('1000101') != -1) && getDeviceStatistics().then(res => {
-        if (res.code == 0) {
-          this.sbgl = res.data.deviceNumber
-        } else {
-          this.$message({
-            type: 'error',
-            message: '获取管理设备统计数据出错:' + res.msg
+    getDeviceStatistics() {
+      this.btnPermissions.indexOf('1000101') != -1 &&
+        getDeviceStatistics()
+          .then((res) => {
+            if (res.code == 0) {
+              this.sbgl = res.data.deviceNumber
+            } else {
+              this.$message({
+                type: 'error',
+                message: '获取管理设备统计数据出错:' + res.msg
+              })
+            }
           })
-        }
-      }).catch(() => {
-        this.$message({
-          type: 'error',
-          message: '获取管理设备统计数据出错'
-        })
-      })
+          .catch(() => {
+            this.$message({
+              type: 'error',
+              message: '获取管理设备统计数据出错'
+            })
+          })
     },
-    getHealthReportStatistics () {
-      (this.btnPermissions.indexOf('1000404') != -1 || this.btnPermissions.indexOf('1000207') != -1) && getHealthReportStatistics().then(res => {
-        if (res.code == 0) {
-          if (!res.data) {
-            this.tjsk = 0
-            this.zxsk = 0
-            this.dshtj = 0
+    getHealthReportStatistics() {
+      // if(this.btnPermissions.indexOf('1000404') != -1 ||
+      //   this.btnPermissions.indexOf('1000207') != -1) &&
+      getHealthReportStatistics()
+        .then((res) => {
+          if (res.code == 0) {
+            if (!res.data) {
+              this.tjsk = 0
+              this.zxsk = 0
+              this.dshtj = 0
+            } else {
+              this.tjsk = res.data.healthReportReceivedNumber
+              this.zxsk = res.data.photoReceivedAmountNumber
+              this.dshtj = res.data.unCheckedHealthReportNumber
+            }
           } else {
-            this.tjsk = res.data.healthReportReceivedNumber
-            this.zxsk = res.data.photoReceivedAmountNumber
-            this.dshtj = res.data.unCheckedHealthReportNumber
+            this.$message({
+              type: 'error',
+              message: '获取体检统计数据出错:' + res.msg
+            })
           }
-        } else {
+        })
+        .catch(() => {
           this.$message({
             type: 'error',
-            message: '获取体检统计数据出错:' + res.msg
+            message: '获取体检统计数据出错'
           })
-        }
-      }).catch(() => {
-        this.$message({
-          type: 'error',
-          message: '获取体检统计数据出错'
         })
-      })
     }
-  },
-  created () {
-    this.getDeviceStatistics()
-    this.getHealthReportStatistics()
   }
 }
 </script>

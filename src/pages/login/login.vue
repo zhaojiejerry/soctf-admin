@@ -59,8 +59,8 @@ export default {
     }
     return {
       loginForm: {
-        username: '',
-        password: '',
+        username: 'hello',
+        password: '123456',
         verifyCode: ''
       },
       chartCode: '',

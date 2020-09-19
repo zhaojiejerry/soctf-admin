@@ -67,7 +67,8 @@ const actions = {
             login({
                 userName: username,
                 password: password,
-                verifyCode: verifyCode
+                verifyCode: verifyCode,
+                userType: 2
             }).then(res => {
                 if (res.code == 0) {
                     const str = Math.random().toString(36).substring(2)

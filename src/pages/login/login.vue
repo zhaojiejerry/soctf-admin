@@ -22,7 +22,7 @@
       <el-form-item prop="verifyCode">
         <el-input v-model="loginForm.verifyCode" class="login-input" type="text" autocomplete="off" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
           <i slot="prefix" class="icon-pic password" />
-          <img slot="suffix" :src="chartCode" alt="" @click="getChartCode">
+          <img slot="suffix" :src="chartCode" style="width: 100px; vertical-align: bottom; padding-top: 6px; padding-right: 10px;" alt="" @click="getChartCode">
         </el-input>
       </el-form-item>
       <div class="check-line">
@@ -151,7 +151,7 @@ export default {
               verifyCode: this.loginForm.verifyCode
             })
             .then((res) => {
-              if (res.code == 0) {
+              if (res.success) {
                 setCookie('Token', res.data.accessToken)
                 setCookie('Account', this.loginForm.username)
                 setCookie('Remember', JSON.stringify(this.rememberPass))
@@ -162,6 +162,12 @@ export default {
                   setCookie('Password', '')
                 }
                 this.$router.push({ path: this.redirect || '/' })
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: res.message,
+                  type: 'error'
+                })
               }
               this.loading = false
             })

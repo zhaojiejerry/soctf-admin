@@ -8,27 +8,9 @@ import {
     removeCookie
 } from '@/utils/auth'
 import {
-    asyncRouterMap,
     resetRouter,
     lastRoutes
 } from '@/router'
-
-export function filterAsyncRoutes(asyncRouterMap, menu) {
-    const res = []
-    menu.forEach(route => {
-        const tmp = {
-            ...route
-        }
-        if (tmp.component) {
-            tmp.component = asyncRouterMap[tmp.component]
-        }
-        if (tmp.children) {
-            tmp.children = filterAsyncRoutes(asyncRouterMap, tmp.children)
-        }
-        res.push(tmp)
-    })
-    return res
-}
 
 export function deepMenu(arr) {
     let result = []
@@ -142,15 +124,6 @@ const actions = {
             commit('SET_CODE', [])
             removeCookie('Token')
             resolve()
-        })
-    },
-    generateRoutes({
-        commit
-    }, menu) {
-        return new Promise(resolve => {
-            const accessedRoutes = [...filterAsyncRoutes(asyncRouterMap, menu), ...lastRoutes]
-            commit('SET_ROUTES', accessedRoutes)
-            resolve(accessedRoutes)
         })
     }
 }

@@ -62,7 +62,6 @@ module.exports = {
             // },
             "/api": {
                 target: "http://soctf.rusi.ink/",
-                changOrigin: true,
                 changeOrigin: true,
                 pathRewrite: {
                     "^/api": "/",

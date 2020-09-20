@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
 
 <style>
 @import './assets/fontpackage/font.css';
-  #nprogress .bar {
-    background: #FD7715 !important;
-  }
+#nprogress .bar {
+  background: #fd7715 !important;
+}
 </style>

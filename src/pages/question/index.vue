@@ -6,7 +6,7 @@
       </wx-header>
       <div class="macthtable">
         <div class="right-part">
-          <el-button size="small" type="primary" icon="iconfont icon-add">新增</el-button>
+          <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
@@ -61,6 +61,9 @@ export default {
     this.getWriteUpForPage()
   },
   methods: {
+    addNew() {
+      this.$router.push({ path: '/questionEdit' })
+    },
     parseTime(time) {
       return parseTime(time)
     },

@@ -163,6 +163,7 @@ export default {
                 }
                 this.$router.push({ path: this.redirect || '/' })
               } else {
+                this.getChartCode()
                 this.$message({
                   showClose: true,
                   message: res.message,

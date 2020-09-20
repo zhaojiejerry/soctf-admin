@@ -2,7 +2,8 @@
   <div v-if="!item.hidden" class="menu-wrapper">
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <a v-if="onlyOneChild.meta" @click="handleClickMenu(onlyOneChild.path, item.path)">
-        <el-menu-item :disabled="!isNest && item.path != '/'" :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
+        <!-- :disabled="!isNest && item.path != '/'" -->
+        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
           <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
         </el-menu-item>
       </a>
@@ -12,14 +13,7 @@
       <template slot="title">
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
-      <menu-one
-        v-for="child in item.children"
-        :key="child.id"
-        :is-nest="true"
-        :item="child"
-        :base-path="resolvePath(child.path)"
-        class="nest-menu"
-      />
+      <menu-one v-for="child in item.children" :key="child.id" :is-nest="true" :item="child" :base-path="resolvePath(child.path)" class="nest-menu" />
     </el-submenu>
   </div>
 </template>
@@ -29,7 +23,7 @@ import path from 'path'
 import Item from './item'
 
 export default {
-  name: 'menuOne',
+  name: 'MenuOne',
   components: { Item },
   props: {
     // route object
@@ -46,16 +40,16 @@ export default {
       default: ''
     }
   },
-  data () {
+  data() {
     this.onlyOneChild = null
     return {}
   },
   methods: {
-    isExternal (path) {
+    isExternal(path) {
       return /^(https?:|mailto:|tel:)/.test(path)
     },
-    hasOneShowingChild (children = [], parent) {
-      const showingChildren = children.filter(item => {
+    hasOneShowingChild(children = [], parent) {
+      const showingChildren = children.filter((item) => {
         if (item.hidden) {
           return false
         } else {
@@ -78,7 +72,7 @@ export default {
 
       return false
     },
-    resolvePath (routePath) {
+    resolvePath(routePath) {
       if (this.isExternal(routePath)) {
         return routePath
       }
@@ -87,11 +81,11 @@ export default {
       }
       return path.resolve(this.basePath, routePath)
     },
-    handleClickMenu (routePath, itemPath) {
-      if (this.isNest || itemPath == '/') {
-        let url = this.resolvePath(routePath)
-        this.$router.push(url)
-      }
+    handleClickMenu(routePath, itemPath) {
+      // if (this.isNest || itemPath == '/') {
+      //   const url = this.resolvePath(routePath)
+      this.$router.push(itemPath)
+      // }
     }
   }
 }

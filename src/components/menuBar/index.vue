@@ -8,9 +8,9 @@
     </div>
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu :default-active="activeMenu" :unique-opened="true" class="hb-menu" mode="vertical" background-color="#333333" text-color="#fff" active-text-color="#FD7715" @select="select">
-        <!-- <menu-one v-for="route in permissionRoutes" :key="route.path" :item="route" :base-path="route.path" /> -->
-        <el-menu-item index="1-1">问题管理</el-menu-item>
-        <el-menu-item index="1-2">比赛管理</el-menu-item>
+        <menu-one v-for="route in navRoutes" :key="route.path" :item="route" :base-path="route.path" />
+        <!-- <el-menu-item index="1-1">问题管理</el-menu-item>
+        <el-menu-item index="1-2">比赛管理</el-menu-item> -->
       </el-menu>
     </el-scrollbar>
     <div class="tips-user">
@@ -105,7 +105,7 @@ import { editPassword, getSign, updateSign } from '@/api/login.js'
 import { fileUpload } from '@/api/common.js'
 import { getCookie, removeCookie } from '@/utils/auth'
 import { clickoutside } from '@/utils/directives'
-
+import { navRoutes } from '@/router'
 export default {
   components: {
     menuOne
@@ -148,6 +148,7 @@ export default {
       }
     }
     return {
+      navRoutes: [],
       loginFocusState: false,
       sysName: window.HaiboCONF.sysName,
       version: window.HaiboCONF.version,
@@ -178,7 +179,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['permissionRoutes', 'user']),
+    ...mapGetters(['user']),
     userName() {
       return getCookie('Account') || ''
     },
@@ -192,7 +193,9 @@ export default {
       return path
     }
   },
-  created() {},
+  created() {
+    this.navRoutes = navRoutes
+  },
   methods: {
     select(index, indexPath) {
       switch (index) {

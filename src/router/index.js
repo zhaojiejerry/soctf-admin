@@ -3,9 +3,78 @@ import Router from 'vue-router'
 import env from '../../config/prod.env'
 
 import Layout from '@/components/layout/index'
-
 Vue.use(Router)
 
+export const navRoutes = [{
+        path: 'index',
+        name: 'Home',
+        component: () =>
+            import ('@/pages/home/index'),
+        meta: {
+            title: '首页',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'question',
+        name: 'question',
+        component: () =>
+            import ('@/pages/question/index'),
+        meta: {
+            title: '问题管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'questionEdit',
+        name: 'questionEdit',
+        component: () =>
+            import ('@/pages/question/addNew'),
+        hidden: true
+    },
+    {
+        path: 'match',
+        name: 'match',
+        component: () =>
+            import ('@/pages/match/index'),
+        meta: {
+            title: '比赛管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'personalDetail',
+        name: 'personalDetail',
+        component: () =>
+            import ('@/pages/system/user/detail'),
+        hidden: true,
+        children: []
+    },
+    {
+        path: 'personalEdit',
+        name: 'personalEdit',
+        component: () =>
+            import ('@/pages/system/user/edit'),
+        hidden: true,
+        children: []
+    },
+    {
+        path: 'subAccountPersonal',
+        name: 'subAccountPersonal',
+        component: () =>
+            import ('@/pages/system/user/subAccountInfo'),
+        hidden: true,
+        children: []
+    },
+    {
+        path: 'subAccountPersonalEdit',
+        name: 'subAccountPersonalEdit',
+        component: () =>
+            import ('@/pages/system/user/addSubAccount'),
+        hidden: true,
+        children: []
+    }
+]
 export const constantRoutes = [{
         path: '/login',
         name: 'login',
@@ -24,126 +93,9 @@ export const constantRoutes = [{
         path: '/',
         component: Layout,
         redirect: '/index',
-        children: [{
-                path: 'index',
-                name: 'Home',
-                component: () =>
-                    import ('@/pages/home/index'),
-                meta: {
-                    title: '首页',
-                    icon: 'iconfont icon-home'
-                }
-            },
-            {
-                path: 'question',
-                name: 'question',
-                component: () =>
-                    import ('@/pages/question/index'),
-                meta: {
-                    title: '问题管理',
-                    icon: 'iconfont icon-home'
-                }
-            },
-            {
-                path: 'match',
-                name: 'match',
-                component: () =>
-                    import ('@/pages/match/index'),
-                meta: {
-                    title: '比赛管理管理',
-                    icon: 'iconfont icon-home'
-                }
-            },
-            {
-                path: 'personalDetail',
-                name: 'personalDetail',
-                component: () =>
-                    import ('@/pages/system/user/detail'),
-                hidden: true,
-                children: []
-            },
-            {
-                path: 'personalEdit',
-                name: 'personalEdit',
-                component: () =>
-                    import ('@/pages/system/user/edit'),
-                hidden: true,
-                children: []
-            },
-            {
-                path: 'subAccountPersonal',
-                name: 'subAccountPersonal',
-                component: () =>
-                    import ('@/pages/system/user/subAccountInfo'),
-                hidden: true,
-                children: []
-            },
-            {
-                path: 'subAccountPersonalEdit',
-                name: 'subAccountPersonalEdit',
-                component: () =>
-                    import ('@/pages/system/user/addSubAccount'),
-                hidden: true,
-                children: []
-            }
-        ]
+        children: navRoutes
     }
 ]
-
-export const asyncRouterMap = {
-    layout: () =>
-        import ('@/components/layout/index'),
-    user: () =>
-        import ('@/pages/system/user/index'),
-    userDetail: () =>
-        import ('@/pages/system/user/detail'),
-    userEdit: () =>
-        import ('@/pages/system/user/edit'),
-    addSubAccount: () =>
-        import ('@/pages/system/user/addSubAccount'),
-    subAccountInfo: () =>
-        import ('@/pages/system/user/subAccountInfo'),
-    role: () =>
-        import ('@/pages/system/role/index'),
-    roleDetail: () =>
-        import ('@/pages/system/role/detail'),
-    roleEdit: () =>
-        import ('@/pages/system/role/edit'),
-    business: () =>
-        import ('@/pages/order/health/index'),
-    photo: () =>
-        import ('@/pages/info/photo/index'),
-    healthPlatform: () =>
-        import ('@/pages/info/healthPlatform/index'),
-    businessDetail: () =>
-        import ('@/pages/order/health/detail'),
-    businessInfo: () =>
-        import ('@/pages/order/health/info'),
-    deviceList: () =>
-        import ('@/pages/device/deviceList'),
-    editDevice: () =>
-        import ('@/pages/device/editDevice'),
-    deviceInfo: () =>
-        import ('@/pages/device/deviceInfo'),
-    deviceCoding: () =>
-        import ('@/pages/device/deviceCoding'),
-    addDeviceCoding: () =>
-        import ('@/pages/device/addDeviceCoding'),
-    templeteList: () =>
-        import ('@/pages/config/templeteList'),
-    addTemplete: () =>
-        import ('@/pages/config/addTemplete'),
-    orderList: () =>
-        import ('@/pages/order/orderList'),
-    orderDetails: () =>
-        import ('@/pages/order/orderDetails'),
-    finance: () =>
-        import ('@/pages/order/finance'),
-    checkBill: () =>
-        import ('@/pages/order/checkBill'),
-    optLogList: () =>
-        import ('@/pages/system/opt/index')
-}
 
 export const lastRoutes = [{
     path: '*',

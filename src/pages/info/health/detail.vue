@@ -1,45 +1,25 @@
 <template>
   <div class="hb-health-detail">
-    <wx-header v-show="!isPlatform" showBack>
+    <wx-header v-show="!isPlatform" show-back>
       <span slot="headerTitle">查看详情</span>
-      <span class="second-font" slot="headerOther">
+      <span slot="headerOther" class="second-font">
         (体检单编号&nbsp;{{ healthId }})
         <div v-if="pageListCondition" class="prev-next-group">
-          <el-button
-            size="small"
-            class="prev-next-btn"
-            type="text"
-            @click="handleSubHealth('pre')"
-          >上一单</el-button>
-          <el-button
-            size="small"
-            class="prev-next-btn"
-            type="text"
-            @click="handleSubHealth('next')"
-          >下一单</el-button>
+          <el-button size="small" class="prev-next-btn" type="text" @click="handleSubHealth('pre')">上一单</el-button>
+          <el-button size="small" class="prev-next-btn" type="text" @click="handleSubHealth('next')">下一单</el-button>
         </div>
       </span>
     </wx-header>
-    <div
-      class="hb-main-container"
-      :class="{isPlatformMainContainer: isPlatform, isPlatformForBorder: isPlatform}"
-    >
-      <div
-        class="hb-main-content health-container"
-        :class="{isPlatformMainContainer: isPlatform, isPlatformMainContainerWidth: isPlatform}"
-      >
-        <el-row
-          :gutter="20"
-          class="row-container-top"
-          :class="{checkDetailTop: checkDetailFlag && isPlatform, isPlatformMainContainerWidth: isPlatform}"
-        >
-          <el-col :span="colNumLeft" class="col-container" :class="{isPlatformPart: isPlatform}">
+    <div :class="{isPlatformMainContainer: isPlatform, isPlatformForBorder: isPlatform}" class="hb-main-container">
+      <div :class="{isPlatformMainContainer: isPlatform, isPlatformMainContainerWidth: isPlatform}" class="hb-main-content health-container">
+        <el-row :gutter="20" :class="{checkDetailTop: checkDetailFlag && isPlatform, isPlatformMainContainerWidth: isPlatform}" class="row-container-top">
+          <el-col :span="colNumLeft" :class="{isPlatformPart: isPlatform}" class="col-container">
             <div class="bg-part">
               <div class="common-title">
-                <i class="descri"></i>
+                <i class="descri" />
                 <span class="title-font">体检用户信息</span>
               </div>
-              <div class="user-info" v-if="!isPlatform">
+              <div v-if="!isPlatform" class="user-info">
                 <div class="left">
                   <p>
                     <label>用户姓名：</label>
@@ -69,31 +49,23 @@
                 <div class="left">
                   <p>
                     <label>业务类型：</label>
-                    <span
-                      :title="BusinessType[healthData.bizType]"
-                    >{{ BusinessType[healthData.bizType] }}</span>
+                    <span :title="BusinessType[healthData.bizType]">{{ BusinessType[healthData.bizType] }}</span>
                   </p>
                   <p v-if="healthData.bizType == 'A'">
                     <label>申领车型：</label>
                     <span :title="healthData.drivingLicenseType">{{ healthData.drivingLicenseType }}</span>
                   </p>
-                  <p
-                    v-if="healthData.bizType == 'F' || healthData.bizType == 'G' || healthData.bizType == 'L'"
-                  >
+                  <p v-if="healthData.bizType == 'F' || healthData.bizType == 'G' || healthData.bizType == 'L'">
                     <label>准驾车型：</label>
                     <span :title="healthData.drivingLicenseType">{{ healthData.drivingLicenseType }}</span>
                   </p>
-                  <p
-                    v-if="healthData.bizType == 'H' || healthData.bizType =='R' || healthData.bizType =='T' || healthData.bizType =='U'"
-                  >
+                  <p v-if="healthData.bizType == 'H' || healthData.bizType =='R' || healthData.bizType =='T' || healthData.bizType =='U'">
                     <label>降级后准驾：</label>
                     <span :title="healthData.drivingLicenseType">{{ healthData.drivingLicenseType }}</span>
                   </p>
                   <p v-if="healthData.bizType == 'B'">
                     <label>现有准驾：</label>
-                    <span
-                      :title="healthData.originalDrivingType"
-                    >{{ healthData.originalDrivingType }}</span>
+                    <span :title="healthData.originalDrivingType">{{ healthData.originalDrivingType }}</span>
                   </p>
                   <p v-if="healthData.bizType == 'B'">
                     <label>增驾车型：</label>
@@ -107,60 +79,20 @@
                 <div class="right">
                   <div class="pic-one">
                     <div class="camera-area">
-                      <img
-                        class="camera"
-                        v-if="!healthData.identityImage"
-                        :src="errorImg"
-                        :onerror="onerrorImg"
-                        alt="身份证照片"
-                      />
-                      <img
-                        class="camera"
-                        v-else
-                        :src="healthData.identityImage"
-                        alt="身份证照片"
-                        :onerror="onerrorImg"
-                      />
+                      <img v-if="!healthData.identityImage" :src="errorImg" :onerror="onerrorImg" class="camera" alt="身份证照片">
+                      <img v-else :src="healthData.identityImage" :onerror="onerrorImg" class="camera" alt="身份证照片">
                     </div>
                     <span class="pic-text">身份证照片</span>
                   </div>
                   <div class="pic-one">
-                    <el-popover
-                      trigger="hover"
-                      placement="bottom"
-                      popper-class="big-popover xc-popover"
-                    >
+                    <el-popover trigger="hover" placement="bottom" popper-class="big-popover xc-popover">
                       <div class="pop-area">
-                        <img
-                          class="popImg"
-                          v-if="!healthData.currentImage"
-                          :src="errorImg"
-                          :onerror="onerrorImg"
-                          alt="现场拍摄照片"
-                        />
-                        <img
-                          class="popImg"
-                          v-else
-                          :src="healthData.currentImage"
-                          :onerror="onerrorImg"
-                          alt="现场拍摄照片"
-                        />
+                        <img v-if="!healthData.currentImage" :src="errorImg" :onerror="onerrorImg" class="popImg" alt="现场拍摄照片">
+                        <img v-else :src="healthData.currentImage" :onerror="onerrorImg" class="popImg" alt="现场拍摄照片">
                       </div>
-                      <div class="camera-area" slot="reference">
-                        <img
-                          class="camera"
-                          v-if="!healthData.currentImage"
-                          :src="errorImg"
-                          :onerror="onerrorImg"
-                          alt="现场拍摄照片"
-                        />
-                        <img
-                          class="camera"
-                          v-else
-                          :src="healthData.currentImage"
-                          alt="现场拍摄照片"
-                          :onerror="onerrorImg"
-                        />
+                      <div slot="reference" class="camera-area">
+                        <img v-if="!healthData.currentImage" :src="errorImg" :onerror="onerrorImg" class="camera" alt="现场拍摄照片">
+                        <img v-else :src="healthData.currentImage" :onerror="onerrorImg" class="camera" alt="现场拍摄照片">
                       </div>
                     </el-popover>
                     <span class="pic-text">现场拍摄照片</span>
@@ -168,60 +100,24 @@
                   <div class="pic-one last-one">
                     <el-popover trigger="hover" placement="bottom" popper-class="big-popover">
                       <div class="pop-area">
-                        <img
-                          class="popImg"
-                          v-if="!healthData.contrastImage"
-                          :src="errorImg"
-                          :onerror="onerrorImg"
-                          alt="人证对比照片"
-                        />
-                        <img
-                          class="popImg"
-                          v-else
-                          :src="healthData.contrastImage"
-                          :onerror="onerrorImg"
-                          alt="人证对比照片"
-                        />
+                        <img v-if="!healthData.contrastImage" :src="errorImg" :onerror="onerrorImg" class="popImg" alt="人证对比照片">
+                        <img v-else :src="healthData.contrastImage" :onerror="onerrorImg" class="popImg" alt="人证对比照片">
                       </div>
-                      <div class="camera-area camera-top" slot="reference">
-                        <img
-                          class="camera"
-                          v-if="!healthData.contrastImage"
-                          :src="errorImg"
-                          :onerror="onerrorImg"
-                          alt="人证对比照片"
-                        />
-                        <img
-                          class="camera"
-                          v-else
-                          :src="healthData.contrastImage"
-                          alt="人证对比照片"
-                          :onerror="onerrorImg"
-                        />
+                      <div slot="reference" class="camera-area camera-top">
+                        <img v-if="!healthData.contrastImage" :src="errorImg" :onerror="onerrorImg" class="camera" alt="人证对比照片">
+                        <img v-else :src="healthData.contrastImage" :onerror="onerrorImg" class="camera" alt="人证对比照片">
                       </div>
                     </el-popover>
                     <div class="camera-area camera-bottom">
-                      <img
-                        class="camera"
-                        v-if="!healthData.driverSign"
-                        :src="errorImg"
-                        :onerror="onerrorImg"
-                        alt="人证对比照片"
-                      />
-                      <img
-                        class="camera"
-                        v-else
-                        :src="healthData.driverSign"
-                        alt="人证对比照片"
-                        :onerror="onerrorImg"
-                      />
+                      <img v-if="!healthData.driverSign" :src="errorImg" :onerror="onerrorImg" class="camera" alt="人证对比照片">
+                      <img v-else :src="healthData.driverSign" :onerror="onerrorImg" class="camera" alt="人证对比照片">
                     </div>
                     <span class="pic-text">人证对比照片</span>
                   </div>
                 </div>
               </div>
-              <div class="user-info" v-else>
-                <div class="left" :class="{checkDetailLeft: checkDetailFlag}">
+              <div v-else class="user-info">
+                <div :class="{checkDetailLeft: checkDetailFlag}" class="left">
                   <p v-if="checkDetailFlag">
                     <label>用户姓名：</label>
                     <span :title="healthData.driverName">{{ healthData.driverName }}</span>
@@ -248,170 +144,71 @@
                   </p>
                   <p>
                     <label>业务类型：</label>
-                    <span
-                      :title="BusinessType[healthData.bizType]"
-                    >{{ BusinessType[healthData.bizType] }}</span>
+                    <span :title="BusinessType[healthData.bizType]">{{ BusinessType[healthData.bizType] }}</span>
                   </p>
                   <p v-if="healthData.bizType == 'A'">
                     <label>申领车型：</label>
                     <span :title="healthData.drivingLicenseType">{{ healthData.drivingLicenseType }}</span>
                   </p>
-                  <p
-                    v-if="healthData.bizType == 'F' || healthData.bizType == 'G' || healthData.bizType == 'L'"
-                  >
+                  <p v-if="healthData.bizType == 'F' || healthData.bizType == 'G' || healthData.bizType == 'L'">
                     <label>准驾车型：</label>
                     <span :title="healthData.drivingLicenseType">{{ healthData.drivingLicenseType }}</span>
                   </p>
-                  <p
-                    v-if="healthData.bizType == 'H' || healthData.bizType =='R' || healthData.bizType =='T' || healthData.bizType =='U'"
-                  >
+                  <p v-if="healthData.bizType == 'H' || healthData.bizType =='R' || healthData.bizType =='T' || healthData.bizType =='U'">
                     <label>降级后准驾：</label>
                     <span :title="healthData.drivingLicenseType">{{ healthData.drivingLicenseType }}</span>
                   </p>
                   <p v-if="healthData.bizType == 'B'">
                     <label>现有准驾：</label>
-                    <span
-                      :title="healthData.originalDrivingType"
-                    >{{ healthData.originalDrivingType }}</span>
+                    <span :title="healthData.originalDrivingType">{{ healthData.originalDrivingType }}</span>
                   </p>
                   <p v-if="healthData.bizType == 'B'">
                     <label>增驾车型：</label>
                     <span :title="healthData.drivingLicenseType">{{ healthData.drivingLicenseType }}</span>
                   </p>
-                  <p
-                    v-if="checkDetailFlag && (healthData.bizType == 'A' || healthData.bizType == 'B')"
-                  >
+                  <p v-if="checkDetailFlag && (healthData.bizType == 'A' || healthData.bizType == 'B')">
                     <label>报考驾校：</label>
                     <span :title="healthData.driverSchoolName">{{ healthData.driverSchoolName }}</span>
                   </p>
                 </div>
-                <div
-                  class="right"
-                  :class="{isCheckDetailRight: checkDetailFlag,isMangShenRight: !checkDetailFlag}"
-                >
+                <div :class="{isCheckDetailRight: checkDetailFlag,isMangShenRight: !checkDetailFlag}" class="right">
                   <div class="pic-one" style="height: 117px">
                     <div class="camera-area">
-                      <img
-                        class="camera"
-                        v-if="!healthData.identityImage"
-                        :src="errorImg"
-                        :onerror="onerrorImg"
-                        alt="身份证照片"
-                      />
-                      <img
-                        class="camera"
-                        v-else
-                        :src="healthData.identityImage"
-                        alt="身份证照片"
-                        :onerror="onerrorImg"
-                      />
+                      <img v-if="!healthData.identityImage" :src="errorImg" :onerror="onerrorImg" class="camera" alt="身份证照片">
+                      <img v-else :src="healthData.identityImage" :onerror="onerrorImg" class="camera" alt="身份证照片">
                     </div>
                     <span class="pic-text">身份证照片</span>
                   </div>
                   <div class="pic-one" style="width: 190px;height: 117px">
                     <el-popover trigger="hover" placement="bottom" popper-class="big-popover">
                       <div class="pop-area">
-                        <img
-                          class="popImg"
-                          v-if="!healthData.contrastImage"
-                          :src="errorImg"
-                          :onerror="onerrorImg"
-                          alt="人证对比照片"
-                        />
-                        <img
-                          class="popImg"
-                          v-else
-                          :src="healthData.contrastImage"
-                          :onerror="onerrorImg"
-                          alt="人证对比照片"
-                        />
+                        <img v-if="!healthData.contrastImage" :src="errorImg" :onerror="onerrorImg" class="popImg" alt="人证对比照片">
+                        <img v-else :src="healthData.contrastImage" :onerror="onerrorImg" class="popImg" alt="人证对比照片">
                       </div>
-                      <div class="camera-area camera-top" style="height: 100%" slot="reference">
-                        <img
-                          style="width: 100%"
-                          class="camera"
-                          v-if="!healthData.contrastImage"
-                          :src="errorImg"
-                          :onerror="onerrorImg"
-                          alt="人证对比照片"
-                        />
-                        <img
-                          style="width: 100%"
-                          class="camera"
-                          v-else
-                          :src="healthData.contrastImage"
-                          alt="人证对比照片"
-                          :onerror="onerrorImg"
-                        />
+                      <div slot="reference" class="camera-area camera-top" style="height: 100%">
+                        <img v-if="!healthData.contrastImage" :src="errorImg" :onerror="onerrorImg" style="width: 100%" class="camera" alt="人证对比照片">
+                        <img v-else :src="healthData.contrastImage" :onerror="onerrorImg" style="width: 100%" class="camera" alt="人证对比照片">
                       </div>
                     </el-popover>
                     <span class="pic-text">人证对比照片</span>
                   </div>
-                  <div
-                    style="height: 137px"
-                    class="pic-one"
-                    :class="{isCheckDetailMarginTop: checkDetailFlag,isMangShenSetHeightAndWidth: !checkDetailFlag}"
-                  >
-                    <el-popover
-                      trigger="hover"
-                      placement="bottom"
-                      popper-class="big-popover xc-popover"
-                    >
+                  <div :class="{isCheckDetailMarginTop: checkDetailFlag,isMangShenSetHeightAndWidth: !checkDetailFlag}" style="height: 137px" class="pic-one">
+                    <el-popover trigger="hover" placement="bottom" popper-class="big-popover xc-popover">
                       <div class="pop-area">
-                        <img
-                          class="popImg"
-                          v-if="!healthData.currentImage"
-                          :src="errorImg"
-                          :onerror="onerrorImg"
-                          alt="现场拍摄照片"
-                        />
-                        <img
-                          class="popImg"
-                          v-else
-                          :src="healthData.currentImage"
-                          :onerror="onerrorImg"
-                          alt="现场拍摄照片"
-                        />
+                        <img v-if="!healthData.currentImage" :src="errorImg" :onerror="onerrorImg" class="popImg" alt="现场拍摄照片">
+                        <img v-else :src="healthData.currentImage" :onerror="onerrorImg" class="popImg" alt="现场拍摄照片">
                       </div>
-                      <div class="camera-area" slot="reference">
-                        <img
-                          class="camera"
-                          v-if="!healthData.currentImage"
-                          :src="errorImg"
-                          :onerror="onerrorImg"
-                          alt="现场拍摄照片"
-                        />
-                        <img
-                          class="camera"
-                          v-else
-                          :src="healthData.currentImage"
-                          alt="现场拍摄照片"
-                          :onerror="onerrorImg"
-                        />
+                      <div slot="reference" class="camera-area">
+                        <img v-if="!healthData.currentImage" :src="errorImg" :onerror="onerrorImg" class="camera" alt="现场拍摄照片">
+                        <img v-else :src="healthData.currentImage" :onerror="onerrorImg" class="camera" alt="现场拍摄照片">
                       </div>
                     </el-popover>
                     <span class="pic-text">现场拍摄照片</span>
                   </div>
-                  <div
-                    v-if="checkDetailFlag"
-                    class="pic-one last-one"
-                    style="margin-top: 40px;width: 190px;border: 1px solid #ccc;height: 135px"
-                  >
+                  <div v-if="checkDetailFlag" class="pic-one last-one" style="margin-top: 40px;width: 190px;border: 1px solid #ccc;height: 135px">
                     <div style="border: none;margin-top: 22%" class="camera-area camera-bottom">
-                      <img
-                        class="camera"
-                        v-if="!healthData.driverSign"
-                        :src="errorImg"
-                        :onerror="onerrorImg"
-                        alt="签名照片"
-                      />
-                      <img
-                        class="camera"
-                        v-else
-                        :src="healthData.driverSign"
-                        alt="签名照片"
-                        :onerror="onerrorImg"
-                      />
+                      <img v-if="!healthData.driverSign" :src="errorImg" :onerror="onerrorImg" class="camera" alt="签名照片">
+                      <img v-else :src="healthData.driverSign" :onerror="onerrorImg" class="camera" alt="签名照片">
                     </div>
                     <span class="pic-text">签名照片</span>
                   </div>
@@ -422,26 +219,20 @@
           <el-col :span="colNumRight" class="col-container">
             <div class="bg-part" style="padding-right: 10px">
               <div class="common-title">
-                <i class="descri"></i>
+                <i class="descri" />
                 <span class="title-font">审核信息</span>
-                <span class="license-type-out" v-if="drivingLicenseType">
-                  <span class="license-type-inner">{{drivingLicenseType}}证用户</span>
+                <span v-if="drivingLicenseType" class="license-type-out">
+                  <span class="license-type-inner">{{ drivingLicenseType }}证用户</span>
                 </span>
               </div>
-              <div
-                v-if="healthData.checkStatus == 0 && healthData.paymentDone == false"
-                class="uncheck-info no-pay-parent"
-              >
+              <div v-if="healthData.checkStatus == 0 && healthData.paymentDone == false" class="uncheck-info no-pay-parent">
                 <div class="no-pay">
                   <!-- <span class="danger" style="color:#fd7714;font-weight:normal;line-height:24px;">
                     <i class="el-icon-warning" style="margin-right:6px;"></i>
                     <i style="display:inline-block;font-style:normal;margin-bottom:6px;">暂无法审核</i>
                   </span>-->
                   <el-button type="text" style="padding:0;position:relative;margin-left:24px;">
-                    <i
-                      class="el-icon-warning"
-                      style="margin-right:6px;position:absolute; left:-29px;top:-6px;"
-                    ></i>暂无法审核
+                    <i class="el-icon-warning" style="margin-right:6px;position:absolute; left:-29px;top:-6px;" />暂无法审核
                   </el-button>
                   <span class="ordinary">体检通过未支付</span>
                   <span class="ordinary">待支付完成后才可审核</span>
@@ -450,22 +241,8 @@
               <div v-else-if="healthData.checkStatus == 0" class="uncheck-info">
                 <!-- 待审核 -->
                 <div class="left" style="margin-left: 22%">
-                  <el-button
-                    class="passBtn"
-                    type="success"
-                    size="big"
-                    @click="handleHealthDetail"
-                    style="width:128px"
-                    plain
-                  >通过</el-button>
-                  <el-button
-                    class="rejectBtn"
-                    type="danger"
-                    size="big"
-                    @click="handleHealthDetail('reject')"
-                    style="width:128px"
-                    plain
-                  >驳回</el-button>
+                  <el-button class="passBtn" type="success" size="big" style="width:128px" plain @click="handleHealthDetail">通过</el-button>
+                  <el-button class="rejectBtn" type="danger" size="big" style="width:128px" plain @click="handleHealthDetail('reject')">驳回</el-button>
                 </div>
                 <!-- <div class="right">
                   <i class="el-icon-warning"></i>
@@ -475,11 +252,7 @@
               </div>
               <div v-else class="check-info">
                 <!-- 已审核 -->
-                <div
-                  v-if="healthData.qualifiedStatus == 1"
-                  class="info-parent"
-                  :class="{isPlatformInfoParent: !checkDetailFlag}"
-                >
+                <div v-if="healthData.qualifiedStatus == 1" :class="{isPlatformInfoParent: !checkDetailFlag}" class="info-parent">
                   <!-- 合格体检单人工审核（通过，驳回） -->
                   <p>
                     <label>审核结果：</label>
@@ -498,23 +271,10 @@
                     <label>驳回理由：</label>
                     {{ healthData.checkReason }}
                   </p>
-                  <img
-                    :class="{isPlatformInfoImg: isPlatform}"
-                    class="info-img"
-                    v-if="healthData.checkStatus == 1"
-                    src="./pass.png"
-                  />
-                  <img
-                    :class="{isPlatformInfoImg: isPlatform}"
-                    class="info-img"
-                    v-if="healthData.checkStatus == -1"
-                    src="./reject.png"
-                  />
+                  <img v-if="healthData.checkStatus == 1" :class="{isPlatformInfoImg: isPlatform}" class="info-img" src="./pass.png">
+                  <img v-if="healthData.checkStatus == -1" :class="{isPlatformInfoImg: isPlatform}" class="info-img" src="./reject.png">
                 </div>
-                <div
-                  v-else-if="healthData.qualifiedStatus == 0 || healthData.qualifiedStatus == 2"
-                  class="info-parent"
-                >
+                <div v-else-if="healthData.qualifiedStatus == 0 || healthData.qualifiedStatus == 2" class="info-parent">
                   <!-- 不合格，中途退出自动驳回 -->
                   <p>
                     <label>审核结果：</label>
@@ -524,56 +284,29 @@
                     <label>审核时间：</label>
                     {{ healthData.checkTime }}
                   </p>
-                  <img
-                    :class="{isPlatformInfoImg: isPlatform}"
-                    class="info-img"
-                    src="./auto-reject.png"
-                  />
+                  <img :class="{isPlatformInfoImg: isPlatform}" class="info-img" src="./auto-reject.png">
                 </div>
               </div>
             </div>
           </el-col>
         </el-row>
-        <el-row
-          :gutter="30"
-          class="row-container-bottom"
-          :class="{isPlatformPartTopBorder: isPlatform,isPlatformMainContainerWidth: isPlatform}"
-        >
+        <el-row :gutter="30" :class="{isPlatformPartTopBorder: isPlatform,isPlatformMainContainerWidth: isPlatform}" class="row-container-bottom">
           <el-col :span="12" class="col-container">
             <div class="bg-part">
               <div class="common-title">
                 <div class="title-wrap">
                   <div>
-                    <i class="descri"></i>
+                    <i class="descri" />
                     <span class="title-font">体检视频</span>
                   </div>
-                  <div class="result-btn" :class="{isPlatformResultBtn: isPlatform}">
-                    <el-button
-                      size="mini"
-                      :disabled="!healthData.healthReportDetailVO"
-                      :class="{'active': (activeDirection + activeType) == 'front-1'}"
-                      @click="handleClickVideoBtn(-1, 'front')"
-                      plain
-                    >正面</el-button>
-                    <el-button
-                      size="mini"
-                      :disabled="!healthData.healthReportDetailVO"
-                      :class="{'active': (activeDirection + activeType) == 'back-1'}"
-                      @click="handleClickVideoBtn(-1, 'back')"
-                      plain
-                    >全景</el-button>
+                  <div :class="{isPlatformResultBtn: isPlatform}" class="result-btn">
+                    <el-button :disabled="!healthData.healthReportDetailVO" :class="{'active': (activeDirection + activeType) == 'front-1'}" size="mini" plain @click="handleClickVideoBtn(-1, 'front')">正面</el-button>
+                    <el-button :disabled="!healthData.healthReportDetailVO" :class="{'active': (activeDirection + activeType) == 'back-1'}" size="mini" plain @click="handleClickVideoBtn(-1, 'back')">全景</el-button>
                   </div>
                 </div>
               </div>
               <div class="video-info">
-                <video-player
-                  v-if="playerOptions.sources[0].src"
-                  ref="videoPlayer"
-                  :playsinline="true"
-                  :options="playerOptions"
-                  @ready="playerIsReady"
-                  class="vjs-custom-skin vjs-big-play-centered video-player-container"
-                ></video-player>
+                <video-player v-if="playerOptions.sources[0].src" ref="videoPlayer" :playsinline="true" :options="playerOptions" class="vjs-custom-skin vjs-big-play-centered video-player-container" @ready="playerIsReady" />
                 <span v-else>视频播放失败</span>
               </div>
             </div>
@@ -583,28 +316,13 @@
               <div class="common-title" style="margin-bottom: 9px">
                 <div class="update-wrap">
                   <div>
-                    <i class="descri"></i>
+                    <i class="descri" />
                     <span class="title-font">体检结果</span>
                   </div>
-                  <div class="result-btn" :class="{isPlatformResultBtn: isPlatform}">
-                    <el-button
-                      size="mini"
-                      style="background-color: #fd7715;color: #ffffff;"
-                      @click="clickOpenUpdate"
-                      v-if="!openUpdate && healthData.qualifiedStatus == 1 && btnPermissions.indexOf('1000211') != -1"
-                    >修改</el-button>
-                    <el-button
-                      size="mini"
-                      style="border: solid 1px #cccccc;background-color:#ffffff;color:#333333"
-                      @click="cancleUpdate"
-                      v-if="openUpdate"
-                    >取消</el-button>
-                    <el-button
-                      size="mini"
-                      style="background-color: #fd7715;color: #ffffff;"
-                      @click="submitUpdate"
-                      v-if="openUpdate"
-                    >提交</el-button>
+                  <div :class="{isPlatformResultBtn: isPlatform}" class="result-btn">
+                    <el-button v-if="!openUpdate && healthData.qualifiedStatus == 1 && btnPermissions.indexOf('1000211') != -1" size="mini" style="background-color: #fd7715;color: #ffffff;" @click="clickOpenUpdate">修改</el-button>
+                    <el-button v-if="openUpdate" size="mini" style="border: solid 1px #cccccc;background-color:#ffffff;color:#333333" @click="cancleUpdate">取消</el-button>
+                    <el-button v-if="openUpdate" size="mini" style="background-color: #fd7715;color: #ffffff;" @click="submitUpdate">提交</el-button>
                   </div>
                 </div>
               </div>
@@ -612,182 +330,105 @@
                 <div class="result-item">
                   <div class="result-content">
                     <div class="part-title">视力与辨色力检测</div>
-                    <div
-                      v-if="videoDots.length == 0 || !healthData.healthReportDetailVO"
-                      class="part-content"
-                      :class="{isPlatformPartContent: isPlatform}"
-                    >
+                    <div v-if="videoDots.length == 0 || !healthData.healthReportDetailVO" :class="{isPlatformPartContent: isPlatform}" class="part-content">
                       <p class="ellipsis">未检测</p>
                     </div>
-                    <div v-else class="part-content" :class="{isPlatformPartContent: isPlatform}">
+                    <div v-else :class="{isPlatformPartContent: isPlatform}" class="part-content">
                       <p class="ellipsis">
                         <span>视力矫正:</span>
-                        <span
-                          style="color: #333333;"
-                          v-if="!openUpdate"
-                        >{{ healthData.healthReportDetailVO.eyeCorrect ? '配戴眼镜' : '裸眼' }}</span>
-                        <el-select
-                          v-model="eyeCorrect"
-                          placeholder="请选择"
-                          size="mini"
-                          style="width:109px;margin-left:10px"
-                          v-if="openUpdate"
-                        >
-                          <el-option
-                            v-for="item in eyeOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          ></el-option>
+                        <span v-if="!openUpdate" style="color: #333333;">{{ healthData.healthReportDetailVO.eyeCorrect ? '配戴眼镜' : '裸眼' }}</span>
+                        <el-select v-if="openUpdate" v-model="eyeCorrect" placeholder="请选择" size="mini" style="width:109px;margin-left:10px">
+                          <el-option v-for="item in eyeOptions" :key="item.value" :label="item.label" :value="item.value" />
                         </el-select>
                       </p>
-                      <p
-                        :class="{isPlatformEllipsis: isPlatform}"
-                        class="ellipsis"
-                      >左眼：{{ healthData.healthReportDetailVO.eyeLeft || '未知' }}，右眼：{{ healthData.healthReportDetailVO.eyeRight || '未知' }}，红绿色盲：{{ healthData.healthReportDetailVO.eyeColorVision == null ? '未知' : healthData.healthReportDetailVO.eyeColorVision ? '无' : '有'}}</p>
+                      <p :class="{isPlatformEllipsis: isPlatform}" class="ellipsis">左眼：{{ healthData.healthReportDetailVO.eyeLeft || '未知' }}，右眼：{{ healthData.healthReportDetailVO.eyeRight || '未知' }}，红绿色盲：{{ healthData.healthReportDetailVO.eyeColorVision == null ? '未知' : healthData.healthReportDetailVO.eyeColorVision ? '无' : '有' }}</p>
                     </div>
                   </div>
                 </div>
-                <el-divider></el-divider>
+                <el-divider />
                 <div class="result-item">
                   <div class="result-content">
                     <div class="part-title">听力检测</div>
-                    <div
-                      v-if="videoDots.length < 4 || !healthData.healthReportDetailVO"
-                      class="part-content"
-                      :class="{isPlatformPartContent: isPlatform}"
-                    >
+                    <div v-if="videoDots.length < 4 || !healthData.healthReportDetailVO" :class="{isPlatformPartContent: isPlatform}" class="part-content">
                       <p class="ellipsis">未检测</p>
                     </div>
-                    <div v-else class="part-content" :class="{isPlatformPartContent: isPlatform}">
+                    <div v-else :class="{isPlatformPartContent: isPlatform}" class="part-content">
                       <p class="ellipsis">
                         <span>听力矫正:</span>
-                        <span
-                          style="color: #333333;"
-                          v-if="!openUpdate"
-                        >{{ healthData.healthReportDetailVO.earHearingaid ? '佩戴助听器' : '裸耳' }}</span>
-                        <el-select
-                          v-model="earHearingaid"
-                          placeholder="请选择"
-                          size="mini"
-                          style="width:109px;margin-left:10px"
-                          v-if="openUpdate"
-                        >
-                          <el-option
-                            v-for="item in earOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          ></el-option>
+                        <span v-if="!openUpdate" style="color: #333333;">{{ healthData.healthReportDetailVO.earHearingaid ? '佩戴助听器' : '裸耳' }}</span>
+                        <el-select v-if="openUpdate" v-model="earHearingaid" placeholder="请选择" size="mini" style="width:109px;margin-left:10px">
+                          <el-option v-for="item in earOptions" :key="item.value" :label="item.label" :value="item.value" />
                         </el-select>
                       </p>
-                      <p
-                        :class="{isPlatformEllipsis: isPlatform}"
-                        class="ellipsis"
-                      >左耳：{{ healthData.healthReportDetailVO.earLeft ? '合格' : '不合格' }}，右耳：{{ healthData.healthReportDetailVO.earRight ? '合格' : '不合格' }}</p>
+                      <p :class="{isPlatformEllipsis: isPlatform}" class="ellipsis">左耳：{{ healthData.healthReportDetailVO.earLeft ? '合格' : '不合格' }}，右耳：{{ healthData.healthReportDetailVO.earRight ? '合格' : '不合格' }}</p>
                     </div>
                   </div>
                 </div>
-                <el-divider></el-divider>
+                <el-divider />
                 <div class="result-item">
                   <div class="result-content">
                     <div class="part-title">躯干与四肢检测</div>
-                    <div
-                      v-if="videoDots.length < 5 || !healthData.healthReportDetailVO"
-                      class="part-content"
-                      :class="{isPlatformPartContent: isPlatform}"
-                    >
+                    <div v-if="videoDots.length < 5 || !healthData.healthReportDetailVO" :class="{isPlatformPartContent: isPlatform}" class="part-content">
                       <p class="ellipsis">未检测</p>
                     </div>
-                    <div v-else class="part-content" :class="{isPlatformPartContent: isPlatform}">
+                    <div v-else :class="{isPlatformPartContent: isPlatform}" class="part-content">
                       <p class="ellipsis">
                         <span>
                           身高：
-                          <span
-                            v-if="!openUpdate"
-                          >{{ healthData.healthReportDetailVO.height ? healthData.healthReportDetailVO.height + '厘米' : '未知' }}</span>
+                          <span v-if="!openUpdate">{{ healthData.healthReportDetailVO.height ? healthData.healthReportDetailVO.height + '厘米' : '未知' }}</span>
                           <span v-if="openUpdate">
-                            <el-input
-                              v-model="height"
-                              placeholder
-                              size="mini"
-                              style="width:73px;margin-left:10px"
-                            ></el-input>CM
+                            <el-input v-model="height" placeholder size="mini" style="width:73px;margin-left:10px" />CM
                           </span>
                         </span>
                       </p>
-                      <p
-                        :class="{isPlatformEllipsis: isPlatform}"
-                        class="ellipsis"
-                      >四肢：{{ hasLimbs }}，{{ hasDyskinesia }}</p>
+                      <p :class="{isPlatformEllipsis: isPlatform}" class="ellipsis">四肢：{{ hasLimbs }}，{{ hasDyskinesia }}</p>
                     </div>
                   </div>
                 </div>
-                <el-divider></el-divider>
+                <el-divider />
                 <div class="result-item">
                   <!-- <div class="img-cover">
                     <img :src="playerOptions.poster || errorImg" alt="体检全程视频" :onerror="onerrorImg" />
                   </div>-->
                   <div class="result-content">
                     <div class="part-title">体检全程视频</div>
-                    <div class="part-content" :class="{isPlatformPartContent: isPlatform}">
+                    <div :class="{isPlatformPartContent: isPlatform}" class="part-content">
                       <p class="ellipsis">体检{{ healthData.qualifiedStatus == 1 ? '合格' : '不合格' }}</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <img
-                v-if="healthData.qualifiedStatus == 0"
-                class="result-pic"
-                :class="{isPlatformMarginTop: isPlatform}"
-                src="./no-qualified.png"
-              />
-              <img
-                v-else-if="healthData.qualifiedStatus == 1"
-                class="result-pic"
-                :class="{isPlatformMarginTop: isPlatform}"
-                src="./has-qualified.png"
-              />
-              <img
-                v-else-if="healthData.qualifiedStatus == 2"
-                class="result-pic"
-                :class="{isPlatformMarginTop: isPlatform}"
-                src="./half-leave.png"
-              />
+              <img v-if="healthData.qualifiedStatus == 0" :class="{isPlatformMarginTop: isPlatform}" class="result-pic" src="./no-qualified.png">
+              <img v-else-if="healthData.qualifiedStatus == 1" :class="{isPlatformMarginTop: isPlatform}" class="result-pic" src="./has-qualified.png">
+              <img v-else-if="healthData.qualifiedStatus == 2" :class="{isPlatformMarginTop: isPlatform}" class="result-pic" src="./half-leave.png">
             </div>
           </el-col>
         </el-row>
         <el-row class="row-container-last">
           <el-col :span="24" class="col-container">
-            <div class="bg-part" :class="{isPlatformPartTopBorder: isPlatform}">
+            <div :class="{isPlatformPartTopBorder: isPlatform}" class="bg-part">
               <div class="common-title">
-                <i class="descri"></i>
+                <i class="descri" />
                 <span class="title-font">视频截图</span>
               </div>
               <div class="key-image-info">
                 <div v-if="!keyImages || keyImages.length == 0" class="no-result">未查询到结果</div>
                 <div v-else class="has-result">
                   <div v-for="(item, index) in keyImages" :key="index" class="key-image-one">
-                    <el-image class="key-el-image" :src="item.pic" @click="openViewer(index)">
+                    <el-image :src="item.pic" class="key-el-image" @click="openViewer(index)">
                       <div slot="error" class="image-slot">
-                        <img :src="errorImg" />
+                        <img :src="errorImg">
                       </div>
                     </el-image>
 
                     <span class="title">
-                      <img v-if="item.success == 1" src="./videosuccess.png" alt />
-                      <img v-else src="./videofalse.png" alt />
+                      <img v-if="item.success == 1" src="./videosuccess.png" alt>
+                      <img v-else src="./videofalse.png" alt>
                       {{ item.title }}
                     </span>
                   </div>
                   <span v-if="showViewer" class="preview-title">{{ keyImagesTitle }}</span>
-                  <el-image-viewer
-                    v-if="showViewer"
-                    :zIndex="2000"
-                    :on-close="closeViewer"
-                    :on-switch="switchViewer"
-                    :url-list="keyImagesUrl"
-                  />
+                  <el-image-viewer v-if="showViewer" :z-index="2000" :on-close="closeViewer" :on-switch="switchViewer" :url-list="keyImagesUrl" />
                 </div>
               </div>
             </div>
@@ -796,15 +437,15 @@
       </div>
       <el-dialog :visible.sync="dialogVisible" width="20%">
         <span>您还未完成签章设置，请先设置好签章，才能进行体检单审核</span>
-        <span style="text-align: center" slot="footer" class="dialog-footer">
+        <span slot="footer" style="text-align: center" class="dialog-footer">
           <el-button type="primary" @click="closeDialog">设置</el-button>
           <el-button @click="closeDialog('cancel')">取 消</el-button>
         </span>
       </el-dialog>
       <el-dialog :before-close="handleClose" :visible.sync="dialogVisible1" width="23%">
         <span>该体检单已被其他医生审核，是否继续审核其他体检单？</span>
-        <span style="text-align: center" slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="closeDialogNext">下一单（{{tenCount}}秒）</el-button>
+        <span slot="footer" style="text-align: center" class="dialog-footer">
+          <el-button type="primary" @click="closeDialogNext">下一单（{{ tenCount }}秒）</el-button>
           <el-button @click="closeDialogNext('cancel')">查看此订单</el-button>
         </span>
       </el-dialog>
@@ -816,7 +457,15 @@
 import { mapGetters, mapState } from 'vuex'
 import wxHeader from '@/components/header/index'
 import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
-import { healthPageList, getHealthById, healthCheck, getHistoryVideo, getNextHealth, getCurrentCheckState, updateHealthInfo } from '@/api/health.js'
+import {
+  healthPageList,
+  getHealthById,
+  healthCheck,
+  getHistoryVideo,
+  getNextHealth,
+  getCurrentCheckState,
+  updateHealthInfo
+} from '@/api/health.js'
 import errorImg from './errorImg.png'
 import errorVideo from './errorVideo.png'
 // 视频相关
@@ -845,20 +494,7 @@ export default {
       default: ''
     }
   },
-  watch: {
-    detailId: {
-      handler: function (val) {
-        this.healthId = val
-        this.loadHealthDetail()
-        this.openUpdate = false
-      },
-      deep: true
-    }
-  },
-  mounted () {
-
-  },
-  data () {
+  data() {
     return {
       height: '',
       earHearingaid: '',
@@ -921,11 +557,13 @@ export default {
         language: 'zh-CN',
         aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
         fluid: false, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
-        sources: [{
-          withCredentials: false,
-          type: 'application/x-mpegURL',
-          src: '' // 视频url地址
-        }],
+        sources: [
+          {
+            withCredentials: false,
+            type: 'application/x-mpegURL',
+            src: '' // 视频url地址
+          }
+        ],
         flash: { hls: { withCredentials: false } },
         html5: { hls: { withCredentials: false } },
         poster: '', // 封面地址
@@ -943,57 +581,74 @@ export default {
       activeType: -1,
       activeDirection: 'front',
       BusinessType: {
-        'A': '申领驾照(新学员)体检',
-        'B': '增驾体检',
-        'W': '变更考试地',
-        'C': '持军警驾驶证申领',
-        'D': '持境外驾驶证申领',
-        'E': '证件损毁换证',
-        'F': '转入换证',
-        'G': '有效期满换证',
-        'H': '达到规定年龄降级换证',
-        'I': '自愿降低准驾车型换证',
-        'R': '因身体条件变化降级换证',
-        'J': '信息变化换证',
-        'S': '信息备案',
-        'K': '补证',
-        'L': '年审体检',
-        'N': '注销',
-        'T': '注销最高准驾车型',
-        'U': '注销实习准驾车型',
-        'O': '恢复驾驶资格',
-        'P': '延期换证',
-        'V': '延期审验',
-        'Q': '延期提交身体条件证明',
-        'Y': '降级换证体检', // 自定义的中间值 对应selectBusiness 的 降级换证体检
-        'Z': '换证体检'
+        A: '申领驾照(新学员)体检',
+        B: '增驾体检',
+        W: '变更考试地',
+        C: '持军警驾驶证申领',
+        D: '持境外驾驶证申领',
+        E: '证件损毁换证',
+        F: '转入换证',
+        G: '有效期满换证',
+        H: '达到规定年龄降级换证',
+        I: '自愿降低准驾车型换证',
+        R: '因身体条件变化降级换证',
+        J: '信息变化换证',
+        S: '信息备案',
+        K: '补证',
+        L: '年审体检',
+        N: '注销',
+        T: '注销最高准驾车型',
+        U: '注销实习准驾车型',
+        O: '恢复驾驶资格',
+        P: '延期换证',
+        V: '延期审验',
+        Q: '延期提交身体条件证明',
+        Y: '降级换证体检', // 自定义的中间值 对应selectBusiness 的 降级换证体检
+        Z: '换证体检'
       }
     }
   },
+  watch: {
+    detailId: {
+      handler: function (val) {
+        this.healthId = val
+        this.loadHealthDetail()
+        this.openUpdate = false
+      },
+      deep: true
+    }
+  },
+  mounted() {},
   computed: {
-    ...mapGetters([
-      'btnPermissions'
-    ]),
+    ...mapGetters(['btnPermissions']),
     ...mapState({
-      user: state => state.user
+      user: (state) => state.user
     }),
-    colNumLeft () {
+    colNumLeft() {
       return this.isPlatform ? 18 : 16
     },
-    colNumRight () {
+    colNumRight() {
       return this.isPlatform ? 6 : 8
     },
-    checkDetailFlag () {
+    checkDetailFlag() {
       return this.btnPermissions.indexOf('1000208') != -1
     },
-    player () {
+    player() {
       return this.$refs.videoPlayer.player // 自定义播放
     },
-    hasLimbs () {
+    hasLimbs() {
       let result = ''
-      if (this.healthData.healthReportDetailVO.limbsLeftLower && this.healthData.healthReportDetailVO.limbsRightLower && this.healthData.healthReportDetailVO.limbsLeftUpper && this.healthData.healthReportDetailVO.limbsRightUpper) {
+      if (
+        this.healthData.healthReportDetailVO.limbsLeftLower &&
+        this.healthData.healthReportDetailVO.limbsRightLower &&
+        this.healthData.healthReportDetailVO.limbsLeftUpper &&
+        this.healthData.healthReportDetailVO.limbsRightUpper
+      ) {
         result = '无残疾'
-      } else if (!this.healthData.healthReportDetailVO.limbsLeftLower && !this.healthData.healthReportDetailVO.limbsLeftUpper) {
+      } else if (
+        !this.healthData.healthReportDetailVO.limbsLeftLower &&
+        !this.healthData.healthReportDetailVO.limbsLeftUpper
+      ) {
         result = '上下肢残疾'
       } else if (!this.healthData.healthReportDetailVO.limbsLeftLower) {
         result = '下肢残疾'
@@ -1002,11 +657,17 @@ export default {
       }
       return result
     },
-    hasDyskinesia () {
+    hasDyskinesia() {
       let result = ''
-      if (this.healthData.healthReportDetailVO.dyskinesia && this.healthData.healthReportDetailVO.limbsDyskinesia) {
+      if (
+        this.healthData.healthReportDetailVO.dyskinesia &&
+        this.healthData.healthReportDetailVO.limbsDyskinesia
+      ) {
         result = '无运动功能障碍'
-      } else if (!this.healthData.healthReportDetailVO.dyskinesia && !this.healthData.healthReportDetailVO.limbsDyskinesia) {
+      } else if (
+        !this.healthData.healthReportDetailVO.dyskinesia &&
+        !this.healthData.healthReportDetailVO.limbsDyskinesia
+      ) {
         result = '上下肢运动功能障碍'
       } else if (!this.healthData.healthReportDetailVO.dyskinesia) {
         result = '上肢运动功能障碍'
@@ -1016,29 +677,40 @@ export default {
       return result
     }
   },
+  created() {
+    this.healthId = this.$route.query.healthId || ''
+    if (!this.healthId) {
+      if (!this.isPlatform) {
+        this.$message.error('体检单不存在')
+      }
+    } else {
+      this.loadHealthDetail()
+    }
+  },
   methods: {
-    clickOpenUpdate () {
+    clickOpenUpdate() {
       this.openUpdate = true
       this.height = this.healthData.healthReportDetailVO.height
       this.earHearingaid = this.healthData.healthReportDetailVO.earHearingaid
       this.eyeCorrect = this.healthData.healthReportDetailVO.eyeCorrect
     },
-    cancleUpdate () {
+    cancleUpdate() {
       this.openUpdate = false
       this.height = this.healthData.healthReportDetailVO.height
       this.earHearingaid = this.healthData.healthReportDetailVO.earHearingaid
       this.eyeCorrect = this.healthData.healthReportDetailVO.eyeCorrect
     },
-    submitUpdate () {
+    submitUpdate() {
       if (!this.healthData.originalDrivingType) {
         this.healthData.originalDrivingType = ''
       }
       if (!this.healthData.drivingLicenseType) {
         this.healthData.drivingLicenseType = ''
       }
-      let licenseType = this.healthData.drivingLicenseType + this.healthData.originalDrivingType
-      let licenseTypeArray = this.splitType(licenseType).split(',')
-      let bigCar = ['A3', 'N', 'B2', 'A2', 'A1']
+      const licenseType =
+        this.healthData.drivingLicenseType + this.healthData.originalDrivingType
+      const licenseTypeArray = this.splitType(licenseType).split(',')
+      const bigCar = ['A3', 'N', 'B2', 'A2', 'A1']
       console.log(licenseTypeArray)
       if (this.earHearingaid == 1) {
         for (let i = 0; i < licenseTypeArray.length; i++) {
@@ -1065,13 +737,13 @@ export default {
           }
         }
       }
-      let formData = {
+      const formData = {
         reportId: this.healthId,
         earHearingaid: this.earHearingaid,
         eyeCorrect: this.eyeCorrect,
         height: this.height
       }
-      updateHealthInfo(formData).then(res => {
+      updateHealthInfo(formData).then((res) => {
         if (res.code == 0) {
           this.$message({
             message: '修改信息成功',
@@ -1082,17 +754,17 @@ export default {
       })
       this.openUpdate = false
     },
-    splitType (str = '') {
+    splitType(str = '') {
       let result = ''
-      let len = str.length
+      const len = str.length
       if (len == 0 || !str) {
         result = ''
       } else if (len <= 2 && ['A', 'B', 'C'].indexOf(str.charAt(0)) != -1) {
         result = str
       } else {
-        let arr = []
-        for (let i = 0; i < len;) {
-          let code = str.charAt(i)
+        const arr = []
+        for (let i = 0; i < len; ) {
+          const code = str.charAt(i)
           if (['A', 'B', 'C'].indexOf(code) == -1) {
             arr.push(code)
             i++
@@ -1105,14 +777,14 @@ export default {
       }
       return result
     },
-    computeIdentity (str) {
+    computeIdentity(str) {
       if (str) {
         return str.substr(0, 10) + '****' + str.substr(-4)
       } else {
         return '--'
       }
     },
-    computeName (str) {
+    computeName(str) {
       if (str) {
         let result = ''
         for (let i = 0; i < str.length; i++) {
@@ -1127,7 +799,7 @@ export default {
         return '--'
       }
     },
-    loadHealthDetail (bool) {
+    loadHealthDetail(bool) {
       this.healthData.driverSign = errorImg
       this.healthData.currentImage = errorImg
       this.healthData.contrastImage = errorImg
@@ -1141,53 +813,77 @@ export default {
         target: document.querySelector('.content-container')
       })
       const _this = this
-      getHealthById({
-        reportId: this.healthId
-      }, this.isPlatform).then((res) => {
-        loading.close()
-        if (res.code == 0) {
-          this.healthId = res.data.id
-          this.healthData = res.data
-          this.height = res.data.healthReportDetailVO.height
-          this.earHearingaid = res.data.healthReportDetailVO.earHearingaid
-          this.eyeCorrect = res.data.healthReportDetailVO.eyeCorrect
-          this.videoDirectId = res.data.videoDirectId || ''
-          this.videoObvId = res.data.videoObvId || ''
-          this.videoDots = res.data.healthReportVideoInfoList || []
+      getHealthById(
+        {
+          reportId: this.healthId
+        },
+        this.isPlatform
+      )
+        .then((res) => {
+          loading.close()
+          if (res.code == 0) {
+            this.healthId = res.data.id
+            this.healthData = res.data
+            this.height = res.data.healthReportDetailVO.height
+            this.earHearingaid = res.data.healthReportDetailVO.earHearingaid
+            this.eyeCorrect = res.data.healthReportDetailVO.eyeCorrect
+            this.videoDirectId = res.data.videoDirectId || ''
+            this.videoObvId = res.data.videoObvId || ''
+            this.videoDots = res.data.healthReportVideoInfoList || []
 
-          // 驾照格式转化 A1B2CE ====> A1、B2、C、E
-          if (!res.data.drivingLicenseType) {
-            this.drivingLicenseType = ''
-          } else {
-            let regex = /\w\d?/g
-            this.drivingLicenseType = res.data.drivingLicenseType.match(regex).join('、')
-          }
+            // 驾照格式转化 A1B2CE ====> A1、B2、C、E
+            if (!res.data.drivingLicenseType) {
+              this.drivingLicenseType = ''
+            } else {
+              const regex = /\w\d?/g
+              this.drivingLicenseType = res.data.drivingLicenseType
+                .match(regex)
+                .join('、')
+            }
 
-          this.keyImages = []
-          this.keyImagesUrl = []
-          this.keyImagesCopyUrl = []
-          if (res.data.healthReportKeyList && res.data.healthReportKeyList.length != 0) {
-            res.data.healthReportKeyList.forEach((item) => {
-              _this.keyImages.push({ title: item.title, pic: item.direct == 1 ? item.frontPic : item.backPic, success: item.success })
-              _this.keyImagesUrl.push(item.direct == 1 ? item.frontPic : item.backPic)
+            this.keyImages = []
+            this.keyImagesUrl = []
+            this.keyImagesCopyUrl = []
+            if (
+              res.data.healthReportKeyList &&
+              res.data.healthReportKeyList.length != 0
+            ) {
+              res.data.healthReportKeyList.forEach((item) => {
+                _this.keyImages.push({
+                  title: item.title,
+                  pic: item.direct == 1 ? item.frontPic : item.backPic,
+                  success: item.success
+                })
+                _this.keyImagesUrl.push(
+                  item.direct == 1 ? item.frontPic : item.backPic
+                )
+              })
+              _this.keyImagesCopyUrl = [..._this.keyImagesUrl]
+            }
+            this.videoFrontDots = []
+            this.videoBackDots = []
+            this.videoDots.forEach((item) => {
+              _this.videoFrontDots.push({
+                time: item.time / 1000,
+                text: item.title,
+                pic: item.frontPic
+              })
+              _this.videoBackDots.push({
+                time: item.time / 1000,
+                text: item.title,
+                pic: item.backPic
+              })
             })
-            _this.keyImagesCopyUrl = [..._this.keyImagesUrl]
+            if (!bool) {
+              this.getVideoUrl()
+            }
           }
-          this.videoFrontDots = []
-          this.videoBackDots = []
-          this.videoDots.forEach((item) => {
-            _this.videoFrontDots.push({ time: item.time / 1000, text: item.title, pic: item.frontPic })
-            _this.videoBackDots.push({ time: item.time / 1000, text: item.title, pic: item.backPic })
-          })
-          if (!bool) {
-            this.getVideoUrl()
-          }
-        }
-      }).catch(() => {
-        loading.close()
-      })
+        })
+        .catch(() => {
+          loading.close()
+        })
     },
-    handleSubHealth (upDown) {
+    handleSubHealth(upDown) {
       const _this = this
       const loading = this.$loading({
         lock: true,
@@ -1196,81 +892,112 @@ export default {
         background: 'rgba(0, 0, 0, 0.5)',
         target: document.querySelector('.content-container')
       })
-      let formData = Object.assign({}, {
-        index: upDown
-      }, this.pageListCondition)
-      getNextHealth(formData).then((res) => {
-        loading.close()
-        if (res.code == 0) {
-          this.healthId = res.data.id
-          this.healthData = res.data
-          this.videoDirectId = res.data.videoDirectId
-          this.videoObvId = res.data.videoObvId
-          this.videoDots = res.data.healthReportVideoInfoList || []
+      const formData = Object.assign(
+        {},
+        {
+          index: upDown
+        },
+        this.pageListCondition
+      )
+      getNextHealth(formData)
+        .then((res) => {
+          loading.close()
+          if (res.code == 0) {
+            this.healthId = res.data.id
+            this.healthData = res.data
+            this.videoDirectId = res.data.videoDirectId
+            this.videoObvId = res.data.videoObvId
+            this.videoDots = res.data.healthReportVideoInfoList || []
 
-          // 驾照格式转化 A1B2CE ====> A1、B2、C、E
-          if (!res.data.drivingLicenseType) {
-            this.drivingLicenseType = ''
-          } else {
-            let regex = /\w\d?/g
-            this.drivingLicenseType = res.data.drivingLicenseType.match(regex).join('、')
-          }
+            // 驾照格式转化 A1B2CE ====> A1、B2、C、E
+            if (!res.data.drivingLicenseType) {
+              this.drivingLicenseType = ''
+            } else {
+              const regex = /\w\d?/g
+              this.drivingLicenseType = res.data.drivingLicenseType
+                .match(regex)
+                .join('、')
+            }
 
-          this.keyImages = []
-          this.keyImagesUrl = []
-          this.keyImagesCopyUrl = []
-          if (res.data.healthReportKeyList && res.data.healthReportKeyList.length != 0) {
-            res.data.healthReportKeyList.forEach((item) => {
-              _this.keyImages.push({ title: item.title, pic: item.direct == 1 ? item.frontPic : item.backPic, success: item.success })
-              _this.keyImagesUrl.push(item.direct == 1 ? item.frontPic : item.backPic)
+            this.keyImages = []
+            this.keyImagesUrl = []
+            this.keyImagesCopyUrl = []
+            if (
+              res.data.healthReportKeyList &&
+              res.data.healthReportKeyList.length != 0
+            ) {
+              res.data.healthReportKeyList.forEach((item) => {
+                _this.keyImages.push({
+                  title: item.title,
+                  pic: item.direct == 1 ? item.frontPic : item.backPic,
+                  success: item.success
+                })
+                _this.keyImagesUrl.push(
+                  item.direct == 1 ? item.frontPic : item.backPic
+                )
+              })
+              _this.keyImagesCopyUrl = [..._this.keyImagesUrl]
+            }
+            if (this.pageListCondition.orderBy == 'ID') {
+              this.pageListCondition.indexValue = res.data.id
+            } else if (this.pageListCondition.orderBy == 'CREATE_TIME') {
+              // 创建时间可能重复 还是按照id排序
+              this.pageListCondition.indexValue = res.data.id
+            }
+            this.videoFrontDots = []
+            this.videoBackDots = []
+            this.videoDots.forEach((item) => {
+              _this.videoFrontDots.push({
+                time: item.time / 1000,
+                text: item.title,
+                pic: item.frontPic
+              })
+              _this.videoBackDots.push({
+                time: item.time / 1000,
+                text: item.title,
+                pic: item.backPic
+              })
             })
-            _this.keyImagesCopyUrl = [..._this.keyImagesUrl]
+            this.getVideoUrl()
+          } else if (res.code == -1) {
+            this.$message.closeAll()
+            this.$message({
+              showClose: true,
+              duration: 2000,
+              message:
+                upDown == 'pre'
+                  ? '当前已是第一个体检单'
+                  : '当前已是最后一个体检单',
+              type: 'warning'
+            })
           }
-          if (this.pageListCondition.orderBy == 'ID') {
-            this.pageListCondition.indexValue = res.data.id
-          } else if (this.pageListCondition.orderBy == 'CREATE_TIME') {
-            // 创建时间可能重复 还是按照id排序
-            this.pageListCondition.indexValue = res.data.id
-          }
-          this.videoFrontDots = []
-          this.videoBackDots = []
-          this.videoDots.forEach((item) => {
-            _this.videoFrontDots.push({ time: item.time / 1000, text: item.title, pic: item.frontPic })
-            _this.videoBackDots.push({ time: item.time / 1000, text: item.title, pic: item.backPic })
-          })
-          this.getVideoUrl()
-        } else if (res.code == -1) {
-          this.$message.closeAll()
-          this.$message({
-            showClose: true,
-            duration: 2000,
-            message: upDown == 'pre' ? '当前已是第一个体检单' : '当前已是最后一个体检单',
-            type: 'warning'
-          })
-        }
-      }).catch(() => {
-        loading.close()
-      })
+        })
+        .catch(() => {
+          loading.close()
+        })
     },
-    getVideoUrl (value) {
+    getVideoUrl(value) {
       getHistoryVideo({
-        videoId: this.activeDirection == 'front' ? this.videoDirectId : this.videoObvId
-      }).then((res) => {
-        if (res.code == 0) {
-          this.playerOptions.sources[0].src = res.data.playInfoList[0].playURL
-          if (value != -1) {
-            this.playerOptions.poster = res.data.videoBase.coverURL
+        videoId:
+          this.activeDirection == 'front' ? this.videoDirectId : this.videoObvId
+      })
+        .then((res) => {
+          if (res.code == 0) {
+            this.playerOptions.sources[0].src = res.data.playInfoList[0].playURL
+            if (value != -1) {
+              this.playerOptions.poster = res.data.videoBase.coverURL
+            }
+          } else {
+            this.playerOptions.sources[0].src = ''
+            this.playerOptions.poster = ''
           }
-        } else {
+        })
+        .catch(() => {
           this.playerOptions.sources[0].src = ''
           this.playerOptions.poster = ''
-        }
-      }).catch(() => {
-        this.playerOptions.sources[0].src = ''
-        this.playerOptions.poster = ''
-      })
+        })
     },
-    closeDialog (type) {
+    closeDialog(type) {
       // if (this.timer) {
       //   clearInterval(this.timer)
       //   this.timer = null
@@ -1287,7 +1014,7 @@ export default {
         })
       }
     },
-    closeDialogNext (type) {
+    closeDialogNext(type) {
       if (this.timer) {
         clearInterval(this.timer)
         this.timer = null
@@ -1300,7 +1027,7 @@ export default {
         this.$emit('reloadList')
       }
     },
-    handleClose () {
+    handleClose() {
       if (this.timer) {
         clearInterval(this.timer)
         this.timer = null
@@ -1309,7 +1036,7 @@ export default {
       }
       // this.$emit('reloadList')
     },
-    getCode () {
+    getCode() {
       this.closeDialogFlag = false
       const TIME_COUNT = 10
       if (!this.timer) {
@@ -1331,7 +1058,7 @@ export default {
         }, 1000)
       }
     },
-    checkReport (obj) {
+    checkReport(obj) {
       const loading = this.$loading({
         lock: true,
         text: '加载中',
@@ -1339,46 +1066,52 @@ export default {
         background: 'rgba(0, 0, 0, 0.5)',
         target: document.querySelector('.view-container')
       })
-      healthCheck(obj, this.isPlatform).then((res) => {
-        loading.close()
-        if (res.code == 0) {
-          if (this.isPlatform) {
-            this.$emit('reloadList')
-          } else {
-            this.$message.success('审核成功')
-            this.loadHealthDetail(true)
+      healthCheck(obj, this.isPlatform)
+        .then((res) => {
+          loading.close()
+          if (res.code == 0) {
+            if (this.isPlatform) {
+              this.$emit('reloadList')
+            } else {
+              this.$message.success('审核成功')
+              this.loadHealthDetail(true)
+            }
+          } else if (
+            res.code == -1 &&
+            res.msg == '未设置签章，请编辑' &&
+            this.isPlatform
+          ) {
+            // this.getCode()
+            this.dialogVisible = true
+            // const _this = this
+            // this.$confirm('您还未完成签章设置，请先设置好签章，才能进行体检单审核', '', {
+            //   distinguishCancelAndClose: true,
+            //   confirmButtonText: '取消',
+            //   cancelButtonText: '设置(' + this.tenCount + '秒)',
+            //   customClass: 'redConfirm',
+            //   confirmButtonClass: 'rightBtn',
+            //   cancelButtonClass: 'leftBtn'
+            // }).then((action) => {
+            //   console.log('取消操作')
+            // }).catch(async (action) => {
+            //   if (action === 'cancel') {
+            //     //  personalEdit?userId=460533531089702912&isPersonalCenter=true
+            //     _this.$router.push({
+            //       name: 'personalEdit',
+            //       query: {
+            //         userId: _this.user.id,
+            //         isPersonalCenter: true
+            //       }
+            //     })
+            //   }
+            // })
           }
-        } else if (res.code == -1 && res.msg == '未设置签章，请编辑' && this.isPlatform) {
-          // this.getCode()
-          this.dialogVisible = true
-          // const _this = this
-          // this.$confirm('您还未完成签章设置，请先设置好签章，才能进行体检单审核', '', {
-          //   distinguishCancelAndClose: true,
-          //   confirmButtonText: '取消',
-          //   cancelButtonText: '设置(' + this.tenCount + '秒)',
-          //   customClass: 'redConfirm',
-          //   confirmButtonClass: 'rightBtn',
-          //   cancelButtonClass: 'leftBtn'
-          // }).then((action) => {
-          //   console.log('取消操作')
-          // }).catch(async (action) => {
-          //   if (action === 'cancel') {
-          //     //  personalEdit?userId=460533531089702912&isPersonalCenter=true
-          //     _this.$router.push({
-          //       name: 'personalEdit',
-          //       query: {
-          //         userId: _this.user.id,
-          //         isPersonalCenter: true
-          //       }
-          //     })
-          //   }
-          // })
-        }
-      }).catch(() => {
-        loading.close()
-      })
+        })
+        .catch(() => {
+          loading.close()
+        })
     },
-    handleHealthDetail (type) {
+    handleHealthDetail(type) {
       if (!this.isPlatform) {
         if (type == 'reject') {
           this.rejectReport()
@@ -1386,7 +1119,7 @@ export default {
           this.passReport()
         }
       } else {
-        let data = {
+        const data = {
           reportId: this.healthId
         }
         getCurrentCheckState(data).then((res) => {
@@ -1404,13 +1137,13 @@ export default {
         })
       }
     },
-    passReport () {
+    passReport() {
       this.checkReport({
         reportId: this.healthId,
         status: 1
       })
     },
-    rejectReport () {
+    rejectReport() {
       this.$prompt('', '请填写驳回理由', {
         confirmButtonText: '驳回',
         cancelButtonText: '取消',
@@ -1420,20 +1153,23 @@ export default {
         inputPlaceholder: '注意：驳回理由不能为空',
         confirmButtonClass: 'messageBoxButton',
         customClass: 'reject-reason-prompt',
-        message: '<div style="font-size:12px; color:#fd7715"><i class="el-icon-warning" style="margin-right:6px;"></i>驳回后无法撤销，请确保已仔细审核所有体检信息</div>',
+        message:
+          '<div style="font-size:12px; color:#fd7715"><i class="el-icon-warning" style="margin-right:6px;"></i>驳回后无法撤销，请确保已仔细审核所有体检信息</div>',
         dangerouslyUseHTMLString: true
-      }).then(({ value }) => {
-        this.checkReport({
-          reportId: this.healthId,
-          status: -1,
-          checkReason: value
-        })
-      }).catch(() => {
-        console.log('取消操作')
       })
+        .then(({ value }) => {
+          this.checkReport({
+            reportId: this.healthId,
+            status: -1,
+            checkReason: value
+          })
+        })
+        .catch(() => {
+          console.log('取消操作')
+        })
     },
-    playerIsReady (player) {
-      let hls = player.tech({ IWillNotUseThisInPlugins: true }).hls
+    playerIsReady(player) {
+      const hls = player.tech({ IWillNotUseThisInPlugins: true }).hls
       player.tech_.hls.xhr.beforeRequest = function (options) {
         return options
       }
@@ -1450,13 +1186,18 @@ export default {
             const seconds = parseInt(marker.time % 60)
             const minutes = parseInt(marker.time / 60) % 60
             return `${marker.text}
-                    ${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`
+                    ${minutes < 10 ? '0' + minutes : minutes}:${
+              seconds < 10 ? '0' + seconds : seconds
+            }`
           },
           time: function (marker) {
             return marker.time
           }
         },
-        markers: this.activeDirection == 'front' ? this.videoFrontDots : this.videoBackDots,
+        markers:
+          this.activeDirection == 'front'
+            ? this.videoFrontDots
+            : this.videoBackDots,
         onMarkerClick: function (marker) {
           return false
         }
@@ -1468,7 +1209,7 @@ export default {
       this.player.currentTime(currentTime)
       this.player.play()
     },
-    handleClickVideoBtn (index, direction) {
+    handleClickVideoBtn(index, direction) {
       this.activeType = index
       if (direction != this.activeDirection) {
         this.activeDirection = direction
@@ -1482,18 +1223,20 @@ export default {
         this.player.play()
       }
     },
-    openViewer (index) {
+    openViewer(index) {
       this.showIndex = index
       this.keyImagesTitle = this.keyImages[index].title
-      this.keyImagesUrl = this.keyImagesCopyUrl.slice(index).concat(this.keyImagesCopyUrl.slice(0, index))
+      this.keyImagesUrl = this.keyImagesCopyUrl
+        .slice(index)
+        .concat(this.keyImagesCopyUrl.slice(0, index))
       this.showViewer = true
       this.lastIndex = index
     },
-    closeViewer () {
+    closeViewer() {
       this.showViewer = false
     },
-    switchViewer (index) {
-      let newIndex = ((this.showIndex + index) % this.keyImagesUrl.length)
+    switchViewer(index) {
+      const newIndex = (this.showIndex + index) % this.keyImagesUrl.length
       console.log('上一个坐标' + this.lastIndex)
       console.log('当前坐标' + newIndex)
       if (newIndex > this.lastIndex) {
@@ -1513,16 +1256,6 @@ export default {
       }
       this.keyImagesTitle = this.keyImages[newIndex].title
       this.lastIndex = newIndex
-    }
-  },
-  created () {
-    this.healthId = this.$route.query.healthId || ''
-    if (!this.healthId) {
-      if (!this.isPlatform) {
-        this.$message.error('体检单不存在')
-      }
-    } else {
-      this.loadHealthDetail()
     }
   }
 }
@@ -1621,7 +1354,7 @@ export default {
       max-height: 100%;
     }
   }
-  &.el-popper[x-placement^="bottom"] .popper__arrow {
+  &.el-popper[x-placement^='bottom'] .popper__arrow {
     border-bottom-color: #fd7715;
     &::after {
       top: 3px;
@@ -2217,7 +1950,7 @@ export default {
             color: #fff;
             font-size: 24px;
             .el-icon-circle-close:before {
-              content: "\e6db";
+              content: '\e6db';
             }
           }
         }

@@ -5,5 +5,6 @@
         <span slot="headerTitle">赛事新增</span>
       </wx-header>
     </div>
+
   </div>
 </template>

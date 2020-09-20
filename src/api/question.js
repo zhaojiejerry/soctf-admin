@@ -9,10 +9,28 @@ export function getWriteUpForPage(data) {
     })
 }
 
-// 删除
+// 新增
 export function deleteWriteUp(data) {
     return axios({
         url: '/writeup/deleteWriteUp',
+        method: 'post',
+        data
+    })
+}
+
+// 修改
+export function modifyWriteUp(data) {
+    return axios({
+        url: '/writeup/modifyWriteUp',
+        method: 'post',
+        data
+    })
+}
+
+// 查看详情
+export function getQuestionWriteUp(data) {
+    return axios({
+        url: '/writeup/getQuestionWriteUp',
         method: 'get',
         params: data
     })

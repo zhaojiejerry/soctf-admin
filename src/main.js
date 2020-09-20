@@ -9,7 +9,6 @@ import '@/assets/font/iconfont.css'
 import '@/assets/scss/common.scss'
 // vue-router
 import router from '@/router/index'
-import '@/router/permission'
 // vuex
 import store from '@/vuex/store'
 // pxToRem

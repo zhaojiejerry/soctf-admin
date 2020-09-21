@@ -11,6 +11,7 @@ import {
     resetRouter,
     lastRoutes
 } from '@/router'
+import router from '@/router'
 
 export function deepMenu(arr) {
     let result = []
@@ -67,21 +68,25 @@ const actions = {
         commit,
         state
     }) {
-        return new Promise((resolve, reject) => {
-            logout().then((res) => {
-                if (res.code == 0) {
-                    commit('SET_TOKEN', '')
-                    commit('SET_MENU', [])
-                    commit('SET_CODE', [])
-                    commit('SET_ISLOADMENU', false)
-                    removeCookie('Token')
-                    resetRouter()
-                }
-                resolve()
-            }).catch(error => {
-                reject(error)
+        commit('SET_TOKEN', '')
+        commit('SET_MENU', [])
+        commit('SET_CODE', [])
+        commit('SET_ISLOADMENU', false)
+        removeCookie('Token')
+        router.push({
+                path: '/login'
             })
-        })
+            // resetRouter()
+
+        // return new Promise((resolve, reject) => {
+        //     logout().then((res) => {
+        //         if (res.code == 0) {
+        //         }
+        //         resolve()
+        //     }).catch(error => {
+        //         reject(error)
+        //     })
+        // })
     },
     getInfo({
         commit,

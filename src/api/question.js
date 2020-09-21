@@ -9,7 +9,7 @@ export function getWriteUpForPage(data) {
     })
 }
 
-// 新增
+// 删除
 export function deleteWriteUp(data) {
     return axios({
         url: '/writeup/deleteWriteUp',
@@ -22,6 +22,15 @@ export function deleteWriteUp(data) {
 export function modifyWriteUp(data) {
     return axios({
         url: '/writeup/modifyWriteUp',
+        method: 'post',
+        data
+    })
+}
+
+// 新增
+export function addWriteUp(data) {
+    return axios({
+        url: '/writeup/addWriteUp',
         method: 'post',
         data
     })

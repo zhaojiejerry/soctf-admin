@@ -1,11 +1,11 @@
 <template>
   <div style="background-color: #edeef2;">
-    <div class="hb-user-detail">
+    <div>
       <wx-header show-back>
         <span slot="headerTitle">问题管理</span>
       </wx-header>
       <div class="macthtable">
-        <div class="right-part">
+        <div class="right-part" style="padding: 10px;">
           <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
         </div>
         <div class="user-child-list">
@@ -23,9 +23,10 @@
               </template>
             </el-table-column>
             <el-table-column label="答案描述" align="center" prop="answerDescription" show-overflow-tooltip />
+            <el-table-column label="分类" align="center" prop="type" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.id)">编辑</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.questionId)">编辑</el-button>
                 <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
@@ -67,7 +68,14 @@ export default {
     parseTime(time) {
       return parseTime(time)
     },
-    handleSubAccountEdit() {},
+    handleSubAccountEdit(id) {
+      this.$router.push({
+        path: '/questionEdit',
+        query: {
+          id: id
+        }
+      })
+    },
     handleDeviceDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -125,7 +133,7 @@ export default {
 </script>
 <style  scoped>
 .macthtable {
-  margin: 0.8rem 0.2rem 0.2rem;
+  margin: 0rem 0.2rem 0.2rem;
   background: white;
   padding-bottom: 0.2rem;
   height: calc(100vh - 120px);

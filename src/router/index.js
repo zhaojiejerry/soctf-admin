@@ -1,3 +1,4 @@
+/* eslint-disable no-spaced-func */
 import Vue from 'vue'
 import Router from 'vue-router'
 import env from '../../config/prod.env'
@@ -29,7 +30,7 @@ export const navRoutes = [{
         path: 'questionEdit',
         name: 'questionEdit',
         component: () =>
-            import ('@/pages/question/addNew'),
+            import ('@/pages/question/modify'),
         hidden: true
     },
     {
@@ -41,6 +42,13 @@ export const navRoutes = [{
             title: '比赛管理',
             icon: 'iconfont icon-home'
         }
+    },
+    {
+        path: 'matchEdit',
+        name: 'matchEdit',
+        component: () =>
+            import ('@/pages/match/modify'),
+        hidden: true
     },
     {
         path: 'personalDetail',

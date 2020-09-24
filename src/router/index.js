@@ -51,6 +51,54 @@ export const navRoutes = [{
         hidden: true
     },
     {
+        path: 'choice',
+        name: 'choice',
+        component: () =>
+            import ('@/pages/choice/index'),
+        meta: {
+            title: '选择题管理',
+            icon: 'iconfont icon-home'
+        }
+    }, {
+        path: 'choiceEdit',
+        name: 'choiceEdit',
+        component: () =>
+            import ('@/pages/choice/modify'),
+        hidden: true
+    },
+    {
+        path: 'docker',
+        name: 'docker',
+        component: () =>
+            import ('@/pages/docker/index'),
+        meta: {
+            title: '容器题管理',
+            icon: 'iconfont icon-home'
+        }
+    }, {
+        path: 'dockerEdit',
+        name: 'dockerEdit',
+        component: () =>
+            import ('@/pages/docker/modify'),
+        hidden: true
+    },
+    {
+        path: 'file',
+        name: 'file',
+        component: () =>
+            import ('@/pages/file/index'),
+        meta: {
+            title: '附件题管理',
+            icon: 'iconfont icon-home'
+        }
+    }, {
+        path: 'fileEdit',
+        name: 'fileEdit',
+        component: () =>
+            import ('@/pages/file/modify'),
+        hidden: true
+    },
+    {
         path: 'personalDetail',
         name: 'personalDetail',
         component: () =>

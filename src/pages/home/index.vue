@@ -58,8 +58,6 @@
 import { mapGetters } from 'vuex'
 import { getCookie } from '@/utils/auth'
 import wxHeader from '@/components/header/index'
-import { getDeviceStatistics } from '@/api/device.js'
-import { getHealthReportStatistics } from '@/api/health.js'
 
 export default {
   components: {
@@ -79,10 +77,7 @@ export default {
       return getCookie('Account') || ''
     }
   },
-  created() {
-    this.getDeviceStatistics()
-    this.getHealthReportStatistics()
-  },
+  created() {},
   methods: {
     handleViewDetail(type) {
       if (type == 'tj') {
@@ -112,55 +107,6 @@ export default {
           name: 'deviceList'
         })
       }
-    },
-    getDeviceStatistics() {
-      this.btnPermissions.indexOf('1000101') != -1 &&
-        getDeviceStatistics()
-          .then((res) => {
-            if (res.code == 0) {
-              this.sbgl = res.data.deviceNumber
-            } else {
-              this.$message({
-                type: 'error',
-                message: '获取管理设备统计数据出错:' + res.msg
-              })
-            }
-          })
-          .catch(() => {
-            this.$message({
-              type: 'error',
-              message: '获取管理设备统计数据出错'
-            })
-          })
-    },
-    getHealthReportStatistics() {
-      // if(this.btnPermissions.indexOf('1000404') != -1 ||
-      //   this.btnPermissions.indexOf('1000207') != -1) &&
-      getHealthReportStatistics()
-        .then((res) => {
-          if (res.code == 0) {
-            if (!res.data) {
-              this.tjsk = 0
-              this.zxsk = 0
-              this.dshtj = 0
-            } else {
-              this.tjsk = res.data.healthReportReceivedNumber
-              this.zxsk = res.data.photoReceivedAmountNumber
-              this.dshtj = res.data.unCheckedHealthReportNumber
-            }
-          } else {
-            this.$message({
-              type: 'error',
-              message: '获取体检统计数据出错:' + res.msg
-            })
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: 'error',
-            message: '获取体检统计数据出错'
-          })
-        })
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="hb-user-edit">
-    <wx-header showBack>
+    <wx-header show-back>
       <span slot="headerTitle">{{ userId ? '编辑用户' : '新建用户' }}</span>
     </wx-header>
     <div class="hb-main-container">
@@ -10,53 +10,23 @@
             <div class="form-title">账号信息</div>
           </el-form-item>
           <el-form-item label="账号名称：" prop="username">
-            <el-input
-              :disabled="userId != ''"
-              size="small"
-              :maxlength="20"
-              v-model="form.username"
-              placeholder="请输入账号名称(数字和字母组合，不超过10个字符)"
-            ></el-input>
+            <el-input :disabled="userId != ''" :maxlength="20" v-model="form.username" size="small" placeholder="请输入账号名称(数字和字母组合，不超过10个字符)" />
           </el-form-item>
           <el-form-item label="姓名：" prop="realName">
-            <el-input size="small" :maxlength="12" v-model="form.realName" placeholder="请输入真实姓名"></el-input>
+            <el-input :maxlength="12" v-model="form.realName" size="small" placeholder="请输入真实姓名" />
           </el-form-item>
-          <el-form-item id="loginState" v-if="!userId" label="登录密码：" prop="password">
-            <el-input
-              size="small"
-              show-password
-              :maxlength="16"
-              @blur="loginFocusState=false"
-              @focus="changeFocus"
-              v-model="form.password"
-              placeholder="请设置登录密码"
-            ></el-input>
+          <el-form-item v-if="!userId" id="loginState" label="登录密码：" prop="password">
+            <el-input :maxlength="16" v-model="form.password" size="small" show-password placeholder="请设置登录密码" @blur="loginFocusState=false" @focus="changeFocus" />
             <div v-if="loginFocusState" class="el-form-item__tips">8-16位数字、字母、符号的组合，且至少使用其中两种</div>
           </el-form-item>
           <el-form-item label="用户角色：" prop="roleId">
-            <el-select
-              v-if="!isPersonalCenter"
-              class="select-form"
-              v-model="form.roleId"
-              placeholder="请选择用户角色"
-              size="small"
-            >
-              <el-option
-                v-for="item in roleList"
-                :key="item.id"
-                :label="item.roleName"
-                :value="item.id"
-              ></el-option>
+            <el-select v-if="!isPersonalCenter" v-model="form.roleId" class="select-form" placeholder="请选择用户角色" size="small">
+              <el-option v-for="item in roleList" :key="item.id" :label="item.roleName" :value="item.id" />
             </el-select>
-            <el-input v-if="isPersonalCenter" :disabled="true" readonly v-model="form.roleName"></el-input>
+            <el-input v-if="isPersonalCenter" :disabled="true" v-model="form.roleName" readonly />
           </el-form-item>
-          <el-form-item label="用户类型：" v-if="form.type != 1" prop="type">
-            <el-radio-group
-              v-model="form.type"
-              class="radio-form"
-              size="small"
-              :disabled="userId != '' || isPersonalCenter"
-            >
+          <el-form-item v-if="form.type != 1" label="用户类型：" prop="type">
+            <el-radio-group v-model="form.type" :disabled="userId != '' || isPersonalCenter" class="radio-form" size="small">
               <el-radio v-for="item in userTypeList" :key="item.id" :label="item.id">{{ item.name }}</el-radio>
             </el-radio-group>
           </el-form-item>
@@ -64,53 +34,25 @@
             <div class="form-title">单位信息</div>
           </el-form-item>
           <el-form-item label="单位名称：" prop="orgName">
-            <el-input size="small" :maxlength="40" v-model="form.orgName" placeholder="请输入单位名称"></el-input>
+            <el-input :maxlength="40" v-model="form.orgName" size="small" placeholder="请输入单位名称" />
           </el-form-item>
-          <el-form-item label="所属上级：" v-if="form.type != 1" prop="parentId">
-            <hb-user-tree
-              holder="请选择所属上级"
-              v-if="!isPersonalCenter"
-              :disabled="isPersonalCenter"
-              :dropdownWidth="375"
-              :value="form.parentId"
-              @getValue="handleUserFilterId"
-            ></hb-user-tree>
-            <el-input v-if="isPersonalCenter" :disabled="true" readonly v-model="form.parentName"></el-input>
-            <p style="color: #666666;" v-if="form.type == 4">上级单位即体检医院</p>
+          <el-form-item v-if="form.type != 1" label="所属上级：" prop="parentId">
+            <hb-user-tree v-if="!isPersonalCenter" :disabled="isPersonalCenter" :dropdown-width="375" :value="form.parentId" holder="请选择所属上级" @getValue="handleUserFilterId" />
+            <el-input v-if="isPersonalCenter" :disabled="true" v-model="form.parentName" readonly />
+            <p v-if="form.type == 4" style="color: #666666;">上级单位即体检医院</p>
           </el-form-item>
           <el-form-item label="联系电话：" prop="phone">
             <div class="phoneInput">
-              <el-input
-                size="small"
-                :maxlength="25"
-                v-model="form.phone"
-                readonly
-                placeholder="请输入联系电话"
-                v-if="form.phone"
-              ></el-input>
-              <el-button type="primary" @click="changePhone" size="mini" v-if="form.phone">更换手机号</el-button>
-              <el-button type="primary" @click="bindPhone" size="mini" v-if="!form.phone">绑定手机号</el-button>
+              <el-input v-if="form.phone" :maxlength="25" v-model="form.phone" size="small" readonly placeholder="请输入联系电话" />
+              <el-button v-if="form.phone" type="primary" size="mini" @click="changePhone">更换手机号</el-button>
+              <el-button v-if="!form.phone" type="primary" size="mini" @click="bindPhone">绑定手机号</el-button>
             </div>
           </el-form-item>
-          <el-form-item
-            label="单位地址："
-            prop="area"
-            :rules="[{required: true, validator: validateArea, trigger: 'change'}]"
-          >
-            <hb-area-select
-              :province="form.province"
-              :city="form.city"
-              :area="form.area"
-              @getValue="handleAreaList"
-            ></hb-area-select>
+          <el-form-item :rules="[{required: true, validator: validateArea, trigger: 'change'}]" label="单位地址：" prop="area">
+            <hb-area-select :province="form.province" :city="form.city" :area="form.area" @getValue="handleAreaList" />
           </el-form-item>
           <el-form-item label prop="address">
-            <el-input
-              size="small"
-              :maxlength="40"
-              v-model="form.address"
-              placeholder="请输入详细地址，例如街道，门牌号"
-            ></el-input>
+            <el-input :maxlength="40" v-model="form.address" size="small" placeholder="请输入详细地址，例如街道，门牌号" />
           </el-form-item>
           <el-form-item label-width="0" style="margin-bottom:10px;">
             <div class="form-title">附加信息</div>
@@ -123,25 +65,15 @@
                   个人签章
                 </div>
                 <div class="upload-area" @mouseenter="enterUserSign = true">
-                  <input
-                    class="file-upload"
-                    type="file"
-                    id="userSign"
-                    accept="image/png, image/jpeg, image/jpg"
-                    @change="uploadImg($event, 'userSign')"
-                  />
-                  <img v-if="form.userSign" :src="form.userSign" />
-                  <label style="background:#fff" v-else for="userSign" class="upload-content">
-                    <i class="el-icon-plus"></i>
+                  <input id="userSign" class="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" @change="uploadImg($event, 'userSign')">
+                  <img v-if="form.userSign" :src="form.userSign">
+                  <label v-else style="background:#fff" for="userSign" class="upload-content">
+                    <i class="el-icon-plus" />
                   </label>
-                  <div
-                    class="float-layer"
-                    v-if="enterUserSign && form.userSign"
-                    @mouseleave="enterUserSign = false"
-                  >
-                    <i class="el-icon-zoom-in" @click="previewImage('userSign')"></i>
-                    <label for="userSign" class="el-icon-edit-outline"></label>
-                    <i class="el-icon-delete" @click="form.userSign = ''"></i>
+                  <div v-if="enterUserSign && form.userSign" class="float-layer" @mouseleave="enterUserSign = false">
+                    <i class="el-icon-zoom-in" @click="previewImage('userSign')" />
+                    <label for="userSign" class="el-icon-edit-outline" />
+                    <i class="el-icon-delete" @click="form.userSign = ''" />
                   </div>
                 </div>
                 <p class="suggestion">建议长宽比：233px*100px</p>
@@ -152,25 +84,15 @@
                   单位签章
                 </div>
                 <div class="upload-area" @mouseenter="enterOrgSign = true">
-                  <input
-                    class="file-upload"
-                    type="file"
-                    id="orgSign"
-                    accept="image/png, image/jpeg, image/jpg"
-                    @change="uploadImg($event, 'orgSign')"
-                  />
-                  <img v-if="form.orgSign" :src="form.orgSign" />
-                  <label style="background:#fff" v-else for="orgSign" class="upload-content">
-                    <i class="el-icon-plus"></i>
+                  <input id="orgSign" class="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" @change="uploadImg($event, 'orgSign')">
+                  <img v-if="form.orgSign" :src="form.orgSign">
+                  <label v-else style="background:#fff" for="orgSign" class="upload-content">
+                    <i class="el-icon-plus" />
                   </label>
-                  <div
-                    class="float-layer"
-                    v-if="enterOrgSign && form.orgSign"
-                    @mouseleave="enterOrgSign = false"
-                  >
-                    <i class="el-icon-zoom-in" @click="previewImage('orgSign')"></i>
-                    <label for="orgSign" class="el-icon-edit-outline"></label>
-                    <i class="el-icon-delete" @click="form.orgSign = ''"></i>
+                  <div v-if="enterOrgSign && form.orgSign" class="float-layer" @mouseleave="enterOrgSign = false">
+                    <i class="el-icon-zoom-in" @click="previewImage('orgSign')" />
+                    <label for="orgSign" class="el-icon-edit-outline" />
+                    <i class="el-icon-delete" @click="form.orgSign = ''" />
                   </div>
                 </div>
                 <p class="suggestion">建议长宽比：300px*300px</p>
@@ -179,124 +101,59 @@
             <p class="suggestion" style="width:400px">只能上传JPG_PNG文件，且不超过500K</p>
           </el-form-item>
           <el-form-item label="备注：" prop="remark">
-            <el-input
-              type="textarea"
-              show-word-limit
-              :maxlength="100"
-              resize="none"
-              :rows="5"
-              v-model="form.remark"
-              placeholder="请填写备注信息"
-            ></el-input>
+            <el-input :maxlength="100" :rows="5" v-model="form.remark" type="textarea" show-word-limit resize="none" placeholder="请填写备注信息" />
           </el-form-item>
           <el-form-item>
-            <el-button
-              :disabled="disableSubmit"
-              type="primary"
-              size="small"
-              :loading="saveLoading"
-              @click="handleUserSave"
-            >确定</el-button>
+            <el-button :disabled="disableSubmit" :loading="saveLoading" type="primary" size="small" @click="handleUserSave">确定</el-button>
             <el-button size="small" @click="handleUserList">取消</el-button>
           </el-form-item>
         </el-form>
       </div>
     </div>
-    <el-dialog
-      :visible.sync="previewDialog"
-      :append-to-body="true"
-      width="488px"
-      custom-class="preview-dialog-2"
-      :show-close="true"
-    >
-      <img class="preview-img" :src="previewImg" />
+    <el-dialog :visible.sync="previewDialog" :append-to-body="true" :show-close="true" width="488px" custom-class="preview-dialog-2">
+      <img :src="previewImg" class="preview-img">
     </el-dialog>
     <div class="bindphoneDialog">
-      <el-dialog
-        title="绑定手机号"
-        :visible.sync="bindPhoneDialogVisible"
-        width="400px"
-        height="240px"
-        center
-        style="text-align: center"
-        @close="resetForm"
-      >
+      <el-dialog :visible.sync="bindPhoneDialogVisible" title="绑定手机号" width="400px" height="240px" center style="text-align: center" @close="resetForm">
         <div class="bindPhone">
-          <el-form label-width="70px" ref="phoneForm" :model="phoneForm" :rules="bindPhoneRules">
+          <el-form ref="phoneForm" :model="phoneForm" :rules="bindPhoneRules" label-width="70px">
             <div class="phoneNumber">
               <el-form-item label="手机号:" prop="phoneNumber">
-                <el-input placeholder="请输入手机号" size="small" v-model="phoneForm.phoneNumber"></el-input>
+                <el-input v-model="phoneForm.phoneNumber" placeholder="请输入手机号" size="small" />
               </el-form-item>
             </div>
             <!-- <div class="code"> -->
             <el-form-item label="验证码:" prop="code">
-              <el-input
-                placeholder="请输入验证码"
-                style="width: 50%"
-                size="small"
-                resize="none"
-                prop="code"
-                v-model="phoneForm.code"
-              ></el-input>
-              <el-button
-                @click="send"
-                style="width: 94px;height:31px;margin-left:5px"
-                :disabled="disabled=!show"
-                size="small"
-              >
+              <el-input v-model="phoneForm.code" placeholder="请输入验证码" style="width: 50%" size="small" resize="none" prop="code" />
+              <el-button :disabled="disabled=!show" style="width: 94px;height:31px;margin-left:5px" size="small" @click="send">
                 <span v-show="show">发送验证码</span>
-                <span v-show="!show" class="count">{{count}} s后重新发送</span>
+                <span v-show="!show" class="count">{{ count }} s后重新发送</span>
               </el-button>
             </el-form-item>
             <!-- </div> -->
             <div class="refundButton" style="text-align: center">
-              <el-button type="primary" size="small" @click="editPhone" v-if="userId">更新</el-button>
-              <el-button type="primary" size="small" @click="bindSub" v-else>确认</el-button>
+              <el-button v-if="userId" type="primary" size="small" @click="editPhone">更新</el-button>
+              <el-button v-else type="primary" size="small" @click="bindSub">确认</el-button>
             </div>
           </el-form>
         </div>
       </el-dialog>
     </div>
     <div class="bindphoneDialog">
-      <el-dialog
-        title="更换手机号"
-        :visible.sync="changePhoneDialogVisible"
-        width="420px"
-        height="240px"
-        center
-        style="text-align: center"
-        @close="resetChangeForm"
-      >
+      <el-dialog :visible.sync="changePhoneDialogVisible" title="更换手机号" width="420px" height="240px" center style="text-align: center" @close="resetChangeForm">
         <div class="bindPhone">
-          <el-form
-            label-width="90px"
-            ref="changePhoneForm"
-            :model="changePhoneForm"
-            :rules="phoneRules"
-          >
+          <el-form ref="changePhoneForm" :model="changePhoneForm" :rules="phoneRules" label-width="90px">
             <div class="phoneNumber">
               <el-form-item label="当前手机号:" prop="phoneNumber">
-                <span>{{form.phone}}</span>
+                <span>{{ form.phone }}</span>
               </el-form-item>
             </div>
             <!-- <div class="code"> -->
             <el-form-item label="验证码:" prop="code">
-              <el-input
-                placeholder="请输入验证码"
-                style="width: 50%"
-                size="small"
-                resize="none"
-                prop="code"
-                v-model="changePhoneForm.code"
-              ></el-input>
-              <el-button
-                @click="sendDelete"
-                style="width: 94px;height:31px;margin-left:5px"
-                :disabled="disabled=!show2"
-                size="small"
-              >
+              <el-input v-model="changePhoneForm.code" placeholder="请输入验证码" style="width: 50%" size="small" resize="none" prop="code" />
+              <el-button :disabled="disabled=!show2" style="width: 94px;height:31px;margin-left:5px" size="small" @click="sendDelete">
                 <span v-show="show2" @click="sendDelete">发送验证码</span>
-                <span v-show="!show2" class="count2">{{count2}} s后重新发送</span>
+                <span v-show="!show2" class="count2">{{ count2 }} s后重新发送</span>
               </el-button>
             </el-form-item>
             <!-- </div> -->
@@ -315,9 +172,17 @@ import { mapGetters } from 'vuex'
 import wxHeader from '@/components/header/index'
 import hbUserTree from '@/components/userTree/index'
 import hbAreaSelect from '@/components/areaSelect/index'
-import { fileUpload } from '@/api/common.js'
-import { getUserById, editUser, addUser, sendMessage, checkCodeA, checkCodeB, editPhone } from '@/api/user.js'
-import { roleList } from '@/api/role.js'
+// import { fileUpload } from '@/api/common.js'
+import {
+  getUserById,
+  editUser,
+  addUser,
+  sendMessage,
+  checkCodeA,
+  checkCodeB,
+  editPhone
+} from '@/api/user.js'
+// import { roleList } from '@/api/role.js'
 
 export default {
   components: {
@@ -325,7 +190,7 @@ export default {
     hbUserTree,
     hbAreaSelect
   },
-  data () {
+  data() {
     const validateUsername = (rule, value, callback) => {
       const reg = /^[a-zA-Z0-9]+$/
       if (value.length == 0) {
@@ -399,7 +264,9 @@ export default {
         callback(new Error('数字、字母、符号的组合，且至少使用其中两种'))
       } else if ((value.length > 16 || value.length < 8) && !reg.test(value)) {
         if (!reg.test(value)) {
-          callback(new Error('8-16位数字、字母、符号的组合，且至少使用其中两种'))
+          callback(
+            new Error('8-16位数字、字母、符号的组合，且至少使用其中两种')
+          )
         }
       } else {
         callback()
@@ -430,7 +297,9 @@ export default {
         code: [{ required: true, message: '请输入验证码' }]
       },
       bindPhoneRules: {
-        phoneNumber: [{ required: true, validator: validateMobilePhone, trigger: 'change' }],
+        phoneNumber: [
+          { required: true, validator: validateMobilePhone, trigger: 'change' }
+        ],
         code: [{ required: true, message: '请输入验证码' }]
       },
       show: true, // 初始启用按钮
@@ -476,7 +345,12 @@ export default {
           { required: true, validator: validateUsername, trigger: 'change' }
         ],
         realName: [
-          { required: true, validator: validateRealNameT, message: '请输入真实姓名', trigger: 'change' }
+          {
+            required: true,
+            validator: validateRealNameT,
+            message: '请输入真实姓名',
+            trigger: 'change'
+          }
         ],
         password: [
           { required: true, validator: validatePassword, trigger: 'change' }
@@ -484,9 +358,7 @@ export default {
         orgName: [
           { required: true, validator: validateOrgName, trigger: 'change' }
         ],
-        roleId: [
-          { required: true, message: '请选择角色', trigger: 'change' }
-        ],
+        roleId: [{ required: true, message: '请选择角色', trigger: 'change' }],
         parentId: [
           { required: true, message: '请选择上级单位', trigger: 'change' }
         ],
@@ -500,20 +372,87 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'user'
-    ])
+    ...mapGetters(['user'])
+  },
+  created() {
+    const userType = [
+      // {
+      //   id: 1,
+      //   name: '公司'
+      // },
+      {
+        id: 2,
+        name: '代理商'
+      },
+      {
+        id: 3,
+        name: '医院'
+      },
+      {
+        id: 4,
+        name: '驾校'
+      }
+    ]
+    this.userTypeList = userType.filter(
+      (val) => val.id >= parseInt(this.user.type)
+    )
+    this.form.type = this.userTypeList[0].id
+    this.userId = this.$route.query.userId || ''
+    this.isPersonalCenter =
+      this.$route.query.isPersonalCenter || this.user.id == this.userId || false
+    if (this.userId) {
+      getUserById({
+        userId: this.userId,
+        isPersonalCenter: this.isPersonalCenter
+      }).then((res) => {
+        if (res.code == 0) {
+          // bugfix 可能是v-if 多处绑定userId,导致子组件重复渲染
+          // this.userId = res.data.id
+          this.filterNumer = this.phoneNumFilter(res.data.phone)
+          this.form.username = res.data.username || ''
+          this.form.realName = res.data.realName || ''
+          this.form.roleId = res.data.roleList.length
+            ? res.data.roleList[0].id
+            : ''
+          this.form.roleName = res.data.roleList.length
+            ? res.data.roleList[0].roleName
+            : ''
+          this.form.type = res.data.type || ''
+          this.form.orgName = res.data.orgName || ''
+          this.form.parentId =
+            !res.data.parentId || res.data.parentId == -1
+              ? ''
+              : res.data.parentId
+          this.form.phone = res.data.phone || ''
+          this.form.province = res.data.province || ''
+          this.form.city = res.data.city || ''
+          this.form.area = res.data.area || ''
+          this.form.address = res.data.address || ''
+          this.form.remark = res.data.remark || ''
+          this.form.orgSign = res.data.orgSign || ''
+          this.form.userSign = res.data.userSign || ''
+          this.parentIdCopy = res.data.parentId
+        }
+      })
+    }
+    if (!this.isPersonalCenter) {
+      roleList().then((res) => {
+        if (res.code == 0) {
+          this.roleList = res.data
+        }
+      })
+    }
   },
   methods: {
-    resetForm () {
+    resetForm() {
       this.$refs.phoneForm.resetFields()
     },
-    resetChangeForm () {
+    resetChangeForm() {
       this.$refs.changePhoneForm.resetFields()
     },
-    phoneNumFilter (phone) {
+    phoneNumFilter(phone) {
       // 1字符串转化成数组
-      let phoneArr = [...phone]
+      const phoneArr = [...phone]
       // 2.将数组中的4-7位变成*
       phoneArr.map((res, index) => {
         if (index > 2 && index < 7) {
@@ -527,7 +466,7 @@ export default {
       })
       return this.filterStr
     },
-    send () {
+    send() {
       if (!this.timer) {
         this.$refs.phoneForm.validateField('phoneNumber', (phoneError) => {
           if (!phoneError) {
@@ -536,23 +475,25 @@ export default {
               templateType: 0,
               useType: 5,
               phoneNumber: this.phoneForm.phoneNumber
-            }).then((res) => {
-              if (res.code == 0) {
-                this.$message({
-                  message: '发送成功',
-                  type: 'success'
-                })
-                this.messageId = res.data.messageId
-              } else {
+            })
+              .then((res) => {
+                if (res.code == 0) {
+                  this.$message({
+                    message: '发送成功',
+                    type: 'success'
+                  })
+                  this.messageId = res.data.messageId
+                } else {
+                  this.show = true
+                  clearInterval(this.timer) // 清除定时器
+                  this.timer = null
+                }
+              })
+              .catch(() => {
                 this.show = true
                 clearInterval(this.timer) // 清除定时器
                 this.timer = null
-              }
-            }).catch(() => {
-              this.show = true
-              clearInterval(this.timer) // 清除定时器
-              this.timer = null
-            })
+              })
             this.count = 90
             this.show = false
             this.timer = setInterval(() => {
@@ -568,30 +509,32 @@ export default {
         })
       }
     },
-    sendDelete () {
+    sendDelete() {
       if (!this.timer2) {
         sendMessage({
           signType: 0,
           templateType: 0,
           useType: 5,
           phoneNumber: this.form.phone
-        }).then((res) => {
-          if (res.code == 0) {
-            this.$message({
-              message: '发送成功',
-              type: 'success'
-            })
-            this.messageId = res.data.messageId
-          } else {
+        })
+          .then((res) => {
+            if (res.code == 0) {
+              this.$message({
+                message: '发送成功',
+                type: 'success'
+              })
+              this.messageId = res.data.messageId
+            } else {
+              this.show2 = true
+              clearInterval(this.timer2) // 清除定时器
+              this.timer2 = null
+            }
+          })
+          .catch(() => {
             this.show2 = true
             clearInterval(this.timer2) // 清除定时器
             this.timer2 = null
-          }
-        }).catch(() => {
-          this.show2 = true
-          clearInterval(this.timer2) // 清除定时器
-          this.timer2 = null
-        })
+          })
         this.count2 = 90
         this.show2 = false
         this.timer2 = setInterval(() => {
@@ -605,10 +548,10 @@ export default {
         }, 1000)
       }
     },
-    bindPhone () {
+    bindPhone() {
       this.bindPhoneDialogVisible = true
     },
-    bindSub () {
+    bindSub() {
       this.$refs.phoneForm.validate((valid) => {
         if (valid) {
           checkCodeA({
@@ -630,7 +573,7 @@ export default {
         }
       })
     },
-    editPhone () {
+    editPhone() {
       this.$refs.phoneForm.validate((valid) => {
         if (valid) {
           editPhone({
@@ -653,7 +596,7 @@ export default {
         }
       })
     },
-    deleteBind () {
+    deleteBind() {
       this.$refs.changePhoneForm.validateField('code', (codeError) => {
         if (!codeError) {
           checkCodeB({
@@ -672,24 +615,24 @@ export default {
         }
       })
     },
-    changePhone () {
+    changePhone() {
       this.changePhoneDialogVisible = true
     },
-    changeFocus () {
+    changeFocus() {
       const state = document.getElementById('loginState')
       const stateClass = state.getElementsByClassName('el-form-item__error')[0]
       if (!stateClass) {
         this.loginFocusState = true
       }
     },
-    handleUserFilterId (id) {
+    handleUserFilterId(id) {
       this.form.parentId = id
     },
-    previewImage (str) {
+    previewImage(str) {
       this.previewImg = this.form[str]
       this.previewDialog = true
     },
-    uploadImg (e, id) {
+    uploadImg(e, id) {
       const file = e.target.files[0]
       if (!/\.(jpg|jpeg|png|JPG|JPEG|PNG)$/.test(e.target.value)) {
         this.$message.error('图片类型错误，只能上传JPG/PNG文件')
@@ -700,7 +643,7 @@ export default {
         return false
       }
       console.log(file)
-      let formdata = new FormData()
+      const formdata = new FormData()
       formdata.append('file', file)
       fileUpload(formdata).then((res) => {
         if (res.code == 0) {
@@ -709,14 +652,14 @@ export default {
           this.enterOrgSign = false
         }
       })
-      let reader = new FileReader()
-      reader.onload = e => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
         document.getElementById(id).value = '' // 解决同一张图片上传两次，第二次不触发change事件
       }
       // 转化为base64
       reader.readAsDataURL(file)
     },
-    validateArea (rule, value, callback) {
+    validateArea(rule, value, callback) {
       if (this.excludeProvince.indexOf(this.form.province) != -1) {
         callback(new Error('系统暂不支持该地区'))
       } else {
@@ -727,7 +670,7 @@ export default {
         }
       }
     },
-    validateParentId (rule, value, callback) {
+    validateParentId(rule, value, callback) {
       if (this.form.type != 4) {
         callback()
       } else {
@@ -738,20 +681,20 @@ export default {
         }
       }
     },
-    handleAreaList (val) {
+    handleAreaList(val) {
       this.form.province = val.province
       this.form.city = val.city
       this.form.area = val.area
     },
-    handleUserList () {
+    handleUserList() {
       this.$router.push({
         name: 'user'
       })
     },
-    handleUserSave () {
+    handleUserSave() {
       console.log(this.phoneForm.phoneNumber)
       const _this = this
-      this.$refs.userEditForm.validate(valid => {
+      this.$refs.userEditForm.validate((valid) => {
         let word = ''
         if (this.userId == '') {
           word = '新建'
@@ -773,7 +716,7 @@ export default {
           }
 
           if (this.userId == '') {
-            let formData = {
+            const formData = {
               username: this.form.username,
               realName: this.form.realName,
               password: this.form.password,
@@ -793,28 +736,30 @@ export default {
             }
 
             this.saveLoading = true
-            addUser(formData).then((res) => {
-              this.saveLoading = false
-              if (res.code == 0) {
-                this.disableSubmit = true
-                this.$message({
-                  type: 'success',
-                  duration: 2000,
-                  message: word + '用户成功！',
-                  onClose: () => {
-                    _this.handleUserList()
-                  }
-                })
-              } else {
+            addUser(formData)
+              .then((res) => {
+                this.saveLoading = false
+                if (res.code == 0) {
+                  this.disableSubmit = true
+                  this.$message({
+                    type: 'success',
+                    duration: 2000,
+                    message: word + '用户成功！',
+                    onClose: () => {
+                      _this.handleUserList()
+                    }
+                  })
+                } else {
+                  this.saveLoading = false
+                  // this.$message.error(word + '用户不成功，请重新编辑')
+                }
+              })
+              .catch(() => {
                 this.saveLoading = false
                 // this.$message.error(word + '用户不成功，请重新编辑')
-              }
-            }).catch(() => {
-              this.saveLoading = false
-              // this.$message.error(word + '用户不成功，请重新编辑')
-            })
+              })
           } else {
-            let formData = {
+            const formData = {
               id: this.userId,
               realName: this.form.realName,
               roleId: this.form.roleId,
@@ -832,90 +777,33 @@ export default {
             }
 
             this.saveLoading = true
-            editUser(formData).then((res) => {
-              this.saveLoading = false
-              if (res.code == 0) {
-                this.disableSubmit = true
-                this.$message({
-                  type: 'success',
-                  duration: 2000,
-                  message: word + '用户成功！',
-                  onClose: () => {
-                    if (!_this.isPersonalCenter) {
-                      _this.handleUserList()
+            editUser(formData)
+              .then((res) => {
+                this.saveLoading = false
+                if (res.code == 0) {
+                  this.disableSubmit = true
+                  this.$message({
+                    type: 'success',
+                    duration: 2000,
+                    message: word + '用户成功！',
+                    onClose: () => {
+                      if (!_this.isPersonalCenter) {
+                        _this.handleUserList()
+                      }
                     }
-                  }
-                })
-              } else {
+                  })
+                } else {
+                  this.saveLoading = false
+                  // this.$message.error(word + '用户不成功，请重新编辑')
+                }
+              })
+              .catch(() => {
                 this.saveLoading = false
                 // this.$message.error(word + '用户不成功，请重新编辑')
-              }
-            }).catch(() => {
-              this.saveLoading = false
-              // this.$message.error(word + '用户不成功，请重新编辑')
-            })
+              })
           }
         } else {
           this.$message.error(word + '用户不成功，请重新编辑')
-        }
-      })
-    }
-  },
-  created () {
-    let userType = [
-      // {
-      //   id: 1,
-      //   name: '公司'
-      // },
-      {
-        id: 2,
-        name: '代理商'
-      },
-      {
-        id: 3,
-        name: '医院'
-      },
-      {
-        id: 4,
-        name: '驾校'
-      }
-    ]
-    this.userTypeList = userType.filter((val) => val.id >= parseInt(this.user.type))
-    this.form.type = this.userTypeList[0].id
-    this.userId = this.$route.query.userId || ''
-    this.isPersonalCenter = this.$route.query.isPersonalCenter || this.user.id == this.userId || false
-    if (this.userId) {
-      getUserById({
-        userId: this.userId,
-        isPersonalCenter: this.isPersonalCenter
-      }).then((res) => {
-        if (res.code == 0) {
-          // bugfix 可能是v-if 多处绑定userId,导致子组件重复渲染
-          // this.userId = res.data.id
-          this.filterNumer = this.phoneNumFilter(res.data.phone)
-          this.form.username = res.data.username || ''
-          this.form.realName = res.data.realName || ''
-          this.form.roleId = res.data.roleList.length ? res.data.roleList[0].id : ''
-          this.form.roleName = res.data.roleList.length ? res.data.roleList[0].roleName : ''
-          this.form.type = res.data.type || ''
-          this.form.orgName = res.data.orgName || ''
-          this.form.parentId = (!res.data.parentId || res.data.parentId == -1) ? '' : res.data.parentId
-          this.form.phone = res.data.phone || ''
-          this.form.province = res.data.province || ''
-          this.form.city = res.data.city || ''
-          this.form.area = res.data.area || ''
-          this.form.address = res.data.address || ''
-          this.form.remark = res.data.remark || ''
-          this.form.orgSign = res.data.orgSign || ''
-          this.form.userSign = res.data.userSign || ''
-          this.parentIdCopy = res.data.parentId
-        }
-      })
-    }
-    if (!this.isPersonalCenter) {
-      roleList().then((res) => {
-        if (res.code == 0) {
-          this.roleList = res.data
         }
       })
     }
@@ -974,7 +862,7 @@ export default {
     font-weight: bold;
   }
   .form-title:before {
-    content: "";
+    content: '';
     display: inline-block;
     width: 4px;
     height: 16px;

@@ -1,6 +1,6 @@
 <template>
   <el-container class="wx-layout">
-    <multi-video />
+    <!-- <multi-video /> -->
     <el-main class="wx-main">
       <div class="side-container">
         <wx-menu />
@@ -25,14 +25,11 @@ import { mapGetters, mapState } from 'vuex'
 import { playSound } from '@/utils/js-play-sound'
 import wxFooter from '@/components/footer/index'
 import wxMenu from '@/components/menuBar/index'
-import multiVideo from '@/components/multiVideo/index'
-import { toggleWaitCheckNoice, getWaitCheck } from '@/api/health.js'
 
 export default {
   components: {
     wxFooter,
-    wxMenu,
-    multiVideo
+    wxMenu
   },
   data() {
     return {
@@ -55,51 +52,13 @@ export default {
     }
   },
   created() {},
-  mounted() {
-    if (this.warningTipFlag) {
-      this.getWaitCheck()
-      this.setWarnTimer()
-    }
-  },
+  mounted() {},
   destroyed() {
     if (this.timer) {
       clearInterval(this.timer)
     }
   },
-  methods: {
-    waitCheckNotice(flag) {
-      toggleWaitCheckNoice({ toggle: flag ? 1 : 0 }).then((res) => {
-        if (flag) {
-          this.getWaitCheck()
-          this.setWarnTimer()
-        } else {
-          if (this.timer) {
-            clearInterval(this.timer)
-          }
-        }
-      })
-    },
-    setWarnTimer() {
-      this.timer = setInterval(() => {
-        this.getWaitCheck()
-      }, 60000)
-    },
-    getWaitCheck() {
-      getWaitCheck({ timestamp: this.timestamp }).then((res) => {
-        if (res.code === 0) {
-          this.timestamp = res.data.timestamp
-          if (res.data.waitCheckHealthIds.length > 0) {
-            const soundSrc = require('./warning.mp3')
-            playSound({ url: soundSrc, delay: 5000 })
-            console.log('语音提醒')
-            if (this.$route.path.indexOf('healthPlatform') != -1) {
-              this.$refs.viewContainer.reviewList(true)
-            }
-          }
-        }
-      })
-    }
-  }
+  methods: {}
 }
 </script>
 

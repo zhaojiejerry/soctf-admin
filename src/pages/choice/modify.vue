@@ -2,13 +2,13 @@
   <div style="background-color: #edeef2;">
     <div class="hb-user-detail" style="">
       <wx-header show-back>
-        <span slot="headerTitle">问题编辑</span>
+        <span slot="headerTitle">选择题编辑</span>
       </wx-header>
     </div>
     <div class="macthtable">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
-        <el-form-item label="答案/文档标题" prop="title">
-          <el-input v-model="ruleForm.title" class="itemwidth" />
+        <el-form-item label="题目名称" prop="name">
+          <el-input v-model="ruleForm.name" class="itemwidth" />
         </el-form-item>
         <el-form-item label="文档类型" prop="fileType">
           <el-select v-model="ruleForm.fileType" class="itemwidth" placeholder="请选择文档类型">
@@ -48,7 +48,12 @@
 <script>
 import wxHeader from '@/components/header/index'
 import { getCookie } from '@/utils/auth'
-import { modifyWriteUp, addWriteUp, getQuestionWriteUp } from '@/api/question'
+import {
+  modifyChoiceQuestion,
+  addChoiceQuestion,
+  getOneChoiceQuestion
+} from '@/api/choice'
+import { getjson } from '@/api/common'
 export default {
   components: {
     wxHeader
@@ -56,38 +61,47 @@ export default {
   data() {
     return {
       ruleForm: {
-        answerDescription: '',
-        createAt: '',
-        createById: '',
-        fileType: '',
-        fileUrl: '',
-        id: 0,
-        label: [],
-        mainBody: '',
-        questionId: '',
-        title: '',
-        type: ''
+        bankId: '',
+        category: '',
+        choiceDescription: '',
+        choiceId: '',
+        choiceScore: 0,
+        choiceTime: 0,
+        choiceType: '',
+        correctAnswer: '',
+        difficultyLevel: '',
+        goldCoin: 0,
+        name: '',
+        optionArray: '',
+        optionVos: [
+          {
+            optionCode: '',
+            optionDescription: ''
+          }
+        ],
+        remark: '',
+        solved: true
       },
       label: [],
-      rules: {
-        title: [
-          { required: true, message: '请输入答案/文档标题', trigger: 'blur' }
-        ],
-        fileType: [
-          { required: true, message: '请选择文档类型', trigger: 'change' }
-        ]
-      },
-      fileList: []
+      rules: {},
+      fileList: [],
+      subject: []
     }
   },
   mounted() {
+    this.getjson()
     if (this.$route.query.id) {
-      this.getQuestionWriteUp()
+      this.getOneChoiceQuestion()
     }
   },
   methods: {
+    getjson() {
+      getjson('ctf.json').then((res) => {
+        this.subject = res.subject
+      })
+    },
     handleSuccess(response, file, fileList) {
-      console.log(response, file, fileList)
+      // console.log(response, file, fileList)
       // this.fileList = fileList.slice(-3);
     },
     beforeUpload(file) {
@@ -102,12 +116,14 @@ export default {
       console.log(file, fileList)
       this.fileList = []
     },
-    getQuestionWriteUp() {
-      getQuestionWriteUp({
-        questionId: this.$route.query.id
+    getOneChoiceQuestion() {
+      getOneChoiceQuestion({
+        choiceId: this.$route.query.id
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data
+          // this.ruleForm.label = res.data.label.split('|')
+          // this.label = res.data.label.split('|')
           var fileUrl = res.data.fileUrl.split('/')
           this.fileList = [
             {
@@ -115,8 +131,6 @@ export default {
               url: res.data.fileUrl
             }
           ]
-          this.ruleForm.label = res.data.label.split('|')
-          this.label = res.data.label.split('|')
         }
       })
     },
@@ -127,7 +141,7 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (this.$route.query.id) {
-            modifyWriteUp({
+            modifyChoiceQuestion({
               answerDescription: this.ruleForm.answerDescription,
               fileType: this.ruleForm.fileType,
               fileUrl: this.ruleForm.fileUrl,
@@ -152,7 +166,7 @@ export default {
               }
             })
           } else {
-            addWriteUp({
+            addChoiceQuestion({
               answerDescription: this.ruleForm.answerDescription,
               createAt: new Date(),
               createById: getCookie('usrId'),

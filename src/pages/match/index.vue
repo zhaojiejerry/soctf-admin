@@ -42,7 +42,7 @@
             </el-table-column>
           </el-table>
           <div class="pager-container mt30">
-            <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :page-sizes="[10, 20, 30]" :total="subAccountTotal" background size="small" layout="prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+            <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="subAccountTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
               <el-button size="small" plain class="pagination-button">确定</el-button>
             </el-pagination>
           </div>

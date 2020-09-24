@@ -2,7 +2,7 @@
   <div style="background-color: #edeef2;">
     <div class="hb-user-detail" style="">
       <wx-header show-back>
-        <span slot="headerTitle">问题编辑</span>
+        <span slot="headerTitle">容器题编辑</span>
       </wx-header>
     </div>
     <div class="macthtable">
@@ -48,7 +48,11 @@
 <script>
 import wxHeader from '@/components/header/index'
 import { getCookie } from '@/utils/auth'
-import { modifyWriteUp, addWriteUp, getQuestionWriteUp } from '@/api/question'
+import {
+  editDockerQuestion,
+  addDockerQuestion,
+  getDockerQuestionById
+} from '@/api/docker'
 export default {
   components: {
     wxHeader
@@ -56,38 +60,35 @@ export default {
   data() {
     return {
       ruleForm: {
-        answerDescription: '',
-        createAt: '',
-        createById: '',
-        fileType: '',
-        fileUrl: '',
-        id: 0,
-        label: [],
-        mainBody: '',
-        questionId: '',
-        title: '',
-        type: ''
+        category: '',
+        challengeType: '',
+        deploymentType: '',
+        difficultyLevel: '',
+        dirName: '',
+        enable: 0,
+        frpType: 0,
+        goldCoin: 0,
+        id: '',
+        label: '',
+        name: '',
+        questionDescribe: '',
+        questionType: 0,
+        time: 0,
+        value: 0
       },
       label: [],
-      rules: {
-        title: [
-          { required: true, message: '请输入答案/文档标题', trigger: 'blur' }
-        ],
-        fileType: [
-          { required: true, message: '请选择文档类型', trigger: 'change' }
-        ]
-      },
+      rules: {},
       fileList: []
     }
   },
   mounted() {
     if (this.$route.query.id) {
-      this.getQuestionWriteUp()
+      this.getDockerQuestionById()
     }
   },
   methods: {
     handleSuccess(response, file, fileList) {
-      console.log(response, file, fileList)
+      // console.log(response, file, fileList)
       // this.fileList = fileList.slice(-3);
     },
     beforeUpload(file) {
@@ -102,12 +103,14 @@ export default {
       console.log(file, fileList)
       this.fileList = []
     },
-    getQuestionWriteUp() {
-      getQuestionWriteUp({
+    getDockerQuestionById() {
+      getDockerQuestionById({
         questionId: this.$route.query.id
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data
+          // this.ruleForm.label = res.data.label.split('|')
+          // this.label = res.data.label.split('|')
           var fileUrl = res.data.fileUrl.split('/')
           this.fileList = [
             {
@@ -115,8 +118,6 @@ export default {
               url: res.data.fileUrl
             }
           ]
-          this.ruleForm.label = res.data.label.split('|')
-          this.label = res.data.label.split('|')
         }
       })
     },
@@ -127,7 +128,7 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (this.$route.query.id) {
-            modifyWriteUp({
+            editDockerQuestion({
               answerDescription: this.ruleForm.answerDescription,
               fileType: this.ruleForm.fileType,
               fileUrl: this.ruleForm.fileUrl,
@@ -152,7 +153,7 @@ export default {
               }
             })
           } else {
-            addWriteUp({
+            addDockerQuestion({
               answerDescription: this.ruleForm.answerDescription,
               createAt: new Date(),
               createById: getCookie('usrId'),

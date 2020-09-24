@@ -29,7 +29,7 @@
           <el-input v-model="ruleForm.gameText" type="textarea" class="itemwidth" />
         </el-form-item>
         <el-form-item label="比赛LOGO图片">
-          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/api/oss">
+          <el-upload :show-file-list="false" :on-success="handleiconSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/api/oss">
             <img v-if="iconUrl" :src="iconUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
@@ -41,13 +41,13 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="赛事说明">
-          <el-upload :on-change="handleChange" :file-list="remark" class="upload-demo" action="/api/oss">
+          <el-upload :on-change="handleRemark" :file-list="remark" class="upload-demo" action="/api/oss">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="赛事积分说明">
-          <el-upload :on-change="handleChange" :file-list="scoreRemark" class="upload-demo" action="/api/oss">
+          <el-upload :on-change="handleScoreRemark" :file-list="scoreRemark" class="upload-demo" action="/api/oss">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>
@@ -88,7 +88,14 @@ export default {
         scoreRemark: '',
         startTime: ''
       },
-      rules: {},
+      rules: {
+        gameName: [
+          { required: true, message: '请输入赛事名称', trigger: 'blur' }
+        ],
+        gameType: [
+          { required: true, message: '请选择比赛类型', trigger: 'change' }
+        ]
+      },
       remark: [],
       scoreRemark: [],
       iconUrl: '',
@@ -102,17 +109,23 @@ export default {
     }
   },
   methods: {
-    handleChange(file, fileList) {
+    handleRemark(file, fileList) {
+      console.log(file, fileList)
+      // this.fileList = fileList.slice(-3);
+    },
+    handleScoreRemark(file, fileList) {
       console.log(file, fileList)
       // this.fileList = fileList.slice(-3);
     },
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+      this.mainPic = URL.createObjectURL(file.raw)
+    },
+    handleiconSuccess(res, file) {
+      this.iconUrl = URL.createObjectURL(file.raw)
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 1024 / 1024 < 2
-
       if (!isJPG) {
         this.$message.error('上传图片只能是 JPG 格式!')
       }

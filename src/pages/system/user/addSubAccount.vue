@@ -1,7 +1,7 @@
 <template>
   <div class="hb-add-subaccount">
-    <wx-header showBack>
-      <span slot="headerTitle">{{keyword}}子账号</span>
+    <wx-header show-back>
+      <span slot="headerTitle">{{ keyword }}子账号</span>
     </wx-header>
     <div class="hb-main-container">
       <div class="hb-add-subaccount-content flex flex-column">
@@ -12,33 +12,32 @@
                 <div class="form-title">子账号信息</div>
               </el-form-item>
               <el-form-item label="账号名称：" prop="username">
-                <el-input size="small" :disabled="!!subUserId" :maxlength="20" v-model="subAccountForm.username" placeholder="请输入账号名称(数字和字母组合，不超过10个字符)"></el-input>
+                <el-input :disabled="!!subUserId" :maxlength="20" v-model="subAccountForm.username" size="small" placeholder="请输入账号名称(数字和字母组合，不超过10个字符)" />
               </el-form-item>
               <el-form-item label="姓名：" prop="realName">
-                <el-input size="small" :maxlength="12" v-model="subAccountForm.realName" placeholder="请输入真实姓名"></el-input>
+                <el-input :maxlength="12" v-model="subAccountForm.realName" size="small" placeholder="请输入真实姓名" />
               </el-form-item>
-              <el-form-item id="loginState" v-if="!subUserId" label="登录密码：" prop="password">
-                <el-input size="small" show-password :maxlength="16" @blur="loginFocusState=false"  @focus="changeFocus" v-model="subAccountForm.password" placeholder="请设置登录密码">
-                </el-input>
-                <div v-if="loginFocusState" class="el-form-item__tips" >8-16位数字、字母、符号的组合，且至少使用其中两种</div>
+              <el-form-item v-if="!subUserId" id="loginState" label="登录密码：" prop="password">
+                <el-input :maxlength="16" v-model="subAccountForm.password" size="small" show-password placeholder="请设置登录密码" @blur="loginFocusState=false" @focus="changeFocus" />
+                <div v-if="loginFocusState" class="el-form-item__tips">8-16位数字、字母、符号的组合，且至少使用其中两种</div>
               </el-form-item>
               <el-form-item label="联系电话：" prop="phone">
-                <el-input size="small" :maxlength="25" v-model="subAccountForm.phone" placeholder="请输入联系电话"></el-input>
+                <el-input :maxlength="25" v-model="subAccountForm.phone" size="small" placeholder="请输入联系电话" />
               </el-form-item>
               <el-form-item label="单位名称：" prop="orgName">
-                <el-input size="small" :maxlength="40" :value="subAccountForm.orgName" readonly :disabled="true"></el-input>
+                <el-input :maxlength="40" :value="subAccountForm.orgName" :disabled="true" size="small" readonly />
               </el-form-item>
               <el-form-item label="个人签章：">
                 <div class="sign-container" style="margin-top:0;">
                   <div class="sign-one relative">
                     <div class="upload-area" @mouseenter="enterUserSign = true">
-                      <input class="file-upload" type="file" id="userSign"   accept="image/png, image/jpeg, image/jpg" @change="uploadImg($event, 'userSign')"/>
-                      <img v-if="subAccountForm.userSign" :src="subAccountForm.userSign" />
-                      <label v-else for="userSign" class="upload-content"><i class="el-icon-plus"></i></label>
-                      <div class="float-layer" v-if="enterUserSign && subAccountForm.userSign" @mouseleave="enterUserSign = false">
-                        <i class="el-icon-zoom-in" @click="previewImage('userSign')"></i>
-                        <label for="userSign" class="el-icon-edit-outline"></label>
-                        <i class="el-icon-delete" @click="subAccountForm.userSign = ''"></i>
+                      <input id="userSign" class="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" @change="uploadImg($event, 'userSign')">
+                      <img v-if="subAccountForm.userSign" :src="subAccountForm.userSign">
+                      <label v-else for="userSign" class="upload-content"><i class="el-icon-plus" /></label>
+                      <div v-if="enterUserSign && subAccountForm.userSign" class="float-layer" @mouseleave="enterUserSign = false">
+                        <i class="el-icon-zoom-in" @click="previewImage('userSign')" />
+                        <label for="userSign" class="el-icon-edit-outline" />
+                        <i class="el-icon-delete" @click="subAccountForm.userSign = ''" />
                       </div>
                     </div>
                     <p class="usersign-tip absolute">只能上传JPG/PNG文件，且不超过500K</p>
@@ -46,11 +45,11 @@
                 </div>
               </el-form-item>
               <el-form-item label="备注：" prop="remark">
-                <el-input type="textarea" show-word-limit :maxlength="100" resize="none" :rows="5" v-model="subAccountForm.remark" placeholder="请填写备注信息"></el-input>
+                <el-input :maxlength="100" :rows="5" v-model="subAccountForm.remark" type="textarea" show-word-limit resize="none" placeholder="请填写备注信息" />
               </el-form-item>
             </el-form>
           </div>
-          <div class="subaccount-limits" v-if="!isPersonalCenter">
+          <div v-if="!isPersonalCenter" class="subaccount-limits">
             <el-form>
               <el-form-item label-width="0" style="margin-bottom:10px;">
                 <div class="form-title">子账号权限</div>
@@ -58,37 +57,21 @@
               <el-form-item>
                 <el-radio v-model="isReuse" :label="false">自定义</el-radio>
                 <el-radio v-model="isReuse" :label="true">复用</el-radio>
-                <el-select :disabled="!isReuse" v-model="reuseAccount" @change="changeSubAccoutRoleCheck" placeholder="请选择子账号" size="small">
-                  <el-option v-for="item in reuseAccountList" v-show="item.username!=subAccountForm.username" :key="item.id" :label="item.realName" :value="item.id"></el-option>
+                <el-select :disabled="!isReuse" v-model="reuseAccount" placeholder="请选择子账号" size="small" @change="changeSubAccoutRoleCheck">
+                  <el-option v-for="item in reuseAccountList" v-show="item.username!=subAccountForm.username" :key="item.id" :label="item.realName" :value="item.id" />
                 </el-select>
               </el-form-item>
             </el-form>
             <div class="tree-parent">
               <el-scrollbar class="role-scroll">
-                <el-tree
-                  ref="hbRoleTree"
-                  class="tree-content"
-                  show-checkbox
-                  :check-strictly="true"
-                  :data="permList"
-                  :props="props1"
-                  :node-key="props1.value"
-                  default-expand-all
-                  @check="roleTreeChange"
-                ></el-tree>
+                <el-tree ref="hbRoleTree" :check-strictly="true" :data="permList" :props="props1" :node-key="props1.value" class="tree-content" show-checkbox default-expand-all @check="roleTreeChange" />
               </el-scrollbar>
             </div>
           </div>
         </div>
         <div class="button-con">
-          <el-button
-            @click="handleSaveSubAcount()"
-            type="primary"
-            :loading="saveLoading"
-            size="small">确定</el-button>
-          <el-button
-            size="small"
-            @click="handleUserInfo">取消</el-button>
+          <el-button :loading="saveLoading" type="primary" size="small" @click="handleSaveSubAcount()">确定</el-button>
+          <el-button size="small" @click="handleUserInfo">取消</el-button>
         </div>
       </div>
     </div>
@@ -98,14 +81,14 @@
 <script>
 import { mapGetters } from 'vuex'
 import wxHeader from '@/components/header/index'
-import { fileUpload } from '@/api/common.js'
-import { subAccountPageList, getPermTree, addSubAccount, getSubAccountDetail, updateSubAccount } from '@/api/user.js'
+// import { fileUpload } from '@/api/common.js'
+// import { subAccountPageList, getPermTree, addSubAccount, getSubAccountDetail, updateSubAccount } from '@/api/user.js'
 
 export default {
   components: {
     wxHeader
   },
-  data () {
+  data() {
     const validateUsername = (rule, value, callback) => {
       const reg = /^[a-zA-Z0-9]+$/
       if (value.length == 0) {
@@ -151,7 +134,9 @@ export default {
         callback(new Error('数字、字母、符号的组合，且至少使用其中两种'))
       } else if ((value.length > 16 || value.length < 8) && !reg.test(value)) {
         if (!reg.test(value)) {
-          callback(new Error('8-16位数字、字母、符号的组合，且至少使用其中两种'))
+          callback(
+            new Error('8-16位数字、字母、符号的组合，且至少使用其中两种')
+          )
         }
       } else {
         callback()
@@ -193,23 +178,23 @@ export default {
           { validator: validateUsername, trigger: 'change', required: true }
         ],
         realName: [
-          { validator: validateRealname, required: true, message: '请输入真实姓名', trigger: 'change' }
+          {
+            validator: validateRealname,
+            required: true,
+            message: '请输入真实姓名',
+            trigger: 'change'
+          }
         ],
         password: [
           { required: true, validator: validatePassword, trigger: 'change' }
         ],
-        phone: [
-          { required: true, validator: validatePhone, trigger: 'change' }
-        ]
+        phone: [{ required: true, validator: validatePhone, trigger: 'change' }]
       }
     }
   },
   computed: {
-    ...mapGetters([
-      'btnPermissions',
-      'user'
-    ]),
-    keyword () {
+    ...mapGetters(['btnPermissions', 'user']),
+    keyword() {
       if (this.subUserId) {
         return '编辑'
       } else {
@@ -217,43 +202,63 @@ export default {
       }
     }
   },
+  created() {
+    this.userId = this.$route.query.userId || ''
+    this.subUserId = this.$route.query.subUserId || ''
+    this.subAccountForm.orgName = this.$route.query.orgName || ''
+    this.isPersonalCenter = this.$route.query.isPersonalCenter || ''
+    this.subAccountForm.primaryType = this.$route.query.primaryType || ''
+    if (this.subUserId) {
+      this.handleSubAccountDetail()
+    }
+
+    // 查询可复用的子账号列表
+    if (!this.isPersonalCenter) {
+      this.handleSearchSubAccount()
+    }
+
+    // 查询权限树
+    this.handleSearchPermTree()
+  },
   methods: {
-    disabledFn () {
+    disabledFn() {
       if (this.user.type == 0) {
         return true
       } else {
         return false
       }
     },
-    changeFocus () {
+    changeFocus() {
       const state = document.getElementById('loginState')
       const stateClass = state.getElementsByClassName('el-form-item__error')[0]
       if (!stateClass) {
         this.loginFocusState = true
       }
     },
-    changeSubAccoutRoleCheck () {
+    changeSubAccoutRoleCheck() {
       const this_ = this
       getSubAccountDetail({
         userId: this_.reuseAccount
-      }).then(res => {
-        if (res.code == 0) {
-          this_.checkedList = res.data.checkedList
-          this_.$refs.hbRoleTree.setCheckedKeys(res.data.checkedList)
-        } else {
+      })
+        .then((res) => {
+          if (res.code == 0) {
+            this_.checkedList = res.data.checkedList
+            this_.$refs.hbRoleTree.setCheckedKeys(res.data.checkedList)
+          } else {
+            this_.$message({
+              type: 'error',
+              message: '查询子账号权限失败'
+            })
+          }
+        })
+        .catch(() => {
           this_.$message({
             type: 'error',
             message: '查询子账号权限失败'
           })
-        }
-      }).catch(() => {
-        this_.$message({
-          type: 'error',
-          message: '查询子账号权限失败'
         })
-      })
     },
-    roleTreeChange (p1, p2) {
+    roleTreeChange(p1, p2) {
       const _this = this
       let checkedKeys = p2.checkedKeys
       if (checkedKeys.includes(p1.id)) {
@@ -267,10 +272,14 @@ export default {
         this.childIds = []
         this.getChildIds(p1)
         if (this.childIds.length > 0) {
-          let b = new Set(_this.childIds)
-          checkedKeys = [...new Set(checkedKeys.filter((x) => {
-            return !b.has(x)
-          }))]
+          const b = new Set(_this.childIds)
+          checkedKeys = [
+            ...new Set(
+              checkedKeys.filter((x) => {
+                return !b.has(x)
+              })
+            )
+          ]
           this.$refs.hbRoleTree.setCheckedKeys(checkedKeys)
         }
       }
@@ -278,17 +287,17 @@ export default {
         this.isReuse = false
       }
     },
-    getParentIds (data) {
+    getParentIds(data) {
       if (!data.pid || data.pid == -1) {
         return false
       }
       this.parentIds.push(data.pid)
-      let node = this.$refs.hbRoleTree.getNode(data.pid)
+      const node = this.$refs.hbRoleTree.getNode(data.pid)
       if (node) {
         this.getParentIds(node.data)
       }
     },
-    getChildIds (data) {
+    getChildIds(data) {
       const _this = this
       if (data.children && data.children.length > 0) {
         for (let i = 0; i < data.children.length; i++) {
@@ -297,7 +306,7 @@ export default {
         }
       }
     },
-    handleSearchSubAccount () {
+    handleSearchSubAccount() {
       const loading = this.$loading({
         lock: true,
         text: '加载中',
@@ -310,20 +319,25 @@ export default {
         pageNo: 1,
         pageSize: 100,
         primaryId: this.userId
-      }).then(res => {
-        loading.close()
-        if (res.code == 0) {
-          this.reuseAccountList = res.list
-        }
-      }).catch(() => {
-        loading.close()
       })
+        .then((res) => {
+          loading.close()
+          if (res.code == 0) {
+            this.reuseAccountList = res.list
+          }
+        })
+        .catch(() => {
+          loading.close()
+        })
     },
-    handleSaveSubAcount () {
+    handleSaveSubAcount() {
       const _this = this
       _this.$refs.subAccountForm.validate((valid) => {
         if (valid) {
-          if (this.subAccountForm.primaryType == 3 && !this.subAccountForm.userSign) {
+          if (
+            this.subAccountForm.primaryType == 3 &&
+            !this.subAccountForm.userSign
+          ) {
             this.$message({
               type: 'error',
               message: '医院的子账号必须设置个人签章'
@@ -344,30 +358,32 @@ export default {
             }
 
             this.saveLoading = true
-            addSubAccount(formData).then(res => {
-              this.saveLoading = false
-              if (res.code == 0) {
-                this.$message({
-                  type: 'success',
-                  message: this.keyword + '子账号成功',
-                  onClose: () => {
-                    this.handleUserInfo()
-                  }
-                })
-              } else {
+            addSubAccount(formData)
+              .then((res) => {
+                this.saveLoading = false
+                if (res.code == 0) {
+                  this.$message({
+                    type: 'success',
+                    message: this.keyword + '子账号成功',
+                    onClose: () => {
+                      this.handleUserInfo()
+                    }
+                  })
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: this.keyword + '子账号失败:' + res.msg
+                  })
+                }
+              })
+              .catch((error) => {
+                console.log(error)
+                this.saveLoading = false
                 this.$message({
                   type: 'error',
-                  message: this.keyword + '子账号失败:' + res.msg
+                  message: this.keyword + '子账号失败:' + error
                 })
-              }
-            }).catch((error) => {
-              console.log(error)
-              this.saveLoading = false
-              this.$message({
-                type: 'error',
-                message: this.keyword + '子账号失败:' + error
               })
-            })
           } else {
             formData = {
               id: this.subUserId,
@@ -375,37 +391,41 @@ export default {
               phone: this.subAccountForm.phone,
               userSign: this.subAccountForm.userSign,
               remark: this.subAccountForm.remark,
-              permList: this.isPersonalCenter ? [] : this.$refs.hbRoleTree.getCheckedKeys(false),
+              permList: this.isPersonalCenter
+                ? []
+                : this.$refs.hbRoleTree.getCheckedKeys(false),
               isPersonalCenter: this.isPersonalCenter
             }
 
             this.saveLoading = true
-            updateSubAccount(formData).then(res => {
-              this.saveLoading = false
-              if (res.code == 0) {
-                this.$message({
-                  type: 'success',
-                  message: this.keyword + '子账号成功',
-                  onClose: () => {
-                    if (!this.isPersonalCenter) {
-                      this.handleUserInfo()
+            updateSubAccount(formData)
+              .then((res) => {
+                this.saveLoading = false
+                if (res.code == 0) {
+                  this.$message({
+                    type: 'success',
+                    message: this.keyword + '子账号成功',
+                    onClose: () => {
+                      if (!this.isPersonalCenter) {
+                        this.handleUserInfo()
+                      }
                     }
-                  }
-                })
-              } else {
+                  })
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: this.keyword + '子账号失败:' + res.msg
+                  })
+                }
+              })
+              .catch((error) => {
+                console.log(error)
+                this.saveLoading = false
                 this.$message({
                   type: 'error',
-                  message: this.keyword + '子账号失败:' + res.msg
+                  message: this.keyword + '子账号失败:' + error
                 })
-              }
-            }).catch((error) => {
-              console.log(error)
-              this.saveLoading = false
-              this.$message({
-                type: 'error',
-                message: this.keyword + '子账号失败:' + error
               })
-            })
           }
         } else {
           this.$message({
@@ -415,7 +435,7 @@ export default {
         }
       })
     },
-    handleUserInfo () {
+    handleUserInfo() {
       if (this.isPersonalCenter) {
         this.$router.back(-1)
       } else {
@@ -427,11 +447,11 @@ export default {
         })
       }
     },
-    previewImage (str) {
+    previewImage(str) {
       this.previewImg = this.subAccountForm[str]
       this.previewDialog = true
     },
-    uploadImg (e, id) {
+    uploadImg(e, id) {
       const file = e.target.files[0]
       if (!/\.(jpg|jpeg|png|JPG|JPEG|PNG)$/.test(e.target.value)) {
         this.$message.error('图片类型错误')
@@ -441,7 +461,7 @@ export default {
         this.$message.error('图片文件过大')
         return false
       }
-      let formdata = new FormData()
+      const formdata = new FormData()
       formdata.append('file', file)
       fileUpload(formdata).then((res) => {
         if (res.code == 0) {
@@ -450,152 +470,138 @@ export default {
           this.entercompanySign = false
         }
       })
-      let reader = new FileReader()
-      reader.onload = e => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
         document.getElementById(id).value = '' // 解决同一张图片上传两次，第二次不触发change事件
       }
       // 转化为base64
       reader.readAsDataURL(file)
     },
-    handleSearchPermTree () {
+    handleSearchPermTree() {
       getPermTree({
         userId: this.userId,
         enable: false
-      }).then(res => {
-        if (res.code == 0) {
-          this.permList = res.data.treeList
-          this.checkedList = res.data.checkedList
-        } else {
+      })
+        .then((res) => {
+          if (res.code == 0) {
+            this.permList = res.data.treeList
+            this.checkedList = res.data.checkedList
+          } else {
+            this.$message({
+              type: 'error',
+              message: '查询权限树出错:' + res.msg
+            })
+          }
+        })
+        .catch(() => {
           this.$message({
             type: 'error',
-            message: '查询权限树出错:' + res.msg
+            message: '查询权限树出错'
           })
-        }
-      }).catch(() => {
-        this.$message({
-          type: 'error',
-          message: '查询权限树出错'
         })
-      })
     },
-    handleSubAccountDetail () {
+    handleSubAccountDetail() {
       getSubAccountDetail({
         userId: this.subUserId,
         isPersonalCenter: this.isPersonalCenter
-      }).then(res => {
-        if (res.code == 0) {
-          this.subAccountForm.username = res.data.username || ''
-          this.subAccountForm.realName = res.data.realName || ''
-          this.subAccountForm.phone = res.data.phone || ''
-          this.subAccountForm.userSign = res.data.userSign || ''
-          this.subAccountForm.remark = res.data.remark || ''
-          this.subAccountForm.orgName = res.data.orgName || ''
-          this.subAccountForm.primaryType = res.data.primaryType || ''
-          this.$refs.hbRoleTree.setCheckedKeys(res.data.checkedList)
-        }
-      }).catch(() => {})
+      })
+        .then((res) => {
+          if (res.code == 0) {
+            this.subAccountForm.username = res.data.username || ''
+            this.subAccountForm.realName = res.data.realName || ''
+            this.subAccountForm.phone = res.data.phone || ''
+            this.subAccountForm.userSign = res.data.userSign || ''
+            this.subAccountForm.remark = res.data.remark || ''
+            this.subAccountForm.orgName = res.data.orgName || ''
+            this.subAccountForm.primaryType = res.data.primaryType || ''
+            this.$refs.hbRoleTree.setCheckedKeys(res.data.checkedList)
+          }
+        })
+        .catch(() => {})
     }
-  },
-  created () {
-    this.userId = this.$route.query.userId || ''
-    this.subUserId = this.$route.query.subUserId || ''
-    this.subAccountForm.orgName = this.$route.query.orgName || ''
-    this.isPersonalCenter = this.$route.query.isPersonalCenter || ''
-    this.subAccountForm.primaryType = this.$route.query.primaryType || ''
-    if (this.subUserId) {
-      this.handleSubAccountDetail()
-    }
-
-    // 查询可复用的子账号列表
-    if (!this.isPersonalCenter) {
-      this.handleSearchSubAccount()
-    }
-
-    // 查询权限树
-    this.handleSearchPermTree()
   }
 }
 </script>
 
 <style lang="scss">
-  .hb-add-subaccount {
-    background: #edeef2;
-    .form-title{
-      font-size: 16px;
-      color: #333333;
-      font-weight: bold;
-    }
-    .form-title:before{
-      content: '';
-      display: inline-block;
-      width: 4px;
-      height: 16px;
-      background-color: #fd7715;
-      margin-right: 10px;
-      position: relative;
-      top: 2px;
-    }
-    .el-form-item__content{
-      width: 380px;
-      display: flex;
-      align-items: center;
-    }
-    .hb-add-subaccount-content{
-      flex-grow: 1;
-      box-sizing: border-box;
-      min-width: 1000px;
-      padding: 22px 27px;
+.hb-add-subaccount {
+  background: #edeef2;
+  .form-title {
+    font-size: 16px;
+    color: #333333;
+    font-weight: bold;
+  }
+  .form-title:before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background-color: #fd7715;
+    margin-right: 10px;
+    position: relative;
+    top: 2px;
+  }
+  .el-form-item__content {
+    width: 380px;
+    display: flex;
+    align-items: center;
+  }
+  .hb-add-subaccount-content {
+    flex-grow: 1;
+    box-sizing: border-box;
+    min-width: 1000px;
+    padding: 22px 27px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    .subaccount-con {
       width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      .subaccount-con{
-        width: 100%;
-        flex: 1;
+      flex: 1;
+      display: flex;
+      .subaccount-info {
+        flex: 656;
+        margin-right: 20px;
+        padding: 17px;
+        background: #ffffff;
+      }
+      .subaccount-limits {
+        flex: 431;
+        background: #ffffff;
+        padding: 17px 20px;
         display: flex;
-        .subaccount-info{
-          flex: 656;
-          margin-right: 20px;
-          padding: 17px;
-          background: #ffffff;
-        }
-        .subaccount-limits{
-          flex: 431;
-          background: #ffffff;
-          padding: 17px 20px;
-          display: flex;
-          flex-direction: column;
-          .tree-parent {
-            flex: 1;
-            position: relative;
-            .role-scroll {
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              .el-tree-node__expand-icon {
-                color: #333;
-              }
-              .el-tree-node__expand-icon.is-leaf {
-                color: transparent;
-              }
-              .el-tree-node:focus>.el-tree-node__content {
-                background-color: #FFF1E7;
-                color: #FD7715;
-              }
-              .el-tree-node__content:hover {
-                background-color: #FFF1E7;
-                color: #FD7715;
-              }
+        flex-direction: column;
+        .tree-parent {
+          flex: 1;
+          position: relative;
+          .role-scroll {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            .el-tree-node__expand-icon {
+              color: #333;
+            }
+            .el-tree-node__expand-icon.is-leaf {
+              color: transparent;
+            }
+            .el-tree-node:focus > .el-tree-node__content {
+              background-color: #fff1e7;
+              color: #fd7715;
+            }
+            .el-tree-node__content:hover {
+              background-color: #fff1e7;
+              color: #fd7715;
             }
           }
         }
       }
-      .button-con{
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-      }
+    }
+    .button-con {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
     }
   }
+}
 </style>

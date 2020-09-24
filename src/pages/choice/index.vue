@@ -2,7 +2,7 @@
   <div style="background-color: #edeef2;">
     <div>
       <wx-header show-back>
-        <span slot="headerTitle">问题管理</span>
+        <span slot="headerTitle">选择题管理</span>
       </wx-header>
       <div class="macthtable">
         <div class="right-part" style="padding: 10px;">
@@ -10,24 +10,25 @@
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
-            <el-table-column prop="title" align="center" label="标题" />
-            <el-table-column prop="mainBody" align="center" label="文本描述" />
-            <el-table-column prop="createAt" align="center" label="创建时间">
+            <el-table-column prop="name" align="center" label="题目名称" />
+            <el-table-column prop="choiceDescription" align="center" label="文本描述" />
+            <el-table-column label="题型" align="center" show-overflow-tooltip>
               <template slot-scope="scope">
-                {{ parseTime(scope.row.createAt) }}
+                {{ choiceType[scope.row.choiceType-1] }}
               </template>
             </el-table-column>
-            <el-table-column label="文档类型" align="center" show-overflow-tooltip>
+            <el-table-column label="难易程度" align="center" show-overflow-tooltip>
               <template slot-scope="scope">
-                {{ fileType[scope.row.fileType-1] }}
+                <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
               </template>
             </el-table-column>
-            <el-table-column label="答案描述" align="center" prop="answerDescription" show-overflow-tooltip />
-            <el-table-column label="分类" align="center" prop="type" show-overflow-tooltip />
+            <el-table-column label="分值" align="center" prop="choiceScore" show-overflow-tooltip />
+            <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
+            <el-table-column label="答题时间/秒" align="center" prop="choiceTime" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.questionId)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.id)">删除</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.choiceId)">编辑</el-button>
+                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.choiceId)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -43,7 +44,7 @@
 </template>
 <script>
 import wxHeader from '@/components/header/index'
-import { getWriteUpForPage, deleteWriteUp } from '@/api/question'
+import { getChoiceListForAdmin, deleteChoiceQuestion } from '@/api/choice'
 import { parseTime } from '@/utils/index'
 export default {
   components: {
@@ -55,22 +56,22 @@ export default {
       subAccountTotal: 0,
       pageSize: 10,
       currentPage: 1,
-      fileType: ['WP', '比赛资料', '其他']
+      choiceType: ['单选', '多选']
     }
   },
   mounted() {
-    this.getWriteUpForPage()
+    this.getChoiceListForAdmin()
   },
   methods: {
     addNew() {
-      this.$router.push({ path: '/questionEdit' })
+      this.$router.push({ path: '/choiceEdit' })
     },
     parseTime(time) {
       return parseTime(time)
     },
     handleSubAccountEdit(id) {
       this.$router.push({
-        path: '/questionEdit',
+        path: '/choiceEdit',
         query: {
           id: id
         }
@@ -83,7 +84,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          deleteWriteUp({
+          deleteChoiceQuestion({
             answerId: id
           }).then((res) => {
             if (res.success) {
@@ -92,7 +93,7 @@ export default {
                 message: '删除成功'
               })
               this.currentPage = 1
-              this.getWriteUpForPage()
+              this.getChoiceListForAdmin()
             } else {
               this.$message({
                 type: 'warning',
@@ -108,8 +109,8 @@ export default {
           })
         })
     },
-    getWriteUpForPage() {
-      getWriteUpForPage({
+    getChoiceListForAdmin() {
+      getChoiceListForAdmin({
         currentPage: this.currentPage,
         extraParam: {},
         pageSize: this.pageSize
@@ -122,11 +123,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.getWriteUpForPage()
+      this.getChoiceListForAdmin()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getWriteUpForPage()
+      this.getChoiceListForAdmin()
     }
   }
 }

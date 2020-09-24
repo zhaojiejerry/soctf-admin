@@ -61,21 +61,20 @@ module.exports = {
             //     }
             // },
             "/api": {
-                // target: "http://soctf.rusi.ink/",
-                target: "http://121.40.142.246:8083",
+                target: "http://soctf.rusi.ink/",
+                // target: "http://121.40.142.246:8083",
                 changeOrigin: true,
                 pathRewrite: {
                     "^/api": "/",
                 },
             },
-            //马辉接口
-            // '/api': {
-            //   target: 'http://192.168.11.126:8097/',
-            //   changeOrigin: true,
-            //   pathRewrite: {
-            //     '^/api': '/'
-            //   }
-            // }
+            '/jsonApi': {
+                target: 'https://soctf.oss-cn-hangzhou.aliyuncs.com/',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/jsonApi': ''
+                }
+            }
         },
 
         // Various Dev Server settings

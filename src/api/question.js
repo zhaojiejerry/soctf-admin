@@ -13,8 +13,8 @@ export function getWriteUpForPage(data) {
 export function deleteWriteUp(data) {
     return axios({
         url: '/writeup/deleteWriteUp',
-        method: 'post',
-        data
+        method: 'get',
+        params: data
     })
 }
 

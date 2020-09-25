@@ -22,6 +22,7 @@
                 <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
               </template>
             </el-table-column>
+            <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
             <el-table-column label="分值" align="center" prop="choiceScore" show-overflow-tooltip />
             <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
             <el-table-column label="答题时间/秒" align="center" prop="choiceTime" show-overflow-tooltip />

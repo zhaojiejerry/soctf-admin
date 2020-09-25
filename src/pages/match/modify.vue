@@ -41,13 +41,13 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="赛事说明">
-          <el-upload :on-change="handleRemark" :file-list="remark" class="upload-demo" action="/api/oss">
+          <el-upload :on-change="handleRemark" :file-list="remark" class="upload-demo" action="/api/oss" @on-remove="handleRemove1">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="赛事积分说明">
-          <el-upload :on-change="handleScoreRemark" :file-list="scoreRemark" class="upload-demo" action="/api/oss">
+          <el-upload :on-change="handleScoreRemark" :file-list="scoreRemark" class="upload-demo" action="/api/oss" @on-remove="handleRemove2">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>
@@ -109,25 +109,61 @@ export default {
     }
   },
   methods: {
-    handleRemark(file, fileList) {
-      console.log(file, fileList)
-      // this.fileList = fileList.slice(-3);
+    handleRemark(response, file, fileList) {
+      console.log(response, file, fileList)
+      if (response.success) {
+        this.remark = [{ name: file.name, url: response.message }]
+        this.ruleForm.remark = response.message
+      } else {
+        this.remark = []
+        this.ruleForm.remark = ''
+        this.$message.error(response.message)
+      }
     },
-    handleScoreRemark(file, fileList) {
+    handleScoreRemark(response, file, fileList) {
+      console.log(response, file, fileList)
+      if (response.success) {
+        this.scoreRemark = [{ name: file.name, url: response.message }]
+        this.ruleForm.scoreRemark = response.message
+      } else {
+        this.scoreRemark = []
+        this.ruleForm.scoreRemark = ''
+        this.$message.error(response.message)
+      }
+    },
+    handleRemove1(file, fileList) {
       console.log(file, fileList)
-      // this.fileList = fileList.slice(-3);
+      this.remark = []
+      this.ruleForm.remark = ''
+    },
+    handleRemove2(file, fileList) {
+      console.log(file, fileList)
+      this.scoreRemark = []
+      this.ruleForm.scoreRemark = ''
     },
     handleAvatarSuccess(res, file) {
-      this.mainPic = URL.createObjectURL(file.raw)
+      if (res.success) {
+        this.mainPic = URL.createObjectURL(file.raw)
+      } else {
+        this.mainPic = ''
+        this.$message.error(res.message)
+      }
     },
     handleiconSuccess(res, file) {
-      this.iconUrl = URL.createObjectURL(file.raw)
+      if (res.success) {
+        this.iconUrl = URL.createObjectURL(file.raw)
+      } else {
+        this.iconUrl = ''
+        this.$message.error(res.message)
+      }
     },
+
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
+      console.log(file.type)
+      const isJPG = file.type == 'image/jpeg' || 'image/png' || 'image/git'
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isJPG) {
-        this.$message.error('上传图片只能是 JPG 格式!')
+        this.$message.error('上传图片只能是 JPG /png /git 格式!')
       }
       if (!isLt2M) {
         this.$message.error('上传图片大小不能超过 2MB!')
@@ -205,9 +241,9 @@ export default {
               gameText: this.ruleForm.gameText,
               gameType: this.ruleForm.gameType,
               gameWay: this.ruleForm.gameWay,
-              iconUrl: this.ruleForm.iconUrl,
+              iconUrl: this.iconUrl,
               joinerIds: [],
-              mainPic: this.ruleForm.mainPic,
+              mainPic: this.mainPic,
               organizer: this.ruleForm.organizer,
               remark: this.ruleForm.remark,
               scoreRemark: this.ruleForm.scoreRemark,

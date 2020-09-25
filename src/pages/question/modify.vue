@@ -32,7 +32,7 @@
           <el-input v-model="ruleForm.type" class="itemwidth" />
         </el-form-item>
         <el-form-item label="答案/文档OSS路径">
-          <el-upload ref="upload" :on-success="handleSuccess" :file-list="fileList" class="upload-demo" action="/api/oss" @on-remove="handleRemove" @before-upload="beforeUpload">
+          <el-upload ref="upload" :on-success="handleSuccess" :file-list="fileList" class="upload-demo" action="/api/oss" @on-remove="handleRemove">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>
@@ -88,19 +88,19 @@ export default {
   methods: {
     handleSuccess(response, file, fileList) {
       console.log(response, file, fileList)
-      // this.fileList = fileList.slice(-3);
-    },
-    beforeUpload(file) {
-      console.log(file)
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+      if (response.success) {
+        this.fileList = [{ name: file.name, url: response.message }]
+        this.ruleForm.fileUrl = response.message
+      } else {
+        this.fileList = []
+        this.ruleForm.fileUrl = ''
+        this.$message.error(response.message)
       }
-      return isLt2M
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)
       this.fileList = []
+      this.ruleForm.fileUrl = ''
     },
     getQuestionWriteUp() {
       getQuestionWriteUp({
@@ -108,17 +108,23 @@ export default {
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data
-          var fileUrl = res.data.fileUrl.split('/')
-          this.fileList = [
-            {
-              name: fileUrl[fileUrl.length - 1],
-              url: res.data.fileUrl
-            }
-          ]
-          this.ruleForm.label = res.data.label.split('|')
-          this.label = res.data.label.split('|')
+          if (res.data.fileUrl != '') {
+            var fileUrl = res.data.fileUrl.split('/')
+            console.log(fileUrl)
+            this.fileList = [
+              {
+                name: fileUrl[fileUrl.length - 1],
+                url: res.data.fileUrl
+              }
+            ]
+          }
+          this.ruleForm.label = this.getLabel(res.data.label)
+          this.label = this.ruleForm.label
         }
       })
+    },
+    getLabel(label) {
+      return label.split('|')
     },
     back() {
       this.$router.push({ path: '/question' })
@@ -161,7 +167,7 @@ export default {
               id: 0,
               label: this.ruleForm.label.join('|'),
               mainBody: this.ruleForm.mainBody,
-              questionId: '',
+              questionId: new Date().getTime(),
               title: this.ruleForm.title,
               type: this.ruleForm.type
             }).then((res) => {

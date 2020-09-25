@@ -14,7 +14,7 @@ export function delFileQuestion(data) {
     return axios({
         url: '/file/delFileQuestion',
         method: 'post',
-        data
+        params: data
     })
 }
 
@@ -31,8 +31,8 @@ export function editFileQuestion(data) {
 export function getFileQuestion(data) {
     return axios({
         url: '/file/getFileQuestion',
-        method: 'get',
-        params: data
+        method: 'post',
+        data
     })
 }
 

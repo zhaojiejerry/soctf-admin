@@ -28,6 +28,7 @@
               <template slot-scope="scope">
                 <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.questionId)">编辑</el-button>
                 <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.id)">删除</el-button>
+                <el-button v-if="scope.row.fileType==2" size="small" type="text" @click="handleDeviceDelete(scope.row.id)">生成试卷</el-button>
               </template>
             </el-table-column>
           </el-table>

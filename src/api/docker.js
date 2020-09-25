@@ -13,8 +13,8 @@ export function addDockerQuestion(data) {
 export function delDockerQuestion(data) {
     return axios({
         url: '/docker/delDockerQuestion',
-        method: 'post',
-        data
+        method: 'delete',
+        params: data
     })
 }
 
@@ -40,7 +40,7 @@ export function getDockerQuestionById(data) {
 export function getDockerQuestion(data) {
     return axios({
         url: '/docker/getDockerQuestion',
-        method: 'get',
-        params: data
+        method: 'post',
+        data
     })
 }

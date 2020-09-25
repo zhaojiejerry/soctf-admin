@@ -1,6 +1,5 @@
 import axios from '@/axios/axios.conf'
 import constant from './api'
-import qs from 'qs'
 /**
  * 登录
  * @param {object} params

@@ -32,7 +32,7 @@ export function getOneChoiceQuestion(data) {
     return axios({
         url: '/getOneChoiceQuestion',
         method: 'post',
-        data
+        params: data
     })
 }
 

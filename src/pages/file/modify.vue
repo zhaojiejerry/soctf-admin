@@ -7,35 +7,36 @@
     </div>
     <div class="macthtable">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
-        <el-form-item label="答案/文档标题" prop="title">
-          <el-input v-model="ruleForm.title" class="itemwidth" />
+        <el-form-item label="题目名称" prop="name">
+          <el-input v-model="ruleForm.name" class="itemwidth" />
         </el-form-item>
-        <el-form-item label="文档类型" prop="fileType">
-          <el-select v-model="ruleForm.fileType" class="itemwidth" placeholder="请选择文档类型">
-            <el-option label="WP" value="1" />
-            <el-option label="比赛资料" value="2" />
-            <el-option label="其他" value="3" />
+        <el-form-item label="答案" prop="flag">
+          <el-input v-model="ruleForm.flag" type="textarea" class="itemwidth" />
+        </el-form-item>
+        <el-form-item label="类别" prop="category">
+          <el-select v-model="ruleForm.category" class="itemwidth" placeholder="请选择类别">
+            <el-option v-for="(item,index) in subject" :key="index" :label="item.name" :value="item.name" />
           </el-select>
         </el-form-item>
-        <el-form-item label="文档描述" prop="mainBody">
-          <el-input v-model="ruleForm.mainBody" type="textarea" class="itemwidth" />
+        <el-form-item label="难易程度" prop="difficultyLevel">
+          <div class="itemwidth" style="padding-top: 10px;">
+            <el-rate v-model="ruleForm.difficultyLevel" />
+          </div>
         </el-form-item>
-        <el-form-item label="答案/文档描述" prop="answerDescription">
-          <el-input v-model="ruleForm.answerDescription" class="itemwidth" />
+        <el-form-item label="金币" prop="goldCoin">
+          <el-input v-model.number="ruleForm.goldCoin" :min="0" class="itemwidth" />
         </el-form-item>
-        <el-form-item label="标签" prop="label">
-          <el-select v-model="ruleForm.label" multiple filterable allow-create default-first-option class="itemwidth" placeholder="请选择标签">
-            <el-option v-for="(item,index) in label" :key="index" :label="item" :value="item" />
-          </el-select>
+        <el-form-item label="分值" prop="value">
+          <el-input v-model.number="ruleForm.value" :min="0" class="itemwidth" />
         </el-form-item>
-        <el-form-item label="分类" prop="type">
-          <el-input v-model="ruleForm.type" class="itemwidth" />
+        <el-form-item label="答题时间/秒" prop="time">
+          <el-input v-model.number="ruleForm.time" :min="0" class="itemwidth" />
         </el-form-item>
-        <el-form-item label="答案/文档OSS路径">
-          <el-upload ref="upload" :on-success="handleSuccess" :file-list="fileList" class="upload-demo" action="/api/oss" @on-remove="handleRemove" @before-upload="beforeUpload">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
-          </el-upload>
+        <el-form-item label="地址" prop="url">
+          <el-input v-model="ruleForm.url" class="itemwidth" />
+        </el-form-item>
+        <el-form-item label="描述" prop="questionDescribe">
+          <el-input v-model="ruleForm.questionDescribe" type="textarea" class="itemwidth" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -53,6 +54,7 @@ import {
   addFileQuestion,
   getFileQuestionById
 } from '@/api/file'
+import { getjson } from '@/api/common'
 export default {
   components: {
     wxHeader
@@ -61,7 +63,7 @@ export default {
     return {
       ruleForm: {
         category: '',
-        difficultyLevel: '',
+        difficultyLevel: 0,
         enable: 0,
         flag: '',
         goldCoin: 0,
@@ -73,75 +75,63 @@ export default {
         url: '',
         value: 0
       },
-      label: [],
-      rules: {},
-      fileList: []
+      rules: {
+        name: [{ required: true, message: '请输入题目名称', trigger: 'blur' }],
+        flag: [{ required: true, message: '请输入答案', trigger: 'blur' }],
+        category: [{ required: true, message: '请选择类别', trigger: 'change' }]
+      },
+      subject: []
     }
   },
   mounted() {
+    this.getjson()
     if (this.$route.query.id) {
       this.getFileQuestionById()
     }
   },
   methods: {
-    handleSuccess(response, file, fileList) {
-      // console.log(response, file, fileList)
-      // this.fileList = fileList.slice(-3);
-    },
-    beforeUpload(file) {
-      console.log(file)
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isLt2M
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-      this.fileList = []
+    getjson() {
+      getjson('ctf.json').then((res) => {
+        this.subject = res.subject
+      })
     },
     getFileQuestionById() {
       getFileQuestionById({
-        questionId: this.$route.query.id
+        id: this.$route.query.id
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data
-          // this.ruleForm.label = res.data.label.split('|')
-          // this.label = res.data.label.split('|')
-          var fileUrl = res.data.fileUrl.split('/')
-          this.fileList = [
-            {
-              name: fileUrl[fileUrl.length - 1],
-              url: res.data.fileUrl
-            }
-          ]
+          this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel)
         }
       })
     },
     back() {
-      this.$router.push({ path: '/question' })
+      this.$router.push({ path: '/file' })
     },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (this.$route.query.id) {
             editFileQuestion({
-              answerDescription: this.ruleForm.answerDescription,
-              fileType: this.ruleForm.fileType,
-              fileUrl: this.ruleForm.fileUrl,
+              category: this.ruleForm.category,
+              difficultyLevel: this.ruleForm.difficultyLevel,
+              enable: this.ruleForm.enable,
+              flag: this.ruleForm.flag,
+              goldCoin: this.ruleForm.goldCoin,
               id: this.ruleForm.id,
-              label: this.ruleForm.label.join('|'),
-              mainBody: this.ruleForm.mainBody,
-              questionId: this.ruleForm.questionId,
-              title: this.ruleForm.title,
-              type: this.ruleForm.type
+              name: this.ruleForm.name,
+              questionDescribe: this.ruleForm.questionDescribe,
+              questionType: 2,
+              time: this.ruleForm.time,
+              url: this.ruleForm.url,
+              value: this.ruleForm.value
             }).then((res) => {
               if (res.success) {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
                 })
-                this.$router.push({ path: '/question' })
+                this.$router.push({ path: '/file' })
               } else {
                 this.$message({
                   type: 'warning',
@@ -151,24 +141,25 @@ export default {
             })
           } else {
             addFileQuestion({
-              answerDescription: this.ruleForm.answerDescription,
-              createAt: new Date(),
-              createById: getCookie('usrId'),
-              fileType: this.ruleForm.fileType,
-              fileUrl: this.ruleForm.fileUrl,
-              id: 0,
-              label: this.ruleForm.label.join('|'),
-              mainBody: this.ruleForm.mainBody,
-              questionId: '',
-              title: this.ruleForm.title,
-              type: this.ruleForm.type
+              category: this.ruleForm.category,
+              difficultyLevel: this.ruleForm.difficultyLevel,
+              enable: 1,
+              flag: this.ruleForm.flag,
+              goldCoin: this.ruleForm.goldCoin,
+              id: new Date().getTime(),
+              name: this.ruleForm.name,
+              questionDescribe: this.ruleForm.questionDescribe,
+              questionType: 2,
+              time: this.ruleForm.time,
+              url: this.ruleForm.url,
+              value: this.ruleForm.value
             }).then((res) => {
               if (res.success) {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
                 })
-                this.$router.push({ path: '/question' })
+                this.$router.push({ path: '/file' })
               } else {
                 this.$message({
                   type: 'warning',

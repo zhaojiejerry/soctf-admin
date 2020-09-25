@@ -22,12 +22,13 @@
                 <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
               </template>
             </el-table-column>
+            <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
             <el-table-column label="分值" align="center" prop="value" show-overflow-tooltip />
             <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
             <el-table-column label="答题时间/秒" align="center" prop="time" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.questionId)">编辑</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.id)">编辑</el-button>
                 <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
@@ -85,7 +86,7 @@ export default {
       })
         .then(() => {
           delFileQuestion({
-            answerId: id
+            id: id
           }).then((res) => {
             if (res.success) {
               this.$message({
@@ -111,13 +112,17 @@ export default {
     },
     getFileQuestion() {
       getFileQuestion({
-        currentPage: this.currentPage,
-        extraParam: {},
-        pageSize: this.pageSize
+        category: '',
+        difficultyLevel: '',
+        labs: '',
+        name: '',
+        pageNo: this.currentPage,
+        pageSize: this.pageSize,
+        userId: ''
       }).then((res) => {
         if (res.success) {
-          this.subAccountList = res.data
-          this.subAccountTotal = res.count
+          this.subAccountList = res.data.records
+          this.subAccountTotal = res.data.total
         }
       })
     },

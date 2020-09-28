@@ -22,6 +22,14 @@ export function getLoginCode() {
     })
 }
 
+// 获取用户列表
+export function getUserInfoList(data) {
+    return axios({
+        url: '/sys/getUserInfoList',
+        method: 'post',
+        data
+    })
+}
 /**
  * 登出
  * @param {}

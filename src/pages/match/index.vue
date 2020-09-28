@@ -36,6 +36,7 @@
               <template slot-scope="scope">
                 <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.gameId)">编辑</el-button>
                 <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
+                <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="handleCreatePaper(scope.row.gameId)">生成试卷</el-button>
                 <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="startGame(scope.row.gameId)">发布</el-button>
                 <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="endGame(scope.row.gameId)">结束</el-button>
               </template>
@@ -93,6 +94,14 @@ export default {
         }
       })
     },
+    handleCreatePaper(id) {
+      this.$router.push({
+        path: '/createPaper',
+        query: {
+          id: id
+        }
+      })
+    },
     deleteGame(id) {
       this.$confirm('此操作将永久删除该比赛, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -109,7 +118,7 @@ export default {
                 message: '删除成功'
               })
               this.currentPage = 1
-              this.getWriteUpForPage()
+              this.getGameInfoListForPage()
             } else {
               this.$message({
                 type: 'warning',
@@ -141,7 +150,7 @@ export default {
                 message: '比赛已结束'
               })
               this.currentPage = 1
-              this.getWriteUpForPage()
+              this.getGameInfoListForPage()
             } else {
               this.$message({
                 type: 'warning',
@@ -173,7 +182,7 @@ export default {
                 message: '比赛发布成功'
               })
               this.currentPage = 1
-              this.getWriteUpForPage()
+              this.getGameInfoListForPage()
             } else {
               this.$message({
                 type: 'warning',

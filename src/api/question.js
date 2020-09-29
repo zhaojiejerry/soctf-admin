@@ -44,3 +44,12 @@ export function getQuestionWriteUp(data) {
         params: data
     })
 }
+
+// 获取所有类型的题
+export function getAllQuestion(data) {
+    return axios({
+        url: '/question/getAllQuestion',
+        method: 'post',
+        data
+    })
+}

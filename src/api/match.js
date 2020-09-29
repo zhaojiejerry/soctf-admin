@@ -62,3 +62,12 @@ export function startGame(data) {
         params: data
     })
 }
+
+// 生成试卷
+export function createPaperInfo(data) {
+    return axios({
+        url: '/createPaperInfoForGame',
+        method: 'post',
+        data
+    })
+}

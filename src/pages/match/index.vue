@@ -50,10 +50,12 @@
         </div>
       </div>
     </div>
+    <createPaper v-model="dialogTableVisible" :game-id="gameId" />
   </div>
 </template>
 <script>
 import wxHeader from '@/components/header/index'
+import createPaper from './createPaper'
 import {
   getGameInfoListForPage,
   deleteGame,
@@ -63,14 +65,17 @@ import {
 import { parseTime } from '@/utils/index'
 export default {
   components: {
-    wxHeader
+    wxHeader,
+    createPaper
   },
   data() {
     return {
+      dialogTableVisible: false,
       subAccountList: [],
       subAccountTotal: 0,
       pageSize: 10,
       currentPage: 1,
+      gameId: '',
       fileType: ['WP', '比赛资料', '其他'],
       gameStatus: ['未开始', '进行中', '已结束'],
       gameType: ['个人', '团队']
@@ -95,12 +100,8 @@ export default {
       })
     },
     handleCreatePaper(id) {
-      this.$router.push({
-        path: '/createPaper',
-        query: {
-          id: id
-        }
-      })
+      this.dialogTableVisible = true
+      this.gameId = id
     },
     deleteGame(id) {
       this.$confirm('此操作将永久删除该比赛, 是否继续?', '提示', {

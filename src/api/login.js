@@ -30,6 +30,16 @@ export function getUserInfoList(data) {
         data
     })
 }
+
+// 获取团队列表
+export function getTeamInfoListForPage(data) {
+    return axios({
+        url: '/team/getTeamInfoListForPage',
+        method: 'post',
+        data
+    })
+}
+
 /**
  * 登出
  * @param {}

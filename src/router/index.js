@@ -51,13 +51,6 @@ export const navRoutes = [{
         hidden: true
     },
     {
-        path: 'createPaper',
-        name: 'createPaper',
-        component: () =>
-            import ('@/pages/match/createPaper'),
-        hidden: true
-    },
-    {
         path: 'choice',
         name: 'choice',
         component: () =>

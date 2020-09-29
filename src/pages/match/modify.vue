@@ -7,90 +7,59 @@
     </div>
     <div class="macthtable">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="赛事名称" prop="gameName">
-              <el-input v-model="ruleForm.gameName" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="比赛类型" prop="gameType">
-              <el-select v-model="ruleForm.gameType" style="width:100%" placeholder="请选择比赛类型">
-                <el-option label="个人" value="1" />
-                <el-option label="团队" value="2" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="比赛时间" prop="description">
-              <el-date-picker v-model="ruleForm.date" style="width:100%" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="比赛官网" prop="gameOfficeAddress">
-              <el-input v-model="ruleForm.gameOfficeAddress" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="赛事描述" prop="description">
-              <el-input v-model="ruleForm.description" type="textarea" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="比赛详细描述" prop="gameText">
-              <el-input v-model="ruleForm.gameText" type="textarea" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="比赛LOGO图片">
-              <el-upload :show-file-list="false" :on-success="handleiconSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/api/oss">
-                <img v-if="iconUrl" :src="iconUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon" />
-              </el-upload>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="赛事主图">
-              <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/api/oss">
-                <img v-if="mainPic" :src="mainPic" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon" />
-              </el-upload>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="赛事说明">
-              <el-upload :on-success="handleRemark" :file-list="remark" class="upload-demo" action="/api/oss" @on-remove="handleRemove1">
-                <el-button size="small" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
-              </el-upload>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="赛事积分说明">
-              <el-upload :on-success="handleScoreRemark" :file-list="scoreRemark" class="upload-demo" action="/api/oss" @on-remove="handleRemove2">
-                <el-button size="small" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
-              </el-upload>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item label="赛事名称" prop="gameName">
+          <el-input v-model="ruleForm.gameName" class="itemwidth" />
+        </el-form-item>
+        <el-form-item label="比赛类型" prop="gameType">
+          <el-select v-model="ruleForm.gameType" class="itemwidth" placeholder="请选择比赛类型">
+            <el-option label="个人" value="1" />
+            <el-option label="团队" value="2" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="参赛者">
-          <div class="box">
-            <el-tag v-for="(item,index) in joiners" :key="index" type="info" closable @close="handleClose(item,index)">
-              {{ item.username }}
-            </el-tag>
+          <div class="itemwidth el-input" @click="getpsn">
+            <div class="box">
+              <el-tag v-for="(item,index) in joiners" :key="index" type="info" closable @close="handleClose(item,index)">
+                {{ item.username }}
+              </el-tag>
+            </div>
           </div>
-          <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableData" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
-            <el-table-column type="selection" width="55" />
-            <el-table-column prop="username" align="center" label="用户名" />
-            <el-table-column prop="phone" align="center" label="电话号码" />
-            <el-table-column prop="email" align="center" label="邮箱" />
-          </el-table>
-          <div class="pager-container mt30">
-            <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="subTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
-              <el-button size="small" plain class="pagination-button">确定</el-button>
-            </el-pagination>
-          </div>
+        </el-form-item>
+        <el-form-item label="比赛时间" prop="description">
+          <el-date-picker v-model="ruleForm.date" class="itemwidth" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
+        </el-form-item>
+        <el-form-item label="比赛官网" prop="gameOfficeAddress">
+          <el-input v-model="ruleForm.gameOfficeAddress" class="itemwidth" />
+        </el-form-item>
+        <el-form-item label="赛事描述" prop="description">
+          <el-input v-model="ruleForm.description" type="textarea" class="itemwidth" />
+        </el-form-item>
+        <el-form-item label="比赛详细描述" prop="gameText">
+          <el-input v-model="ruleForm.gameText" type="textarea" class="itemwidth" />
+        </el-form-item>
+        <el-form-item label="比赛LOGO图片">
+          <el-upload :show-file-list="false" :on-success="handleiconSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/api/oss">
+            <img v-if="iconUrl" :src="iconUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="赛事主图">
+          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/api/oss">
+            <img v-if="mainPic" :src="mainPic" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="赛事说明">
+          <el-upload :on-success="handleRemark" :file-list="remark" class="upload-demo" action="/api/oss" @on-remove="handleRemove1">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="赛事积分说明">
+          <el-upload :on-success="handleScoreRemark" :file-list="scoreRemark" class="upload-demo" action="/api/oss" @on-remove="handleRemove2">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
+          </el-upload>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -98,18 +67,35 @@
         </el-form-item>
       </el-form>
     </div>
+    <el-dialog :visible.sync="dialogTableVisible" title="参赛者">
+      <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableData" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="username" align="center" label="用户名" />
+        <el-table-column prop="phone" align="center" label="电话号码" />
+        <el-table-column prop="email" align="center" label="邮箱" />
+      </el-table>
+      <div class="pager-container mt30">
+        <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="subTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+          <el-button size="small" plain class="pagination-button">确定</el-button>
+        </el-pagination>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import wxHeader from '@/components/header/index'
 import { modifyGameInfo, addGameInfo, getGameInfoDetail } from '@/api/match'
-import { getUserInfoList } from '@/api/login'
+import { getUserInfoList, getTeamInfoListForPage } from '@/api/login'
 export default {
   components: {
     wxHeader
   },
   data() {
     return {
+      dialogTableVisible: false,
       joiners: [],
       ruleForm: {
         date: [],
@@ -153,10 +139,14 @@ export default {
     if (this.$route.query.id) {
       this.getGameInfoDetail()
     }
-    this.$refs.multipleTable.clearSelection()
-    this.getUserInfoList()
+    this.$nextTick(() => {
+      this.getUserInfoList()
+    })
   },
   methods: {
+    getpsn() {
+      this.dialogTableVisible = true
+    },
     handleClose(item, index) {
       this.joiners.splice(index, 1)
       this.$refs.multipleTable.toggleRowSelection(item)
@@ -193,6 +183,25 @@ export default {
           })
         })
       }
+    },
+    getTeamInfoListForPage() {
+      getTeamInfoListForPage({
+        currentPage: this.currentPage,
+        extraParam: {},
+        pageSize: this.pageSize
+      }).then((res) => {
+        if (res.success) {
+          this.tableData = res.data
+          this.joiners.forEach((a) => {
+            this.tableData.forEach((b) => {
+              if (a.teamId === b.teamId) {
+                this.$refs.multipleTable.toggleRowSelection(b, true)
+              }
+            })
+          })
+          this.subTotal = res.count
+        }
+      })
     },
     getUserInfoList() {
       getUserInfoList({
@@ -390,7 +399,9 @@ export default {
 .itemwidth {
   width: 375px;
 }
-
+.el-form-item__content {
+  line-height: 0;
+}
 .mt30 {
   margin-top: 35px;
 }
@@ -414,8 +425,7 @@ export default {
   padding: 0 0.15rem;
   -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  width: 100%;
-  margin-bottom: 15px;
+  width: 375px;
 }
 .el-tag {
   margin-right: 5px;

@@ -17,6 +17,13 @@
             <el-option label="其他" value="3" />
           </el-select>
         </el-form-item>
+        <el-form-item label="关联题目">
+          <div class="itemwidth el-input" @click="dialogTableVisible=true">
+            <div class="el-input__inner">
+              {{ question }}
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item label="文档描述" prop="mainBody">
           <el-input v-model="ruleForm.mainBody" type="textarea" class="itemwidth" />
         </el-form-item>
@@ -43,18 +50,55 @@
         </el-form-item>
       </el-form>
     </div>
+    <el-dialog :visible.sync="dialogTableVisible" :show-close="false" width="70%" title="关联题目">
+      <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subList" highlight-current-row class="list-table" tooltip-effect="dark" @row-click="rowClick">
+        <el-table-column prop="name" align="center" label="题目名称" />
+        <el-table-column prop="questionDescribe" align="center" label="文本描述" />
+        <el-table-column label="题型" align="center" show-overflow-tooltip>
+          <template slot-scope="scope">
+            {{ questionType[scope.row.questionType-1] }}
+          </template>
+        </el-table-column>
+        <el-table-column label="难易程度" align="center">
+          <template slot-scope="scope">
+            <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
+          </template>
+        </el-table-column>
+        <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
+        <el-table-column label="分值" align="center" prop="value" show-overflow-tooltip />
+        <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
+        <el-table-column label="答题时间/秒" align="center" prop="time" show-overflow-tooltip />
+      </el-table>
+      <div class="pager-container mt30">
+        <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="subTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+          <el-button size="small" plain class="pagination-button">确定</el-button>
+        </el-pagination>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogTableVisible=false">取 消</el-button>
+        <el-button type="primary" @click="isOK">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import wxHeader from '@/components/header/index'
 import { getCookie } from '@/utils/auth'
-import { modifyWriteUp, addWriteUp, getQuestionWriteUp } from '@/api/question'
+import {
+  modifyWriteUp,
+  addWriteUp,
+  getQuestionWriteUp,
+  getAllQuestion
+} from '@/api/question'
+import { parseTime } from '@/utils/index'
 export default {
   components: {
     wxHeader
   },
   data() {
     return {
+      dialogTableVisible: false,
+      question: '',
       ruleForm: {
         answerDescription: '',
         createAt: '',
@@ -77,15 +121,53 @@ export default {
           { required: true, message: '请选择文档类型', trigger: 'change' }
         ]
       },
-      fileList: []
+      fileList: [],
+      subList: [],
+      subTotal: 0,
+      pageSize: 10,
+      currentPage: 1,
+      questionRow: [],
+      questionType: ['容器', '附件', '选择']
     }
   },
   mounted() {
     if (this.$route.query.id) {
       this.getQuestionWriteUp()
     }
+    this.getAllQuestion()
   },
   methods: {
+    parseTime(time) {
+      return parseTime(time)
+    },
+    rowClick(row) {
+      console.log(row)
+      this.questionRow = [row]
+    },
+    getAllQuestion() {
+      getAllQuestion({
+        pageSize: this.pageSize,
+        category: '',
+        difficultyLevel: '',
+        labs: '',
+        name: '',
+        pageNo: this.currentPage,
+        userId: ''
+      }).then((res) => {
+        if (res.success) {
+          this.subList = res.data.records
+          this.subTotal = res.data.total
+        }
+      })
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getAllQuestion()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getAllQuestion()
+    },
     handleSuccess(response, file, fileList) {
       console.log(response, file, fileList)
       if (response.success) {
@@ -129,7 +211,26 @@ export default {
     back() {
       this.$router.push({ path: '/question' })
     },
+    isOK() {
+      if (this.questionRow.length == 0) {
+        this.$message({
+          type: 'warning',
+          message: '请选择关联题目'
+        })
+        return
+      }
+      this.question = this.questionRow[0].name
+      this.ruleForm.questionId = this.questionRow[0].id
+      this.dialogTableVisible = false
+    },
     onSubmit() {
+      if (this.ruleForm.questionId == '') {
+        this.$message({
+          type: 'warning',
+          message: '您还没有选择关联题目'
+        })
+        return
+      }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (this.$route.query.id) {
@@ -167,7 +268,7 @@ export default {
               id: 0,
               label: this.ruleForm.label.join('|'),
               mainBody: this.ruleForm.mainBody,
-              questionId: new Date().getTime(),
+              questionId: this.ruleForm.questionId,
               title: this.ruleForm.title,
               type: this.ruleForm.type
             }).then((res) => {
@@ -192,6 +293,15 @@ export default {
 }
 </script>
 <style>
+.el-form-item__content {
+  line-height: 0;
+}
+.mt30 {
+  margin-top: 35px;
+}
+.pager-container {
+  text-align: center;
+}
 .itemwidth {
   width: 375px;
 }

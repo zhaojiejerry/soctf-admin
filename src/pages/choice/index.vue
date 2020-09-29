@@ -17,7 +17,7 @@
                 {{ choiceType[scope.row.choiceType-1] }}
               </template>
             </el-table-column>
-            <el-table-column label="难易程度" align="center" show-overflow-tooltip>
+            <el-table-column label="难易程度" align="center">
               <template slot-scope="scope">
                 <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
               </template>

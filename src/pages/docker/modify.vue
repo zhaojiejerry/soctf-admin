@@ -170,7 +170,7 @@ export default {
               enable: 1,
               frpType: this.ruleForm.frpType,
               goldCoin: this.ruleForm.goldCoin,
-              id: new Date().getTime(),
+              id: '',
               label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               questionDescribe: this.ruleForm.questionDescribe,

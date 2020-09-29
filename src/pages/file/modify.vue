@@ -146,7 +146,7 @@ export default {
               enable: 1,
               flag: this.ruleForm.flag,
               goldCoin: this.ruleForm.goldCoin,
-              id: new Date().getTime(),
+              id: '',
               name: this.ruleForm.name,
               questionDescribe: this.ruleForm.questionDescribe,
               questionType: 2,

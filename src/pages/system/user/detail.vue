@@ -120,9 +120,14 @@
     </div>
     <el-dialog :visible.sync="showResetPassword" title="重置密码" width="428px" @click.native.prevent="handleShowResetPassword(scope.row.id)">
       <el-form ref="resetPasswordForm" :model="resetPasswordForm" class="reset-password">
-        <el-form-item id="loginState" :rules="[
+        <el-form-item
+          id="loginState"
+          :rules="[
             { required:true, validator: validatePassword, trigger: 'change' }
-          ]" class="childrenUserEditPassword" label="新密码：" prop="resetPassword">
+          ]"
+          class="childrenUserEditPassword"
+          label="新密码："
+          prop="resetPassword">
           <el-input :maxlength="16" v-model="resetPasswordForm.resetPassword" size="small" show-password placeholder="请输入新密码（6-12位字母或数字）" @blur="loginFocusState=false" @focus="changeFocus" />
           <div v-if="loginFocusState" class="el-form-item__tips">8-16位数字、字母、符号的组合，且至少使用其中两种</div>
         </el-form-item>
@@ -137,19 +142,16 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import wxHeader from '@/components/header/index'
 import hbUserTree from '@/components/userTree/index'
-import {
-  getUserById,
-  subAccountPageList,
-  userResetPassword,
-  userToggleStatus
-} from '@/api/user.js'
+// import {
+//   getUserById,
+//   subAccountPageList,
+//   userResetPassword,
+//   userToggleStatus
+// } from '@/api/user.js'
 
 export default {
-  components: {
-    wxHeader
-  },
+  components: {},
   data() {
     return {
       loginFocusState: false,
@@ -503,7 +505,7 @@ export default {
           height: 55px;
           background-color: #ffffff;
           border-radius: 4px;
-          border: solid 1px #fd7715;
+          border: solid 1px#B69858;
           margin-top: 16px;
           margin-bottom: 21px;
         }

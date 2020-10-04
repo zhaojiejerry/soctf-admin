@@ -1,21 +1,18 @@
 
 <template>
-  <div class="wx-menu">
+  <div>
     <div class="sys-name">
       <img class="icon-logo" src="./logo.png">
-
       {{ sysName }}
     </div>
-    <el-scrollbar wrap-class="scrollbar-wrapper">
-      <el-menu :default-active="activeMenu" :unique-opened="true" class="hb-menu" mode="vertical" background-color="#333333" text-color="#fff" active-text-color="#FD7715" @select="select">
-        <menu-one v-for="route in navRoutes" :key="route.path" :item="route" :base-path="route.path" />
-        <!-- <el-menu-item index="1-1">问题管理</el-menu-item>
-        <el-menu-item index="1-2">比赛管理</el-menu-item> -->
-      </el-menu>
-    </el-scrollbar>
-    <div class="tips-user">
-      <!-- <el-button class="tips-one" size="small" icon="iconfont icon-message tips-icon" type="text">消息</el-button>
-      <i class="split"></i>-->
+    <div style="height:calc( 100vh - 60px )">
+      <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%">
+        <el-menu :default-active="activeMenu" :unique-opened="true" class="hb-menu" mode="vertical" background-color="#323638" text-color="#fff" active-text-color="#B69858" @select="select">
+          <menu-one v-for="route in navRoutes" :key="route.path" :item="route" :base-path="route.path" />
+        </el-menu>
+      </el-scrollbar>
+    </div>
+    <!-- <div class="tips-user">
       <el-button class="tips-one" size="small" icon="iconfont icon-user tips-icon" type="text" @click.stop="userDialog = !userDialog">{{ userName }}</el-button>
     </div>
     <div v-clickoutside="outClose" v-show="userDialog" class="user-dialog">
@@ -93,7 +90,7 @@
     <el-dialog :visible.sync="previewDialog" :append-to-body="true" :show-close="true" width="488px" custom-class="preview-dialog-2">
       <img :src="previewImg" class="preview-img">
     </el-dialog>
-    <span class="version">v{{ version }}</span>
+    <span class="version">v{{ version }}</span> -->
   </div>
 </template>
 
@@ -412,40 +409,40 @@ export default {
   height: 10px;
   line-height: 10px;
 }
-.wx-menu {
-  height: 100%;
-  .sys-name {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 235px;
-    height: 60px;
-    background-color: #fd7715;
-    font-size: 18px;
-    color: #fff;
-    line-height: 60px;
-    text-align: center;
-    .icon-logo {
-      display: inline-block;
-      height: 28px;
-      margin-right: 3px;
-      vertical-align: middle;
-    }
-    .version {
-      position: absolute;
-      left: 12px;
-      bottom: 2px;
-      font-size: 12px;
-      color: #ffffff;
-      height: 10px;
-      line-height: 10px;
-    }
+.sys-name {
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  width: 235px;
+  height: 60px;
+  background-color: #b69858;
+  font-size: 18px;
+  color: #fff;
+  line-height: 60px;
+  text-align: center;
+  .icon-logo {
+    display: inline-block;
+    height: 28px;
+    margin-right: 3px;
+    vertical-align: middle;
   }
+  .version {
+    position: absolute;
+    left: 12px;
+    bottom: 2px;
+    font-size: 12px;
+    color: #ffffff;
+    height: 10px;
+    line-height: 10px;
+  }
+}
+.wx-menu {
+  height: 100vh;
   .tips-user {
     color: #fff;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    // position: absolute;
+    // bottom: 0;
+    // left: 0;
     width: 235px;
     height: 80px;
     text-align: center;
@@ -463,9 +460,9 @@ export default {
     .tips-one {
       color: #fff;
       &:hover {
-        color: #fd7715;
+        color: #b69858;
         .icon-user {
-          color: #fd7715 !important;
+          color: #b69858 !important;
         }
       }
     }
@@ -491,7 +488,7 @@ export default {
       padding-left: 23px;
       cursor: pointer;
       &:hover {
-        color: #fd7715;
+        color: #b69858;
         background: rgba(253, 97, 21, 0.1);
       }
     }
@@ -563,8 +560,12 @@ export default {
     color: #ffffff !important;
   }
 
+  .is-active {
+    color: #b69858 !important;
+  }
+
   .is-active .iconfont {
-    color: #fd7715 !important;
+    color: #b69858 !important;
   }
 
   .nest-menu .el-submenu > .el-submenu__title,
@@ -588,12 +589,12 @@ export default {
       display: inline-block;
       width: 4px;
       height: 100%;
-      background-color: #fd7715;
+      background-color: #b69858;
     }
   }
   .nest-menu .el-menu-item:hover {
     span {
-      color: #fd7715;
+      color: #b69858;
     }
     .active-prefix {
       position: absolute;
@@ -602,7 +603,7 @@ export default {
       display: inline-block;
       width: 4px;
       height: 100%;
-      background-color: #fd7715;
+      background-color: #b69858;
     }
   }
 }

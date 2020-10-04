@@ -1,18 +1,18 @@
 <template>
-    <div class="noPage">
-      <img src="./page404.png" />
-      <p class="no-tip-text">抱歉，您访问的页面不存在</p>
-      <el-button type="primary" size="small" @click="goPrePage">返回</el-button>
-    </div>
+  <div class="noPage">
+    <img src="./page404.png">
+    <p class="no-tip-text">抱歉，您访问的页面不存在</p>
+    <el-button type="primary" size="small" @click="goPrePage">返回</el-button>
+  </div>
 </template>
 
 <script>
 export default {
-  data () {
+  data() {
     return {}
   },
   methods: {
-    goPrePage () {
+    goPrePage() {
       this.$router.back(-1)
     }
   }
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.noPage{
+.noPage {
   height: 100%;
   display: flex;
   flex-direction: column;

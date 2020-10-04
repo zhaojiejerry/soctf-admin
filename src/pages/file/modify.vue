@@ -1,53 +1,45 @@
 <template>
-  <div style="background-color: #edeef2;">
-    <div class="hb-user-detail" style="">
-      <wx-header show-back>
-        <span slot="headerTitle">文件题编辑</span>
-      </wx-header>
+  <el-dialog :visible.sync="value" :show-close="false" :title="addSign?'新增':'修改'">
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
+      <el-form-item label="题目名称" prop="name">
+        <el-input v-model="ruleForm.name" class="itemwidth" />
+      </el-form-item>
+      <el-form-item label="答案" prop="flag">
+        <el-input v-model="ruleForm.flag" type="textarea" class="itemwidth" />
+      </el-form-item>
+      <el-form-item label="类别" prop="category">
+        <el-select v-model="ruleForm.category" class="itemwidth" placeholder="请选择类别">
+          <el-option v-for="(item,index) in subject" :key="index" :label="item.name" :value="item.name" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="难易程度" prop="difficultyLevel">
+        <div class="itemwidth" style="padding-top: 10px;">
+          <el-rate v-model="ruleForm.difficultyLevel" />
+        </div>
+      </el-form-item>
+      <el-form-item label="金币" prop="goldCoin">
+        <el-input v-model.number="ruleForm.goldCoin" :min="0" class="itemwidth" />
+      </el-form-item>
+      <el-form-item label="分值" prop="value">
+        <el-input v-model.number="ruleForm.value" :min="0" class="itemwidth" />
+      </el-form-item>
+      <el-form-item label="答题时间/秒" prop="time">
+        <el-input v-model.number="ruleForm.time" :min="0" class="itemwidth" />
+      </el-form-item>
+      <el-form-item label="地址" prop="url">
+        <el-input v-model="ruleForm.url" class="itemwidth" />
+      </el-form-item>
+      <el-form-item label="描述" prop="questionDescribe">
+        <el-input v-model="ruleForm.questionDescribe" type="textarea" class="itemwidth" />
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="onSubmit">保存</el-button>
+      <el-button @click="back">取消</el-button>
     </div>
-    <div class="macthtable">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
-        <el-form-item label="题目名称" prop="name">
-          <el-input v-model="ruleForm.name" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="答案" prop="flag">
-          <el-input v-model="ruleForm.flag" type="textarea" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="类别" prop="category">
-          <el-select v-model="ruleForm.category" class="itemwidth" placeholder="请选择类别">
-            <el-option v-for="(item,index) in subject" :key="index" :label="item.name" :value="item.name" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="难易程度" prop="difficultyLevel">
-          <div class="itemwidth" style="padding-top: 10px;">
-            <el-rate v-model="ruleForm.difficultyLevel" />
-          </div>
-        </el-form-item>
-        <el-form-item label="金币" prop="goldCoin">
-          <el-input v-model.number="ruleForm.goldCoin" :min="0" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="分值" prop="value">
-          <el-input v-model.number="ruleForm.value" :min="0" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="答题时间/秒" prop="time">
-          <el-input v-model.number="ruleForm.time" :min="0" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="地址" prop="url">
-          <el-input v-model="ruleForm.url" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="描述" prop="questionDescribe">
-          <el-input v-model="ruleForm.questionDescribe" type="textarea" class="itemwidth" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">保存</el-button>
-          <el-button @click="back">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-  </div>
+  </el-dialog>
 </template>
 <script>
-import wxHeader from '@/components/header/index'
 import { getCookie } from '@/utils/auth'
 import {
   editFileQuestion,
@@ -56,8 +48,20 @@ import {
 } from '@/api/file'
 import { getjson } from '@/api/common'
 export default {
-  components: {
-    wxHeader
+  components: {},
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    },
+    addSign: {
+      type: Boolean,
+      default: false
+    },
+    mainId: {
+      type: String,
+      default: 'false'
+    }
   },
   data() {
     return {
@@ -83,11 +87,32 @@ export default {
       subject: []
     }
   },
+  watch: {
+    value(val) {
+      if (val) {
+        if (!this.addSign) {
+          this.getFileQuestionById()
+        } else {
+          this.ruleForm = {
+            category: '',
+            difficultyLevel: 0,
+            enable: 0,
+            flag: '',
+            goldCoin: 0,
+            id: '',
+            name: '',
+            questionDescribe: '',
+            questionType: 0,
+            time: 0,
+            url: '',
+            value: 0
+          }
+        }
+      }
+    }
+  },
   mounted() {
     this.getjson()
-    if (this.$route.query.id) {
-      this.getFileQuestionById()
-    }
   },
   methods: {
     getjson() {
@@ -97,7 +122,7 @@ export default {
     },
     getFileQuestionById() {
       getFileQuestionById({
-        id: this.$route.query.id
+        id: this.mainId
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data
@@ -106,12 +131,12 @@ export default {
       })
     },
     back() {
-      this.$router.push({ path: '/file' })
+      this.$emit('input', false)
     },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          if (this.$route.query.id) {
+          if (!this.addSign) {
             editFileQuestion({
               category: this.ruleForm.category,
               difficultyLevel: this.ruleForm.difficultyLevel,
@@ -131,7 +156,8 @@ export default {
                   type: 'success',
                   message: '修改成功'
                 })
-                this.$router.push({ path: '/file' })
+                this.back()
+                this.$emit('getList')
               } else {
                 this.$message({
                   type: 'warning',
@@ -159,7 +185,8 @@ export default {
                   type: 'success',
                   message: '新增成功'
                 })
-                this.$router.push({ path: '/file' })
+                this.back()
+                this.$emit('getList')
               } else {
                 this.$message({
                   type: 'warning',

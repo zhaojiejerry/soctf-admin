@@ -1,55 +1,8 @@
 <template>
   <div class="hb-home">
-    <wx-header>
-      <span slot="headerTitle">{{ userName }},欢迎您</span>
-      <span slot="headerOther" class="second-font">(当前登录: {{ user.currentLoginTime }}，上次登录: {{ user.lastLoginTime }})</span>
-    </wx-header>
-
-    <div v-show="btnPermissions.indexOf('1000404') == -1
-        && btnPermissions.indexOf('1000207') == -1
-      && btnPermissions.indexOf('1000101') == -1" class="init-info">
+    <div class="init-info">
       <img src="./lg.png">
       <p class="home-title" style="font-weight:bold;">欢迎使用，体检机后台管理系统</p>
-    </div>
-
-    <div v-show="btnPermissions.indexOf('1000404') != -1
-        || btnPermissions.indexOf('1000207') != -1
-      || btnPermissions.indexOf('1000101') != -1" class="statistics-info">
-      <div v-if="btnPermissions.indexOf('1000404') != -1" class="statistics-info-item">
-        <img src="./tjsk.png" alt>
-        <span class="statistics-info-item-title">今日体检收款</span>
-        <div class="statistics-info-item-num">
-          <span class="statistics-info-item-tjsk">{{ tjsk }}</span>单
-        </div>
-        <el-button @click="handleViewDetail('tj')">查看详情</el-button>
-      </div>
-
-      <div v-if="btnPermissions.indexOf('1000404') != -1" class="statistics-info-item">
-        <img src="./zxsk.png" alt>
-        <span class="statistics-info-item-title">今日照相收款</span>
-        <div class="statistics-info-item-num">
-          <span class="statistics-info-item-tjsk">{{ zxsk }}</span>单
-        </div>
-        <el-button @click="handleViewDetail('zx')">查看详情</el-button>
-      </div>
-
-      <div v-if="btnPermissions.indexOf('1000207') != -1" class="statistics-info-item">
-        <img src="./dshtj.png" alt>
-        <span class="statistics-info-item-title">待审核体检</span>
-        <div class="statistics-info-item-num">
-          <span class="statistics-info-item-tjsk">{{ dshtj }}</span>单
-        </div>
-        <el-button @click="handleViewDetail('dshtj')">查看详情</el-button>
-      </div>
-
-      <div v-if="btnPermissions.indexOf('1000101') != -1" class="statistics-info-item">
-        <img src="./sbgl.png" alt>
-        <span class="statistics-info-item-title">管理设备</span>
-        <div class="statistics-info-item-num">
-          <span class="statistics-info-item-tjsk">{{ sbgl }}</span>台
-        </div>
-        <el-button @click="handleViewDetail('glsb')">查看详情</el-button>
-      </div>
     </div>
   </div>
 </template>
@@ -57,12 +10,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getCookie } from '@/utils/auth'
-import wxHeader from '@/components/header/index'
 
 export default {
-  components: {
-    wxHeader
-  },
+  components: {},
   data() {
     return {
       tjsk: 0,
@@ -162,7 +112,7 @@ export default {
         margin: 7px 0 20px 0;
         .statistics-info-item-tjsk {
           font-size: 46px;
-          color: #fd7715;
+          color: #b69858;
           font-family: Impact;
         }
       }

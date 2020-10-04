@@ -62,7 +62,7 @@ export default {
     font-weight: normal;
   }
   .main-color {
-    color: #fd7715;
+    color: #b69858;
   }
   .header-search {
     font-size: 12px;

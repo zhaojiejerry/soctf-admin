@@ -13,12 +13,14 @@ export default {
 <style>
 @import './assets/fontpackage/font.css';
 #nprogress .bar {
-  background: #fd7715 !important;
+  background: #b69858 !important;
 }
 .macthtable {
-  margin: 0rem 0.2rem 0.2rem;
+  /* margin: 0rem 0.2rem 0.2rem;
   padding-bottom: 0.2rem;
   height: calc(100vh - 120px);
-  overflow: auto;
+	overflow: auto; */
+  background: white;
+  padding-bottom: 0.2rem;
 }
 </style>

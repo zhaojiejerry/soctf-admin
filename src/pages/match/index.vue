@@ -1,9 +1,6 @@
 <template>
   <div style="background-color: #edeef2;">
     <div class="hb-user-detail">
-      <wx-header show-back>
-        <span slot="headerTitle">比赛管理</span>
-      </wx-header>
       <div class="macthtable">
         <div class="right-part" style="padding: 10px;">
           <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
@@ -51,10 +48,10 @@
       </div>
     </div>
     <createPaper v-model="dialogTableVisible" :game-id="gameId" />
+    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getGameInfoListForPage" />
   </div>
 </template>
 <script>
-import wxHeader from '@/components/header/index'
 import createPaper from './createPaper'
 import {
   getGameInfoListForPage,
@@ -63,13 +60,17 @@ import {
   startGame
 } from '@/api/match'
 import { parseTime } from '@/utils/index'
+import modify from './modify'
 export default {
   components: {
-    wxHeader,
-    createPaper
+    createPaper,
+    modify
   },
   data() {
     return {
+      show: false,
+      addSign: false,
+      mainId: '',
       dialogTableVisible: false,
       subAccountList: [],
       subAccountTotal: 0,
@@ -89,15 +90,14 @@ export default {
       return parseTime(time)
     },
     addNew() {
-      this.$router.push({ path: '/matchEdit' })
+      this.show = true
+      this.addSign = true
+      this.mainId = ''
     },
     handleSubAccountEdit(id) {
-      this.$router.push({
-        path: '/matchEdit',
-        query: {
-          id: id
-        }
-      })
+      this.show = true
+      this.mainId = id
+      this.addSign = false
     },
     handleCreatePaper(id) {
       this.dialogTableVisible = true
@@ -228,13 +228,6 @@ export default {
 }
 </script>
 <style  scoped>
-.macthtable {
-  margin: 0rem 0.2rem 0.2rem;
-  background: white;
-  padding-bottom: 0.2rem;
-  height: calc(100vh - 120px);
-  overflow: auto;
-}
 .mt30 {
   margin-top: 35px;
 }

@@ -80,14 +80,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import wxHeader from '@/components/header/index'
 // import { fileUpload } from '@/api/common.js'
 // import { subAccountPageList, getPermTree, addSubAccount, getSubAccountDetail, updateSubAccount } from '@/api/user.js'
 
 export default {
-  components: {
-    wxHeader
-  },
+  components: {},
   data() {
     const validateUsername = (rule, value, callback) => {
       const reg = /^[a-zA-Z0-9]+$/
@@ -536,7 +533,7 @@ export default {
     display: inline-block;
     width: 4px;
     height: 16px;
-    background-color: #fd7715;
+    background-color: #b69858;
     margin-right: 10px;
     position: relative;
     top: 2px;
@@ -587,11 +584,11 @@ export default {
             }
             .el-tree-node:focus > .el-tree-node__content {
               background-color: #fff1e7;
-              color: #fd7715;
+              color: #b69858;
             }
             .el-tree-node__content:hover {
               background-color: #fff1e7;
-              color: #fd7715;
+              color: #b69858;
             }
           }
         }

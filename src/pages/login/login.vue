@@ -26,7 +26,7 @@
         </el-input>
       </el-form-item>
       <div class="check-line">
-        <el-checkbox v-model="rememberPass" class="remember-pass" @change="handleChangeAuto">记住密码</el-checkbox>
+        <!-- <el-checkbox v-model="rememberPass" class="remember-pass" @change="handleChangeAuto">记住密码</el-checkbox> -->
         <!-- <el-checkbox v-model="autoLogin" @change="handleChangePass" class="auto-login">自动登录</el-checkbox> -->
       </div>
       <el-button :loading="loading" type="primary" style="width:100%;" round class="login-btn" @click.native.prevent="handleLogin">登录</el-button>
@@ -35,9 +35,8 @@
 </template>
 
 <script>
-import md5 from 'js-md5'
 import { getCookie, setCookie, removeCookie } from '@/utils/auth'
-import { getLoginCode } from '@/api/login'
+import { getLoginCode } from '@/api/user'
 export default {
   name: 'Login',
   data() {
@@ -90,31 +89,31 @@ export default {
   },
   created() {
     this.getChartCode()
-    this.disabledBtn =
-      (this.$route.params && this.$route.params.disableBtn) || false
-    this.loginForm.username = getCookie('Account') || ''
-    this.rememberPass = getCookie('Remember')
-      ? JSON.parse(getCookie('Remember'))
-      : false
-    this.autoLogin = getCookie('AutoLogin')
-      ? JSON.parse(getCookie('AutoLogin'))
-      : false
-    if (getCookie('Remember') && JSON.parse(getCookie('Remember'))) {
-      this.loginForm.password = getCookie('Password') || ''
-      this.passwordCopy = getCookie('Password') || ''
-    } else {
-      this.loginForm.password = ''
-      this.passwordCopy = ''
-    }
+    // this.disabledBtn =
+    //   (this.$route.params && this.$route.params.disableBtn) || false
+    // this.loginForm.username = getCookie('Account') || ''
+    // this.rememberPass = getCookie('Remember')
+    //   ? JSON.parse(getCookie('Remember'))
+    //   : false
+    // this.autoLogin = getCookie('AutoLogin')
+    //   ? JSON.parse(getCookie('AutoLogin'))
+    //   : false
+    // if (getCookie('Remember') && JSON.parse(getCookie('Remember'))) {
+    //   this.loginForm.password = getCookie('Password') || ''
+    //   this.passwordCopy = getCookie('Password') || ''
+    // } else {
+    //   this.loginForm.password = ''
+    //   this.passwordCopy = ''
+    // }
   },
   mounted() {
-    if (
-      getCookie('AutoLogin') &&
-      JSON.parse(getCookie('AutoLogin')) &&
-      !this.disabledBtn
-    ) {
-      this.handleLogin()
-    }
+    // if (
+    //   getCookie('AutoLogin') &&
+    //   JSON.parse(getCookie('AutoLogin')) &&
+    //   !this.disabledBtn
+    // ) {
+    //   this.handleLogin()
+    // }
   },
   methods: {
     getChartCode() {
@@ -317,7 +316,7 @@ export default {
     margin: 0 auto 25px auto;
     text-align: left;
     font-size: 20px;
-    color: #ee7700;
+    color: #b69858;
   }
 
   .check-line {

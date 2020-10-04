@@ -7,26 +7,19 @@
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
-            <el-table-column prop="name" align="center" label="题目名称" />
-            <el-table-column prop="choiceDescription" align="center" label="文本描述" />
-            <el-table-column label="题型" align="center" show-overflow-tooltip>
+            <el-table-column prop="orgCode" align="center" label="机构编码" />
+            <el-table-column prop="orgName" align="center" label="机构名称" />
+            <el-table-column label="描述" align="center" prop="description" show-overflow-tooltip />
+            <el-table-column label="备注" align="center" prop="remark" show-overflow-tooltip />
+            <el-table-column prop="createAt" align="center" label="创建时间">
               <template slot-scope="scope">
-                {{ choiceType[scope.row.choiceType-1] }}
+                {{ parseTime(scope.row.createAt) }}
               </template>
             </el-table-column>
-            <el-table-column label="难易程度" align="center">
-              <template slot-scope="scope">
-                <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
-              </template>
-            </el-table-column>
-            <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
-            <el-table-column label="分值" align="center" prop="choiceScore" show-overflow-tooltip />
-            <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
-            <el-table-column label="答题时间/秒" align="center" prop="choiceTime" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.choiceId)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.choiceId)">删除</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row)">编辑</el-button>
+                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.orgId)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -38,43 +31,50 @@
         </div>
       </div>
     </div>
-    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getChoiceListForAdmin" />
+    <organizaModify v-model="showOrganiza" :add-sign="addOrganiza" :rule-form="ruleForm" @getList="getOrganizationListPage" />
   </div>
 </template>
 <script>
-import { getChoiceListForAdmin, deleteChoiceQuestion } from '@/api/choice'
+import { getOrganizationListPage, deleteOrganization } from '@/api/organization'
 import { parseTime } from '@/utils/index'
-import modify from './modify'
+import organizaModify from './organizaModify'
 export default {
-  components: { modify },
+  components: { organizaModify },
   data() {
     return {
-      show: false,
-      addSign: false,
-      mainId: '',
+      showOrganiza: false,
+      addOrganiza: false,
       subAccountList: [],
       subAccountTotal: 0,
       pageSize: 10,
       currentPage: 1,
-      choiceType: ['单选', '多选']
+      ruleForm: {}
     }
   },
   mounted() {
-    this.getChoiceListForAdmin()
+    this.getOrganizationListPage()
   },
   methods: {
     addNew() {
-      this.show = true
-      this.addSign = true
-      this.mainId = ''
+      this.showOrganiza = true
+      this.addOrganiza = true
+      this.ruleForm = {
+        createAt: '',
+        createBy: '',
+        description: '',
+        orgCode: '',
+        orgId: '',
+        orgName: '',
+        remark: ''
+      }
     },
     parseTime(time) {
       return parseTime(time)
     },
-    handleSubAccountEdit(id) {
-      this.show = true
-      this.mainId = id
-      this.addSign = false
+    handleSubAccountEdit(row) {
+      this.showOrganiza = true
+      this.addOrganiza = false
+      this.ruleForm = row
     },
     handleDeviceDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -83,7 +83,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          deleteChoiceQuestion({
+          deleteOrganization({
             answerId: id
           }).then((res) => {
             if (res.success) {
@@ -92,7 +92,7 @@ export default {
                 message: '删除成功'
               })
               this.currentPage = 1
-              this.getChoiceListForAdmin()
+              this.getOrganizationListPage()
             } else {
               this.$message({
                 type: 'warning',
@@ -108,8 +108,8 @@ export default {
           })
         })
     },
-    getChoiceListForAdmin() {
-      getChoiceListForAdmin({
+    getOrganizationListPage() {
+      getOrganizationListPage({
         currentPage: this.currentPage,
         extraParam: {},
         pageSize: this.pageSize
@@ -122,11 +122,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.getChoiceListForAdmin()
+      this.getOrganizationListPage()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getChoiceListForAdmin()
+      this.getOrganizationListPage()
     }
   }
 }

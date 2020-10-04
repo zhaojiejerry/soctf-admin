@@ -1,21 +1,10 @@
 <template>
-  <el-popover
-    popper-class="el-table-header__filters"
-    placement="bottom"
-    trigger="click"
-    transition="el-zoom-in-top"
-    @hide="handleOutsideClick"
-    v-model="showPopper"
-  >
+  <el-popover v-model="showPopper" popper-class="el-table-header__filters" placement="bottom" trigger="click" transition="el-zoom-in-top" @hide="handleOutsideClick">
     <div class="el-table-filter__parent">
       <div class="el-table-filter__content">
         <el-scrollbar wrap-class="el-table-filter__wrap">
-          <el-checkbox-group class="el-table-filter__checkbox-group" v-model="filteredValue">
-            <el-checkbox
-              v-for="filter in filters"
-              :key="filter.value"
-              :label="filter.value"
-            >{{ filter.text }}</el-checkbox>
+          <el-checkbox-group v-model="filteredValue" class="el-table-filter__checkbox-group">
+            <el-checkbox v-for="filter in filters" :key="filter.value" :label="filter.value">{{ filter.text }}</el-checkbox>
           </el-checkbox-group>
         </el-scrollbar>
       </div>
@@ -24,14 +13,10 @@
         <button @click="handleReset">重置</button>
       </div>
     </div>
-    <span
-      class="el-filter-title"
-      :class="{ 'is-active': commitValue.length !== 0 }"
-      slot="reference"
-    >
+    <span slot="reference" :class="{ 'is-active': commitValue.length !== 0 }" class="el-filter-title">
       {{ title }}
       <span class="el-table__column-filter-trigger">
-        <i class="el-icon-arrow-down"></i>
+        <i class="el-icon-arrow-down" />
       </span>
     </span>
   </el-popover>
@@ -39,7 +24,7 @@
 
 <script>
 export default {
-  name: 'filterPanels',
+  name: 'FilterPanels',
   props: {
     columnKey: {
       type: String,
@@ -62,32 +47,32 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       showPopper: false,
       filteredValue: [],
       commitValue: []
     }
   },
+  created() {
+    this.commitValue = this.filteredValue = [...this.defaultValue]
+  },
   methods: {
-    handleOutsideClick () {
+    handleOutsideClick() {
       this.filteredValue = [...this.commitValue]
       this.showPopper = false
     },
-    handleConfirm () {
+    handleConfirm() {
       this.commitValue = [...this.filteredValue]
       this.$emit('change', { key: this.columnKey, value: this.commitValue })
       this.showPopper = false
     },
-    handleReset () {
+    handleReset() {
       this.filteredValue = []
       this.commitValue = [...this.filteredValue]
       this.$emit('change', { key: this.columnKey, value: this.commitValue })
       this.showPopper = false
     }
-  },
-  created () {
-    this.commitValue = this.filteredValue = [...this.defaultValue]
   }
 }
 </script>
@@ -100,7 +85,7 @@ export default {
   outline: none;
   cursor: pointer;
   &.is-active {
-    color: #fd7715;
+    color: #b69858;
   }
 }
 </style>

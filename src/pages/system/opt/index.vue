@@ -2,145 +2,60 @@
   <div class="hb-opt-list">
     <wx-header>
       <span slot="headerTitle">操作日志</span>
-      <div class="flex" slot="headerRight">
-        <el-input
-          size="small"
-          :maxlength="40"
-          clearable
-          class="reset-input header-search"
-          :placeholder="filterPlaceHolder"
-          v-model="filterText"
-          @clear="timeFilterChange"
-          @keyup.enter.native="timeFilterChange"
-        >
-          <div class="header-sort" slot="prepend">
-            <el-select
-              ref="headerSort"
-              size="small"
-              popper-class="header-sort-select"
-              v-model="filterType"
-            >
+      <div slot="headerRight" class="flex">
+        <el-input :maxlength="40" :placeholder="filterPlaceHolder" v-model="filterText" size="small" clearable class="reset-input header-search" @clear="timeFilterChange" @keyup.enter.native="timeFilterChange">
+          <div slot="prepend" class="header-sort">
+            <el-select ref="headerSort" v-model="filterType" size="small" popper-class="header-sort-select">
               <el-option value="ip">
-                <i class="iconfont icon-name sort-icon"></i>
+                <i class="iconfont icon-name sort-icon" />
                 <span class="sort-text">操作人IP</span>
               </el-option>
               <el-option value="serviceName">
-                <i class="iconfont icon-all sort-icon"></i>
+                <i class="iconfont icon-all sort-icon" />
                 <span class="sort-text">应用名称</span>
               </el-option>
               <el-option value="content">
-                <i class="iconfont icon-dingdan sort-icon"></i>
+                <i class="iconfont icon-dingdan sort-icon" />
                 <span class="sort-text">操作内容</span>
               </el-option>
             </el-select>
-            <i class="header-icon iconfont" :class="filterIcon" @click.stop="handleToggle"></i>
+            <i :class="filterIcon" class="header-icon iconfont" @click.stop="handleToggle" />
           </div>
-          <el-button slot="append" icon="iconfont icon-search" @click="timeFilterChange"></el-button>
+          <el-button slot="append" icon="iconfont icon-search" @click="timeFilterChange" />
         </el-input>
-        <i class="split-line"></i>
-        <el-button size="small" class="header-search-more" icon="iconfont icon-more" disabled></el-button>
+        <i class="split-line" />
+        <el-button size="small" class="header-search-more" icon="iconfont icon-more" disabled />
       </div>
     </wx-header>
     <div class="hb-main-container">
       <div class="hb-main-content flex flex-column">
         <div class="space-between">
           <div class="left-part">
-            <el-date-picker
-              prefix-icon="iconfont icon-calendar"
-              size="small"
-              class="reset-input mr15 mb15"
-              type="datetimerange"
-              v-model="timeRange"
-              range-separator="至"
-              @change="timeFilterChange"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              style="width:320px"
-              :default-time="['00:00:00', '23:59:59']"
-            />
-            <el-input
-              v-model="operator"
-              placeholder="请输入搜索的操作人"
-              size="small"
-              style="width:200px;margin-left:-4px"
-            ></el-input>
-            <el-input
-              v-model="permName"
-              placeholder="请输入搜索的操作模块"
-              size="small"
-              style="width:200px;margin-left:10px"
-            ></el-input>
-            <el-button
-              size="small"
-              type="primary"
-              @click="search"
-              style="width:70px;height: 34px;letter-spacing: 6px; text-indent: 4px;margin-left:10px"
-            >搜索</el-button>
+            <el-date-picker v-model="timeRange" :default-time="['00:00:00', '23:59:59']" prefix-icon="iconfont icon-calendar" size="small" class="reset-input mr15 mb15" type="datetimerange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" value-format="yyyy-MM-dd HH:mm:ss" style="width:320px" @change="timeFilterChange" />
+            <el-input v-model="operator" placeholder="请输入搜索的操作人" size="small" style="width:200px;margin-left:-4px" />
+            <el-input v-model="permName" placeholder="请输入搜索的操作模块" size="small" style="width:200px;margin-left:10px" />
+            <el-button size="small" type="primary" style="width:70px;height: 34px;letter-spacing: 6px; text-indent: 4px;margin-left:10px" @click="search">搜索</el-button>
           </div>
         </div>
-        <el-table
-          class="list-table opt-table sb-table"
-          :header-cell-style="{background:'#edeef2', color:'#333333', fontWeight: 'bold'}"
-          :cell-style="{fontSize: '12px',height: '50px'}"
-          :default-sort="{prop: 'createTime', order: 'descending'}"
-          tooltip-effect="dark"
-          :data="optList"
-          @sort-change="handleSortChange"
-          height="100%"
-        >
-          <el-table-column show-overflow-tooltip label="操作平台" width="180" prop="operatorPlatform"></el-table-column>
-          <el-table-column show-overflow-tooltip prop="operator" width="120" label="操作人"></el-table-column>
-          <el-table-column prop="ip" width="120" label="操作人IP"></el-table-column>
-          <el-table-column show-overflow-tooltip prop="serviceName" width="150" label="应用名称"></el-table-column>
-          <el-table-column show-overflow-tooltip prop="permName" width="100" label="操作模块"></el-table-column>
-          <el-table-column show-overflow-tooltip prop="content" label="操作内容"></el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="createTime"
-            sortable="custom"
-            width="180"
-            label="创建时间"
-          ></el-table-column>
-          <el-table-column show-overflow-tooltip prop="executeTime" label="执行时间(ms)" width="150"></el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="result"
-            width="150"
-            column-key="paystateone"
-            label="操作状态"
-          >
-            <filter-panel
-              slot="header"
-              column-key="optstateone"
-              title="操作状态"
-              :default-value="optStatusValue"
-              :filters="optState"
-              @change="filterChangeData"
-            ></filter-panel>
+        <el-table :header-cell-style="{background:'#edeef2', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px',height: '50px'}" :default-sort="{prop: 'createTime', order: 'descending'}" :data="optList" class="list-table opt-table sb-table" tooltip-effect="dark" height="100%" @sort-change="handleSortChange">
+          <el-table-column show-overflow-tooltip label="操作平台" width="180" prop="operatorPlatform" />
+          <el-table-column show-overflow-tooltip prop="operator" width="120" label="操作人" />
+          <el-table-column prop="ip" width="120" label="操作人IP" />
+          <el-table-column show-overflow-tooltip prop="serviceName" width="150" label="应用名称" />
+          <el-table-column show-overflow-tooltip prop="permName" width="100" label="操作模块" />
+          <el-table-column show-overflow-tooltip prop="content" label="操作内容" />
+          <el-table-column show-overflow-tooltip prop="createTime" sortable="custom" width="180" label="创建时间" />
+          <el-table-column show-overflow-tooltip prop="executeTime" label="执行时间(ms)" width="150" />
+          <el-table-column show-overflow-tooltip prop="result" width="150" column-key="paystateone" label="操作状态">
+            <filter-panel slot="header" :default-value="optStatusValue" :filters="optState" column-key="optstateone" title="操作状态" @change="filterChangeData" />
             <template slot-scope="scope">
-              <span
-                class="table-opt-status"
-                v-if="scope.row.result == 0 "
-                style="color: #67c23a;"
-              >成功</span>
-              <span class="table-opt-status" v-else style="color: #ef4646;">失败</span>
+              <span v-if="scope.row.result == 0 " class="table-opt-status" style="color: #67c23a;">成功</span>
+              <span v-else class="table-opt-status" style="color: #ef4646;">失败</span>
             </template>
           </el-table-column>
         </el-table>
         <div class="pager-container mt30">
-          <el-pagination
-            v-if="totalNum != 0"
-            background
-            size="small"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage"
-            :page-size="pageSize"
-            :page-sizes="[10, 20, 30]"
-            layout="prev, pager, next, sizes, jumper, slot"
-            :total="totalNum"
-          >
+          <el-pagination v-if="totalNum != 0" :current-page.sync="currentPage" :page-size="pageSize" :page-sizes="[10, 20, 30]" :total="totalNum" background size="small" layout="prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
             <el-button size="small" plain class="pagination-button">确定</el-button>
           </el-pagination>
         </div>
@@ -151,17 +66,15 @@
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-import wxHeader from '@/components/header/index'
 import { getLogList } from '@/api/user.js'
 import filterPanel from '@/components/tableFilterPanel/filter-panel'
 
 export default {
   name: 'LogList',
   components: {
-    wxHeader,
     filterPanel
   },
-  data () {
+  data() {
     return {
       permName: '',
       operator: '',
@@ -193,10 +106,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'btnPermissions'
-    ]),
-    filterPlaceHolder () {
+    ...mapGetters(['btnPermissions']),
+    filterPlaceHolder() {
       if (this.filterType == 'content') {
         return '请输入操作内容关键字'
       } else if (this.filterType == 'serviceName') {
@@ -205,7 +116,7 @@ export default {
         return '请输入操作人ip'
       }
     },
-    filterIcon () {
+    filterIcon() {
       if (this.filterType == 'content') {
         return 'icon-dingdan'
       } else if (this.filterType == 'serviceName') {
@@ -215,52 +126,59 @@ export default {
       }
     }
   },
+  mounted() {
+    this.handleSearch()
+  },
   methods: {
-    filterChangeData (val) {
-      (val.key == 'optstateone') && (this.optStatusValue = val.value)
+    filterChangeData(val) {
+      val.key == 'optstateone' && (this.optStatusValue = val.value)
       this.optStatus = this.optStatusValue.join(',')
       this.currentPage = 1
       this.handleSearch()
     },
-    handleCopySuccess (e) {
+    handleCopySuccess(e) {
       this.$message({
         showClose: true,
         message: '复制成功',
         type: 'success'
       })
     },
-    handleCopyError () {
+    handleCopyError() {
       this.$message({
         showClose: true,
         message: '复制失败',
         type: 'error'
       })
     },
-    handleToggle () {
+    handleToggle() {
       if (this.$refs.headerSort.visible) {
         this.$refs.headerSort.blur()
       } else {
         this.$refs.headerSort.visible = true
       }
     },
-    timeFilterChange () {
+    timeFilterChange() {
       if (this.timeRange) {
-        const startTime = this.timeRange[0] ? new Date(this.timeRange[0]).getTime() : 0
-        const endTime = this.timeRange[1] ? new Date(this.timeRange[1]).getTime() : 0
+        const startTime = this.timeRange[0]
+          ? new Date(this.timeRange[0]).getTime()
+          : 0
+        const endTime = this.timeRange[1]
+          ? new Date(this.timeRange[1]).getTime()
+          : 0
         const intervalTime = endTime - startTime
       }
       this.currentPage = 1
       this.handleSearch()
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.pageSize = val
       this.handleSearch()
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.currentPage = val
       this.handleSearch()
     },
-    handleSortChange (obj) {
+    handleSortChange(obj) {
       if (obj.prop == 'id') {
         this.orderBy = 'ID'
       } else if (obj.prop == 'createTime') {
@@ -273,7 +191,7 @@ export default {
       }
       this.handleSearch()
     },
-    handleSearch () {
+    handleSearch() {
       const this_ = this
       const loading = this.$loading({
         lock: true,
@@ -285,8 +203,10 @@ export default {
       this.formData = {
         search: this.filterText,
         searchType: this.filterType,
-        startTime: (this.timeRange && this.timeRange.length > 0) ? this.timeRange[0] : '',
-        endTime: this.timeRange && this.timeRange.length > 0 ? this.timeRange[1] : '',
+        startTime:
+          this.timeRange && this.timeRange.length > 0 ? this.timeRange[0] : '',
+        endTime:
+          this.timeRange && this.timeRange.length > 0 ? this.timeRange[1] : '',
         pageNo: this.currentPage,
         pageSize: this.pageSize,
         orderBy: this.orderBy,
@@ -295,17 +215,19 @@ export default {
         permName: this.permName,
         result: this.optStatus
       }
-      getLogList(this.formData).then((res) => {
-        loading.close()
-        if (res.code == 0) {
-          this_.optList = res.data.list
-          this_.totalNum = parseInt(res.data.totalCount)
-        }
-      }).catch(() => {
-        loading.close()
-      })
+      getLogList(this.formData)
+        .then((res) => {
+          loading.close()
+          if (res.code == 0) {
+            this_.optList = res.data.list
+            this_.totalNum = parseInt(res.data.totalCount)
+          }
+        })
+        .catch(() => {
+          loading.close()
+        })
     },
-    search () {
+    search() {
       this.currentPage = 1
       this.pageSize = 10
       const this_ = this
@@ -319,8 +241,10 @@ export default {
       this.formData = {
         search: this.filterText,
         searchType: this.filterType,
-        startTime: (this.timeRange && this.timeRange.length > 0) ? this.timeRange[0] : '',
-        endTime: this.timeRange && this.timeRange.length > 0 ? this.timeRange[1] : '',
+        startTime:
+          this.timeRange && this.timeRange.length > 0 ? this.timeRange[0] : '',
+        endTime:
+          this.timeRange && this.timeRange.length > 0 ? this.timeRange[1] : '',
         pageNo: 1,
         pageSize: 10,
         orderBy: this.orderBy,
@@ -329,19 +253,18 @@ export default {
         permName: this.permName,
         result: this.optStatus
       }
-      getLogList(this.formData).then((res) => {
-        loading.close()
-        if (res.code == 0) {
-          this_.optList = res.data.list
-          this_.totalNum = parseInt(res.data.totalCount)
-        }
-      }).catch(() => {
-        loading.close()
-      })
+      getLogList(this.formData)
+        .then((res) => {
+          loading.close()
+          if (res.code == 0) {
+            this_.optList = res.data.list
+            this_.totalNum = parseInt(res.data.totalCount)
+          }
+        })
+        .catch(() => {
+          loading.close()
+        })
     }
-  },
-  mounted () {
-    this.handleSearch()
   }
 }
 </script>
@@ -433,7 +356,7 @@ export default {
       outline: none;
       cursor: pointer;
       &.active {
-        border: 1px solid #fd7715;
+        border: 1px solid#B69858;
       }
     }
   }

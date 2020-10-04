@@ -1,9 +1,6 @@
 <template>
   <div style="background-color: #edeef2;">
     <div>
-      <wx-header show-back>
-        <span slot="headerTitle">问题管理</span>
-      </wx-header>
       <div class="macthtable">
         <div class="right-part" style="padding: 10px;">
           <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
@@ -39,18 +36,20 @@
         </div>
       </div>
     </div>
+    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getWriteUpForPage" />
   </div>
 </template>
 <script>
-import wxHeader from '@/components/header/index'
 import { getWriteUpForPage, deleteWriteUp } from '@/api/question'
 import { parseTime } from '@/utils/index'
+import modify from './modify'
 export default {
-  components: {
-    wxHeader
-  },
+  components: { modify },
   data() {
     return {
+      show: false,
+      addSign: false,
+      mainId: '',
       subAccountList: [],
       subAccountTotal: 0,
       pageSize: 10,
@@ -62,19 +61,18 @@ export default {
     this.getWriteUpForPage()
   },
   methods: {
-    addNew() {
-      this.$router.push({ path: '/questionEdit' })
-    },
     parseTime(time) {
       return parseTime(time)
     },
+    addNew() {
+      this.show = true
+      this.addSign = true
+      this.mainId = ''
+    },
     handleSubAccountEdit(id) {
-      this.$router.push({
-        path: '/questionEdit',
-        query: {
-          id: id
-        }
-      })
+      this.show = true
+      this.mainId = id
+      this.addSign = false
     },
     handleDeviceDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -132,13 +130,6 @@ export default {
 }
 </script>
 <style  scoped>
-.macthtable {
-  margin: 0rem 0.2rem 0.2rem;
-  background: white;
-  padding-bottom: 0.2rem;
-  height: calc(100vh - 120px);
-  overflow: auto;
-}
 .mt30 {
   margin-top: 35px;
 }

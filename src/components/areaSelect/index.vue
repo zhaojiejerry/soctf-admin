@@ -210,7 +210,7 @@ export default {
   box-sizing: border-box;
   .has-content {
     .select-line {
-      color: #fd7715;
+      color: #b69858;
       margin-bottom: 10px;
       .icon-location {
         font-size: 20px;
@@ -229,7 +229,7 @@ export default {
         margin-right: 15px;
         display: inline-block;
         &.active {
-          color: #fd7715;
+          color: #b69858;
           background: #fff1e7;
         }
       }
@@ -250,7 +250,7 @@ export default {
           display: inline-block;
           padding: 5px;
           &.active {
-            color: #fd7715;
+            color: #b69858;
             background: #fff1e7;
           }
         }
@@ -272,7 +272,7 @@ export default {
           margin-right: 15px;
           display: inline-block;
           &.active {
-            color: #fd7715;
+            color: #b69858;
           }
         }
       }

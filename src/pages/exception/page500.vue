@@ -1,16 +1,15 @@
 <template>
-    <div class="noPage">
-      <p>500</p>
-    </div>
+  <div class="noPage">
+    <p>500</p>
+  </div>
 </template>
 
 <script>
-export default {
-}
+export default {}
 </script>
 
 <style lang="scss" scoped>
-.noPage{
+.noPage {
   p {
     text-align: center;
   }

@@ -1,11 +1,6 @@
 <template>
-  <div style="background-color: #edeef2;">
-    <div class="hb-user-detail" style="">
-      <wx-header show-back>
-        <span slot="headerTitle">赛事编辑</span>
-      </wx-header>
-    </div>
-    <div class="macthtable">
+  <div>
+    <el-dialog :visible.sync="value" :show-close="false" :title="addSign?'新增':'修改'">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
         <el-form-item label="赛事名称" prop="gameName">
           <el-input v-model="ruleForm.gameName" class="itemwidth" />
@@ -61,12 +56,12 @@
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">保存</el-button>
-          <el-button @click="back">取消</el-button>
-        </el-form-item>
       </el-form>
-    </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="onSubmit">保存</el-button>
+        <el-button @click="back">取消</el-button>
+      </div>
+    </el-dialog>
     <el-dialog :visible.sync="dialogTableVisible" title="参赛者">
       <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableData" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
         <el-table-column type="selection" width="55" />
@@ -86,12 +81,23 @@
   </div>
 </template>
 <script>
-import wxHeader from '@/components/header/index'
 import { modifyGameInfo, addGameInfo, getGameInfoDetail } from '@/api/match'
-import { getUserInfoList, getTeamInfoListForPage } from '@/api/login'
+import { getUserInfoList, getTeamInfoListForPage } from '@/api/user'
 export default {
-  components: {
-    wxHeader
+  components: {},
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    },
+    addSign: {
+      type: Boolean,
+      default: false
+    },
+    mainId: {
+      type: String,
+      default: 'false'
+    }
   },
   data() {
     return {
@@ -134,11 +140,36 @@ export default {
       currentPage: 1
     }
   },
-  mounted() {
-    console.log(this.$route.query.id)
-    if (this.$route.query.id) {
-      this.getGameInfoDetail()
+  watch: {
+    value(val) {
+      if (val) {
+        if (!this.addSign) {
+          this.getGameInfoDetail()
+        } else {
+          this.ruleForm = {
+            date: [],
+            description: '',
+            endTime: '',
+            gameId: '',
+            gameName: '',
+            gameOfficeAddress: '',
+            gameStatus: '',
+            gameText: '',
+            gameType: '1',
+            gameWay: '',
+            iconUrl: '',
+            joinerIds: [],
+            mainPic: '',
+            organizer: '',
+            remark: '',
+            scoreRemark: '',
+            startTime: ''
+          }
+        }
+      }
     }
+  },
+  mounted() {
     this.$nextTick(() => {
       this.getUserInfoList()
     })
@@ -292,7 +323,7 @@ export default {
     },
     getGameInfoDetail() {
       getGameInfoDetail({
-        gameId: this.$route.query.id
+        gameId: this.mainId
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data
@@ -315,7 +346,7 @@ export default {
       })
     },
     back() {
-      this.$router.push({ path: '/match' })
+      this.$emit('input', false)
     },
     onSubmit() {
       var joiners = []
@@ -324,7 +355,7 @@ export default {
       })
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          if (this.$route.query.id) {
+          if (!this.addSign) {
             modifyGameInfo({
               description: this.ruleForm.description,
               endTime: this.ruleForm.date[1],
@@ -348,7 +379,8 @@ export default {
                   type: 'success',
                   message: '修改成功'
                 })
-                this.$router.push({ path: '/match' })
+                this.back()
+                this.$emit('getList')
               } else {
                 this.$message({
                   type: 'warning',
@@ -380,7 +412,8 @@ export default {
                   type: 'success',
                   message: '新增成功'
                 })
-                this.$router.push({ path: '/match' })
+                this.back()
+                this.$emit('getList')
               } else {
                 this.$message({
                   type: 'warning',

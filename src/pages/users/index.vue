@@ -7,26 +7,20 @@
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
-            <el-table-column prop="name" align="center" label="题目名称" />
-            <el-table-column prop="choiceDescription" align="center" label="文本描述" />
-            <el-table-column label="题型" align="center" show-overflow-tooltip>
+            <el-table-column prop="username" align="center" label="用户名" />
+            <el-table-column label="昵称" align="center" prop="realName" show-overflow-tooltip />
+            <el-table-column prop="createAt" align="center" label="性别">
               <template slot-scope="scope">
-                {{ choiceType[scope.row.choiceType-1] }}
+                {{ scope.row.gender==1?'男':'女' }}
               </template>
             </el-table-column>
-            <el-table-column label="难易程度" align="center">
-              <template slot-scope="scope">
-                <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
-              </template>
-            </el-table-column>
-            <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
-            <el-table-column label="分值" align="center" prop="choiceScore" show-overflow-tooltip />
-            <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
-            <el-table-column label="答题时间/秒" align="center" prop="choiceTime" show-overflow-tooltip />
+            <el-table-column prop="phone" align="center" label="手机号" />
+            <el-table-column label="地区" align="center" prop="area" show-overflow-tooltip />
+            <el-table-column label="个人简介" align="center" prop="remark" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.choiceId)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.choiceId)">删除</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.questionId)">编辑</el-button>
+                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -38,11 +32,11 @@
         </div>
       </div>
     </div>
-    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getChoiceListForAdmin" />
+    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getUserInfoList" />
   </div>
 </template>
 <script>
-import { getChoiceListForAdmin, deleteChoiceQuestion } from '@/api/choice'
+import { getUserInfoList, deleteUser } from '@/api/user'
 import { parseTime } from '@/utils/index'
 import modify from './modify'
 export default {
@@ -56,20 +50,20 @@ export default {
       subAccountTotal: 0,
       pageSize: 10,
       currentPage: 1,
-      choiceType: ['单选', '多选']
+      fileType: ['WP', '比赛资料', '其他']
     }
   },
   mounted() {
-    this.getChoiceListForAdmin()
+    this.getUserInfoList()
   },
   methods: {
+    parseTime(time) {
+      return parseTime(time)
+    },
     addNew() {
       this.show = true
       this.addSign = true
       this.mainId = ''
-    },
-    parseTime(time) {
-      return parseTime(time)
     },
     handleSubAccountEdit(id) {
       this.show = true
@@ -83,7 +77,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          deleteChoiceQuestion({
+          deleteUser({
             answerId: id
           }).then((res) => {
             if (res.success) {
@@ -92,7 +86,7 @@ export default {
                 message: '删除成功'
               })
               this.currentPage = 1
-              this.getChoiceListForAdmin()
+              this.getUserInfoList()
             } else {
               this.$message({
                 type: 'warning',
@@ -108,8 +102,8 @@ export default {
           })
         })
     },
-    getChoiceListForAdmin() {
-      getChoiceListForAdmin({
+    getUserInfoList() {
+      getUserInfoList({
         currentPage: this.currentPage,
         extraParam: {},
         pageSize: this.pageSize
@@ -122,11 +116,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.getChoiceListForAdmin()
+      this.getUserInfoList()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getChoiceListForAdmin()
+      this.getUserInfoList()
     }
   }
 }

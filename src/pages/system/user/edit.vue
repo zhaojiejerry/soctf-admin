@@ -169,24 +169,22 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import wxHeader from '@/components/header/index'
 import hbUserTree from '@/components/userTree/index'
 import hbAreaSelect from '@/components/areaSelect/index'
 // import { fileUpload } from '@/api/common.js'
-import {
-  getUserById,
-  editUser,
-  addUser,
-  sendMessage,
-  checkCodeA,
-  checkCodeB,
-  editPhone
-} from '@/api/user.js'
+// import {
+//   getUserById,
+//   editUser,
+//   addUser,
+//   sendMessage,
+//   checkCodeA,
+//   checkCodeB,
+//   editPhone
+// } from '@/api/user.js'
 // import { roleList } from '@/api/role.js'
 
 export default {
   components: {
-    wxHeader,
     hbUserTree,
     hbAreaSelect
   },
@@ -830,9 +828,9 @@ export default {
       margin-left: 5px;
     }
     .el-button--primary {
-      color: #fd7715;
+      color: #b69858;
       background-color: #f4f4f5;
-      border-color: #fd7715;
+      border-color: #b69858;
     }
   }
   .slot-input {
@@ -866,7 +864,7 @@ export default {
     display: inline-block;
     width: 4px;
     height: 16px;
-    background-color: #fd7715;
+    background-color: #b69858;
     margin-right: 10px;
     position: relative;
     top: 2px;
@@ -901,7 +899,7 @@ export default {
         display: flex;
         flex-direction: row;
         .el-button {
-          color: rgb(253, 119, 21);
+          color: #b69858;
           height: 30px;
           width: 100px;
         }

@@ -117,6 +117,38 @@ export default {
       subject: []
     }
   },
+  watch: {
+    value(val) {
+      if (val) {
+        if (!this.addSign) {
+          this.getOneChoiceQuestion()
+        } else {
+          this.ruleForm = {
+            bankId: '',
+            category: '',
+            choiceDescription: '',
+            choiceId: '',
+            choiceScore: 0,
+            choiceTime: 0,
+            choiceType: '',
+            correctAnswer: '',
+            difficultyLevel: 0,
+            goldCoin: 0,
+            name: '',
+            optionArray: '',
+            optionVos: [
+              {
+                optionCode: String.fromCharCode(64 + 1),
+                optionDescription: ''
+              }
+            ],
+            remark: '',
+            solved: false
+          }
+        }
+      }
+    }
+  },
   mounted() {
     this.getjson()
   },

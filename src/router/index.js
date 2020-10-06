@@ -7,178 +7,190 @@ import Layout from '@/components/layout/index'
 Vue.use(Router)
 
 export const navRoutes = [{
-    path: 'index',
-    name: 'Home',
-    component: () =>
-      import('@/pages/home/index'),
-    meta: {
-      title: '首页',
-      icon: 'iconfont icon-home'
+        path: 'index',
+        name: 'Home',
+        component: () =>
+            import ('@/pages/home/index'),
+        meta: {
+            title: '首页',
+            icon: 'iconfont icon-home'
+        },
+        hidden: true
     },
-    hidden: true
-  },
-  {
-    path: 'question',
-    name: 'question',
-    component: () =>
-      import('@/pages/question/index'),
-    meta: {
-      title: '问题管理',
-      icon: 'iconfont icon-home'
+    {
+        path: 'question',
+        name: 'question',
+        component: () =>
+            import ('@/pages/question/index'),
+        meta: {
+            title: '问题管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'match',
+        name: 'match',
+        component: () =>
+            import ('@/pages/match/index'),
+        meta: {
+            title: '比赛管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'choice',
+        name: 'choice',
+        component: () =>
+            import ('@/pages/choice/index'),
+        meta: {
+            title: '选择题管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'docker',
+        name: 'docker',
+        component: () =>
+            import ('@/pages/docker/index'),
+        meta: {
+            title: '容器题管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'file',
+        name: 'file',
+        component: () =>
+            import ('@/pages/file/index'),
+        meta: {
+            title: '附件题管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'roles',
+        name: 'roles',
+        component: () =>
+            import ('@/pages/roles/index'),
+        meta: {
+            title: '角色管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'organization',
+        name: 'organization',
+        component: () =>
+            import ('@/pages/organization/index'),
+        meta: {
+            title: '组织机构',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'users',
+        name: 'users',
+        component: () =>
+            import ('@/pages/users/index'),
+        meta: {
+            title: '用户管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'branch',
+        name: 'branch',
+        component: () =>
+            import ('@/pages/branch/index'),
+        meta: {
+            title: '部门管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'permission',
+        name: 'permission',
+        component: () =>
+            import ('@/pages/permission/index'),
+        meta: {
+            title: '菜单权限管理',
+            icon: 'iconfont icon-home'
+        }
+    },
+    {
+        path: 'modifyPwd',
+        name: 'modifyPwd',
+        component: () =>
+            import ('@/pages/system/modifyPwd'),
+        meta: {
+            title: '修改密码',
+            icon: 'iconfont icon-home'
+        },
+        hidden: true,
+        children: []
+    },
+    {
+        path: 'psnDetail',
+        name: 'psnDetail',
+        component: () =>
+            import ('@/pages/system/psnDetail'),
+        hidden: true,
+        meta: {
+            title: '个人中心',
+            icon: 'iconfont icon-home'
+        },
+        children: []
     }
-  },
-  {
-    path: 'match',
-    name: 'match',
-    component: () =>
-      import('@/pages/match/index'),
-    meta: {
-      title: '比赛管理',
-      icon: 'iconfont icon-home'
-    }
-  },
-  {
-    path: 'choice',
-    name: 'choice',
-    component: () =>
-      import('@/pages/choice/index'),
-    meta: {
-      title: '选择题管理',
-      icon: 'iconfont icon-home'
-    }
-  },
-  {
-    path: 'docker',
-    name: 'docker',
-    component: () =>
-      import('@/pages/docker/index'),
-    meta: {
-      title: '容器题管理',
-      icon: 'iconfont icon-home'
-    }
-  },
-  {
-    path: 'file',
-    name: 'file',
-    component: () =>
-      import('@/pages/file/index'),
-    meta: {
-      title: '附件题管理',
-      icon: 'iconfont icon-home'
-    }
-  },
-  {
-    path: 'roles',
-    name: 'roles',
-    component: () =>
-      import('@/pages/roles/index'),
-    meta: {
-      title: '角色权限',
-      icon: 'iconfont icon-home'
-    }
-  },
-  {
-    path: 'organization',
-    name: 'organization',
-    component: () =>
-      import('@/pages/organization/index'),
-    meta: {
-      title: '组织机构',
-      icon: 'iconfont icon-home'
-    }
-  },
-  {
-    path: 'users',
-    name: 'users',
-    component: () =>
-      import('@/pages/users/index'),
-    meta: {
-      title: '用户管理',
-      icon: 'iconfont icon-home'
-    }
-  },
-  {
-    path: 'personalDetail',
-    name: 'personalDetail',
-    component: () =>
-      import('@/pages/system/user/detail'),
-    hidden: true,
-    children: []
-  },
-  {
-    path: 'personalEdit',
-    name: 'personalEdit',
-    component: () =>
-      import('@/pages/system/user/edit'),
-    hidden: true,
-    children: []
-  },
-  {
-    path: 'subAccountPersonal',
-    name: 'subAccountPersonal',
-    component: () =>
-      import('@/pages/system/user/subAccountInfo'),
-    hidden: true,
-    children: []
-  },
-  {
-    path: 'subAccountPersonalEdit',
-    name: 'subAccountPersonalEdit',
-    component: () =>
-      import('@/pages/system/user/addSubAccount'),
-    hidden: true,
-    children: []
-  }
 ]
 export const constantRoutes = [{
-    path: '/login',
-    name: 'login',
-    component: () =>
-      import('@/pages/login/login'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    name: '404',
-    component: () =>
-      import('@/pages/exception/page404'),
-    hidden: true
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/index',
-    children: navRoutes
-  }
+        path: '/login',
+        name: 'login',
+        component: () =>
+            import ('@/pages/login/login'),
+        hidden: true
+    },
+    {
+        path: '/404',
+        name: '404',
+        component: () =>
+            import ('@/pages/exception/page404'),
+        hidden: true
+    },
+    {
+        path: '/',
+        component: Layout,
+        redirect: '/index',
+        children: navRoutes
+    }
 ]
 
 export const lastRoutes = [{
-  path: '*',
-  redirect: '/404',
-  hidden: true
+    path: '*',
+    redirect: '/404',
+    hidden: true
 }]
 
 const createRouter = () => new Router({
-  mode: 'history',
-  base: env.BASE_URL,
-  scrollBehavior: (to, from, savedPosition) => {
-    if (savedPosition) {
-      return savedPosition
-    } else {
-      return {
-        x: 0,
-        y: 0
-      }
-    }
-  },
-  routes: constantRoutes
+    mode: 'history',
+    base: env.BASE_URL,
+    scrollBehavior: (to, from, savedPosition) => {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return {
+                x: 0,
+                y: 0
+            }
+        }
+    },
+    routes: constantRoutes
 })
 
 const router = createRouter()
 
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+    const newRouter = createRouter()
+    router.matcher = newRouter.matcher // reset router
 }
 
 export default router

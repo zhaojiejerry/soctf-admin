@@ -23,4 +23,7 @@ export default {
   background: white;
   padding-bottom: 0.2rem;
 }
+.itemwidth {
+  width: 100%;
+}
 </style>

@@ -57,19 +57,57 @@ export function getTeamInfoListForPage(data) {
 export function deleteUser(data) {
   return axios({
     url: '/sys/deleteUser',
+    method: 'get',
+    params: data
+  })
+}
+
+// 获取用户详情
+export function getOneUserInfo(data) {
+  return axios({
+    url: '/sys/getOneUserInfo',
+    method: 'get',
+    params: data
+  })
+}
+
+// 修改用户
+export function modifyUser(data) {
+  return axios({
+    url: '/sys/modifyUser',
     method: 'post',
     data
   })
 }
+
+// 获取手机验证码
+// bizTyp:register-注册，login-登录，modifyPwd-修改密码
+// phoneNumber:手机号
+export function getMobileCode(data) {
+  return axios({
+    url: '/sys/sendSmsCodeMy',
+    method: 'post',
+    data
+  })
+}
+
+export function resetPassword(data) {
+  return axios({
+    url: '/sys/resetPassword',
+    method: 'post',
+    data
+  })
+}
+
 /**
  * 用户树控件
  * @param {}
  */
-export function getUserTree(params) {
+export function getUserTree(data) {
   return axios({
     url: '',
     method: 'get',
-    params: params
+    params: data
   })
 }
 
@@ -77,11 +115,11 @@ export function getUserTree(params) {
  * 用户所在区域控件
  * @param {}
  */
-export function getUserArea(params) {
+export function getUserArea(data) {
   return axios({
     url: '',
     method: 'get',
-    params: params
+    params: data
   })
 }
 
@@ -89,11 +127,11 @@ export function getUserArea(params) {
  * 用户分页列表
  * @param {}
  */
-export function userPageList(params) {
+export function userPageList(data) {
   return axios({
     url: '',
     method: 'get',
-    params: params
+    params: data
   })
 }
 
@@ -101,14 +139,14 @@ export function userPageList(params) {
  * 用户状态切换
  * @param {}
  */
-export function userToggleStatus(params) {
+export function userToggleStatus(data) {
   return axios({
     url: '',
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    data: qs.stringify(params)
+    data: qs.stringify(data)
   })
 }
 
@@ -146,18 +184,6 @@ export function getUserById(params) {
 export function addUser(params) {
   return axios({
     url: '/sys/addUser',
-    method: 'post',
-    data: params
-  })
-}
-
-/**
- * 新建/修改用户
- * @param {}
- */
-export function editUser(params) {
-  return axios({
-    url: '/sys/modifyUser',
     method: 'post',
     data: params
   })

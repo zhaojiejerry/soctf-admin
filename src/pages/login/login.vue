@@ -165,7 +165,6 @@ export default {
               } else {
                 this.getChartCode()
                 this.$message({
-                  showClose: true,
                   message: res.message,
                   type: 'error'
                 })

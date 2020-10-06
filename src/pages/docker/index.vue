@@ -1,9 +1,12 @@
 <template>
   <div style="background-color: #edeef2;">
     <div>
-      <div class="macthtable">
-        <div class="right-part" style="padding: 10px;">
-          <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>容器题管理</span>
+          <div class="right-part">
+            <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
+          </div>
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
@@ -36,7 +39,7 @@
             </el-pagination>
           </div>
         </div>
-      </div>
+      </el-card>
     </div>
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getDockerQuestion" />
   </div>

@@ -250,13 +250,6 @@ export default {
       this.dialogTableVisible = false
     },
     onSubmit() {
-      if (this.ruleForm.questionId == '') {
-        this.$message({
-          type: 'warning',
-          message: '您还没有选择关联题目'
-        })
-        return
-      }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (!this.addSign) {

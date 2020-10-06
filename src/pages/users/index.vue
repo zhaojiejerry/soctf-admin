@@ -1,9 +1,12 @@
 <template>
   <div style="background-color: #edeef2;">
     <div>
-      <div class="macthtable">
-        <div class="right-part" style="padding: 10px;">
-          <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>用户管理</span>
+          <div class="right-part">
+            <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
+          </div>
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
@@ -19,8 +22,8 @@
             <el-table-column label="个人简介" align="center" prop="remark" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.questionId)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.id)">删除</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row)">编辑</el-button>
+                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.usrId)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -30,9 +33,9 @@
             </el-pagination>
           </div>
         </div>
-      </div>
+      </el-card>
     </div>
-    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getUserInfoList" />
+    <modify v-model="show" :add-sign="addSign" :rule-form="ruleForm" @getList="getUserInfoList" />
   </div>
 </template>
 <script>
@@ -43,6 +46,7 @@ export default {
   components: { modify },
   data() {
     return {
+      ruleForm: {},
       show: false,
       addSign: false,
       mainId: '',
@@ -63,11 +67,41 @@ export default {
     addNew() {
       this.show = true
       this.addSign = true
-      this.mainId = ''
+      this.ruleForm = {
+        address: '',
+        area: '',
+        company: '',
+        email: '',
+        gameId: '',
+        gender: 1,
+        goldCoin: 0,
+        idcardNo: '',
+        idcardTyp: '',
+        joinGame: true,
+        password: '',
+        phone: '',
+        portrait: '',
+        realName: '',
+        remark: '',
+        roleIds: [],
+        school: '',
+        score: 0,
+        signature: '',
+        specialRoleId: 0,
+        teamId: '',
+        teamOwner: true,
+        userTyp: '',
+        username: '',
+        usrBranch: '',
+        usrId: '',
+        usrOrganization: '',
+        usrStatus: '',
+        usrSuper: ''
+      }
     },
-    handleSubAccountEdit(id) {
+    handleSubAccountEdit(row) {
       this.show = true
-      this.mainId = id
+      this.ruleForm = row
       this.addSign = false
     },
     handleDeviceDelete(id) {
@@ -78,7 +112,7 @@ export default {
       })
         .then(() => {
           deleteUser({
-            answerId: id
+            usrId: id
           }).then((res) => {
             if (res.success) {
               this.$message({

@@ -13,7 +13,7 @@ export function addAuthorization(data) {
 export function getAuthorizationList(data) {
     return axios({
         url: '/sys/getAuthorizationList',
-        method: 'post',
+        method: 'get',
         data
     })
 }
@@ -31,8 +31,8 @@ export function addRole(data) {
 export function deleteRole(data) {
     return axios({
         url: '/sys/deleteRole',
-        method: 'post',
-        data
+        method: 'get',
+        params: data
     })
 }
 

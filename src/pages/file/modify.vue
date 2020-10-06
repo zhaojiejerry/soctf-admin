@@ -60,7 +60,7 @@ export default {
     },
     mainId: {
       type: String,
-      default: 'false'
+      default: ''
     }
   },
   data() {

@@ -43,9 +43,6 @@ export default {
       }
     }
   },
-  mounted() {
-    // this.getGameOssFile()
-  },
   methods: {
     close() {
       this.$emit('input', false)
@@ -71,3 +68,14 @@ export default {
   }
 }
 </script>
+<style  scoped>
+#details-content {
+  width: 100%;
+  height: 551px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  margin-top: 31px;
+  padding: 25px 30px;
+  position: relative;
+}
+</style>

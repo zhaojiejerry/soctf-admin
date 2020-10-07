@@ -5,7 +5,7 @@
         <el-input v-model="ruleForm.name" class="itemwidth" />
       </el-form-item>
       <el-form-item label="选择题类型" prop="choiceType">
-        <el-select v-model="ruleForm.choiceType" class="itemwidth" placeholder="请选择题类型">
+        <el-select v-model="ruleForm.choiceType" class="itemwidth" placeholder="请选择类型">
           <el-option label="单选" value="1" />
           <el-option label="多选" value="2" />
         </el-select>

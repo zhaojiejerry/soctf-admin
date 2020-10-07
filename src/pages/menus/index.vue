@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="user-child-list">
-        <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark" current-row-key="id">
+        <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
           <el-table-column prop="permCode" align="center" label="权限编码" />
           <el-table-column prop="permName" align="center" label="权限名称" />
           <el-table-column prop="name" align="center" label="菜单名称" />
@@ -26,7 +26,7 @@
           </el-table-column>
           <el-table-column fixed="right" align="center" label="操作">
             <template slot-scope="scope">
-              <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row)">编辑</el-button>
+              <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
               <el-button size="small" type="text" @click.native.prevent="deletePermission(scope.row.permId)">删除</el-button>
             </template>
           </el-table-column>
@@ -73,7 +73,7 @@ export default {
         sortOrder: 0
       }
     },
-    handleSubAccountEdit(row) {
+    handleEdit(row) {
       this.show = true
       this.ruleForm = copyObj(row)
       this.addSign = false

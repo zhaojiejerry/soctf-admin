@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog :visible.sync="value" :show-close="false" title="生成试卷">
-      <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
+      <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" align="center" label="标题" />
         <el-table-column prop="mainBody" align="center" label="文本描述" />
@@ -19,7 +19,7 @@
         <el-table-column label="分类" align="center" prop="type" show-overflow-tooltip />
       </el-table>
       <div class="pager-container mt30">
-        <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="subAccountTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+        <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="tableTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
           <el-button size="small" plain class="pagination-button">确定</el-button>
         </el-pagination>
       </div>
@@ -48,8 +48,8 @@ export default {
   },
   data() {
     return {
-      subAccountList: [],
-      subAccountTotal: 0,
+      tableList: [],
+      tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
       fileType: ['WP', '比赛资料', '其他'],
@@ -78,7 +78,7 @@ export default {
     },
     selectAll(selection) {
       if (selection.length > 0) {
-        this.subAccountList.forEach((v) => {
+        this.tableList.forEach((v) => {
           const index = this.questions.findIndex((i) => {
             return i.questionId === v.questionId
           })
@@ -88,7 +88,7 @@ export default {
         })
       } else {
         this.questions.forEach((item, index) => {
-          this.subAccountList.forEach((ms) => {
+          this.tableList.forEach((ms) => {
             if (item.questionId == ms.questionId) {
               this.questions = this.questions.filter(
                 (item) => item.questionId != ms.questionId
@@ -143,15 +143,15 @@ export default {
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.subAccountList = res.data
+          this.tableList = res.data
           this.questions.forEach((a) => {
-            this.subAccountList.forEach((b) => {
+            this.tableList.forEach((b) => {
               if (a.questionId === b.questionId) {
                 this.$refs.multipleTable.toggleRowSelection(b, true)
               }
             })
           })
-          this.subAccountTotal = res.count
+          this.tableTotal = res.count
         }
       })
     },

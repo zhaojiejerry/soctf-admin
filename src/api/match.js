@@ -80,3 +80,23 @@ export function getGameOssFile(data) {
         params: data
     })
 }
+
+// 竞赛排行榜
+export function getRankingList(data) {
+    return axios({
+        url: '/game/getRankingList',
+        method: 'get',
+        params: data,
+        hideloading: true
+    })
+}
+
+// 获取公告列表 接口中type区别：1公告，2直播，3系统，4奖励
+export function getIndexNotice(data) {
+    return axios({
+        url: '/getNoticeListForUser',
+        method: 'post',
+        data,
+        hideloading: true
+    })
+}

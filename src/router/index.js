@@ -124,6 +124,16 @@ export const navRoutes = [{
             title: '武器库',
             icon: 'iconfont icon-home'
         }
+    },
+    {
+        path: '/notices',
+        name: 'notices',
+        component: () =>
+            import ('@/pages/notices/index'),
+        meta: {
+            title: '公告管理',
+            icon: 'iconfont icon-home'
+        }
     }
 ]
 export const constantRoutes = [{

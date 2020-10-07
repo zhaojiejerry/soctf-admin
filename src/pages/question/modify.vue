@@ -70,8 +70,8 @@
         </el-pagination>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogTableVisible=false">取 消</el-button>
         <el-button type="primary" @click="isOK">确 定</el-button>
+        <el-button @click="dialogTableVisible=false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -214,7 +214,7 @@ export default {
       getQuestionWriteUp({
         questionId: this.mainId
       }).then((res) => {
-        if (res.success) {
+        if (res.data) {
           this.ruleForm = res.data
           if (res.data.fileUrl != '') {
             var fileUrl = res.data.fileUrl.split('/')

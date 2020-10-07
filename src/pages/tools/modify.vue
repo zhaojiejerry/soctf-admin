@@ -64,11 +64,8 @@ export default {
   data() {
     return {
       rules: {
-        roleName: [
-          { required: true, message: '请输入角色名称', trigger: 'blur' }
-        ],
-        orgId: [
-          { required: true, message: '请选择关联机构', trigger: 'change' }
+        weapName: [
+          { required: true, message: '请输入工具名称', trigger: 'blur' }
         ]
       },
       label: [],

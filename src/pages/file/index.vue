@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="user-child-list">
-          <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
+          <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
             <el-table-column prop="name" align="center" label="题目名称" />
             <el-table-column prop="questionDescribe" align="center" label="文本描述" />
             <el-table-column label="题型" align="center" show-overflow-tooltip>
@@ -28,13 +28,13 @@
             <el-table-column label="答题时间/秒" align="center" prop="time" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.id)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.id)">删除</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row.id)">编辑</el-button>
+                <el-button size="small" type="text" @click="handleDelete(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
           <div class="pager-container mt30">
-            <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="subAccountTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+            <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="tableTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
               <el-button size="small" plain class="pagination-button">确定</el-button>
             </el-pagination>
           </div>
@@ -55,8 +55,8 @@ export default {
       show: false,
       addSign: false,
       mainId: '',
-      subAccountList: [],
-      subAccountTotal: 0,
+      tableList: [],
+      tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
       questionType: ['容器', '附件', '选择']
@@ -71,7 +71,7 @@ export default {
       this.addSign = true
       this.mainId = ''
     },
-    handleSubAccountEdit(id) {
+    handleEdit(id) {
       this.show = true
       this.mainId = id
       this.addSign = false
@@ -79,7 +79,7 @@ export default {
     parseTime(time) {
       return parseTime(time)
     },
-    handleDeviceDelete(id) {
+    handleDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -122,8 +122,8 @@ export default {
         userId: ''
       }).then((res) => {
         if (res.success) {
-          this.subAccountList = res.data.records
-          this.subAccountTotal = res.data.total
+          this.tableList = res.data.records
+          this.tableTotal = res.data.total
         }
       })
     },

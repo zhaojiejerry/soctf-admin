@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="user-child-list">
-          <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
+          <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
             <el-table-column prop="username" align="center" label="用户名" />
             <el-table-column label="昵称" align="center" prop="realName" show-overflow-tooltip />
             <el-table-column prop="createAt" align="center" label="性别">
@@ -22,14 +22,14 @@
             <el-table-column label="个人简介" align="center" prop="remark" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.usrId)">删除</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
+                <el-button size="small" type="text" @click="handleDelete(scope.row.usrId)">删除</el-button>
                 <el-button size="small" type="text" @click="handleRole(scope.row)">关联角色</el-button>
               </template>
             </el-table-column>
           </el-table>
           <div class="pager-container mt30">
-            <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="subAccountTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+            <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="tableTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
               <el-button size="small" plain class="pagination-button">确定</el-button>
             </el-pagination>
           </div>
@@ -38,7 +38,7 @@
     </div>
     <modify v-model="show" :add-sign="addSign" :rule-form="ruleForm" @getList="getUserInfoList" />
     <el-dialog :visible.sync="showRoleInfo" :show-close="false" title="关联角色">
-      <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="roleInfoList" class="list-table" tooltip-effect="dark" current-row-key="id" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="roleInfoList" class="list-table" tooltip-effect="dark" @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="55" />
         <el-table-column prop="roleCode" align="center" label="角色编码" />
         <el-table-column prop="roleName" align="center" label="角色名称" />
@@ -66,8 +66,8 @@ export default {
       show: false,
       addSign: false,
       mainId: '',
-      subAccountList: [],
-      subAccountTotal: 0,
+      tableList: [],
+      tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
       roleInfoList: [],
@@ -126,7 +126,7 @@ export default {
         usrSuper: ''
       }
     },
-    handleSubAccountEdit(row) {
+    handleEdit(row) {
       this.show = true
       this.ruleForm = copyObj(row)
       this.addSign = false
@@ -174,7 +174,7 @@ export default {
         }
       })
     },
-    handleDeviceDelete(id) {
+    handleDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -213,8 +213,8 @@ export default {
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.subAccountList = res.data
-          this.subAccountTotal = res.count
+          this.tableList = res.data
+          this.tableTotal = res.count
         }
       })
     },

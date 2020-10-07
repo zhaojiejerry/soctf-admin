@@ -329,19 +329,26 @@ export default {
           this.ruleForm = res.data
           this.ruleForm.date = [res.data.startTime, res.data.endTime]
           var remark = res.data.remark.split('/')
-          this.remark = [
-            {
-              name: remark[remark.length - 1],
-              url: res.data.remark
-            }
-          ]
+          console.log(remark)
+          this.remark =
+            res.data.remark == ''
+              ? []
+              : [
+                  {
+                    name: remark[remark.length - 1],
+                    url: res.data.remark
+                  }
+                ]
           var scoreRemark = res.data.scoreRemark.split('/')
-          this.scoreRemark = [
-            {
-              name: scoreRemark[scoreRemark.length - 1],
-              url: res.data.scoreRemark
-            }
-          ]
+          this.scoreRemark =
+            res.data.scoreRemark == ''
+              ? []
+              : [
+                  {
+                    name: scoreRemark[scoreRemark.length - 1],
+                    url: res.data.scoreRemark
+                  }
+                ]
         }
       })
     },
@@ -356,38 +363,48 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (!this.addSign) {
-            modifyGameInfo({
-              description: this.ruleForm.description,
-              endTime: this.ruleForm.date[1],
-              gameId: this.ruleForm.gameId,
-              gameName: this.ruleForm.gameName,
-              gameOfficeAddress: this.ruleForm.gameOfficeAddress,
-              gameStatus: this.ruleForm.gameStatus,
-              gameText: this.ruleForm.gameText,
-              gameType: this.ruleForm.gameType,
-              gameWay: this.ruleForm.gameWay,
-              iconUrl: this.iconUrl,
-              joinerIds: joiners,
-              mainPic: this.mainPic,
-              organizer: this.ruleForm.organizer,
-              remark: this.ruleForm.remark,
-              scoreRemark: this.ruleForm.scoreRemark,
-              startTime: this.ruleForm.date[0]
-            }).then((res) => {
-              if (res.success) {
-                this.$message({
-                  type: 'success',
-                  message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
-              } else {
-                this.$message({
-                  type: 'warning',
-                  message: '修改失败'
-                })
+            this.$confirm(
+              '每次修改，分配到每个用户的比赛秘钥都会变化, 是否继续?',
+              '提示',
+              {
+                type: 'warning'
               }
-            })
+            )
+              .then(() => {
+                modifyGameInfo({
+                  description: this.ruleForm.description,
+                  endTime: this.ruleForm.date[1],
+                  gameId: this.ruleForm.gameId,
+                  gameName: this.ruleForm.gameName,
+                  gameOfficeAddress: this.ruleForm.gameOfficeAddress,
+                  gameStatus: this.ruleForm.gameStatus,
+                  gameText: this.ruleForm.gameText,
+                  gameType: this.ruleForm.gameType,
+                  gameWay: this.ruleForm.gameWay,
+                  iconUrl: this.iconUrl,
+                  joinerIds: joiners,
+                  mainPic: this.mainPic,
+                  organizer: this.ruleForm.organizer,
+                  remark: this.ruleForm.remark,
+                  scoreRemark: this.ruleForm.scoreRemark,
+                  startTime: this.ruleForm.date[0]
+                }).then((res) => {
+                  if (res.success) {
+                    this.$message({
+                      type: 'success',
+                      message: '修改成功'
+                    })
+                    this.back()
+                    this.$emit('getList')
+                  } else {
+                    this.$message({
+                      type: 'warning',
+                      message: '修改失败'
+                    })
+                  }
+                })
+              })
+              .catch(() => {})
           } else {
             addGameInfo({
               description: this.ruleForm.description,

@@ -5,7 +5,7 @@
         <div slot="header" class="clearfix">
           <span>用户管理</span>
           <div class="right-part">
-            <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
+            <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           </div>
         </div>
         <div class="user-child-list">

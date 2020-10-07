@@ -21,19 +21,15 @@ import 'e-icon-picker/dist/main.css' // fontAwesome 图标库样式
 // VueClipboard
 import VueClipboard from 'vue-clipboard2'
 VueClipboard.config.autoSetContainer = true
-Element.Dialog.props.closeOnClickModal.default = false;
+Element.Dialog.props.closeOnClickModal.default = false
 Vue.config.productionTip = false
 Vue.use(Element)
 Vue.use(VueClipboard)
 
 Vue.prototype.$echarts = Echarts
-    /* eslint-disable no-new */
+
 new Vue({
-    el: '#app',
     router,
     store,
-    components: {
-        App
-    },
-    template: '<App/>'
-})
+    render: h => h(App)
+}).$mount('#app')

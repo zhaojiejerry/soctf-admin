@@ -71,3 +71,12 @@ export function createPaperInfo(data) {
         data
     })
 }
+
+// 获取赛事文档（type=1 -> 赛事说明文档；type=2 -> 赛事积分文档）
+export function getGameOssFile(data) {
+    return axios({
+        url: '/game/getGameOssFile',
+        method: 'get',
+        params: data
+    })
+}

@@ -5,9 +5,23 @@
         <div slot="header" class="clearfix">
           <span>比赛管理</span>
           <div class="right-part">
-            <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
+            <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           </div>
         </div>
+        <el-form ref="ruleForm" inline>
+          <el-form-item label="赛事状态" prop="gameStatus">
+            <el-select v-model="extraParam.gameStatus" clearable placeholder="请选择赛事状态">
+              <el-option v-for="(item, index) in gameStatus" :key="index" :label="item" :value="index+1" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="比赛类型" prop="gameType">
+            <el-select v-model="extraParam.gameType" clearable placeholder="请选择比赛类型">
+              <el-option label="个人" value="1" />
+              <el-option label="团队" value="2" />
+            </el-select>
+          </el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
+        </el-form>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
             <el-table-column prop="gameName" align="center" label="赛事名称" />
@@ -39,6 +53,8 @@
                 <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="handleCreatePaper(scope.row.gameId)">生成试卷</el-button>
                 <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="startGame(scope.row.gameId)">发布</el-button>
                 <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="endGame(scope.row.gameId)">结束</el-button>
+                <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="seeDescription(scope.row.gameId)">查看比赛说明</el-button>
+                <el-button v-if="scope.row.gameStatus==3" size="small" type="text" @click="seeDescription(scope.row.gameId)">查看比赛成绩</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -51,6 +67,7 @@
       </el-card>
     </div>
     <createPaper v-model="dialogTableVisible" :game-id="gameId" />
+    <description v-model="showDescription" :game-id="gameId" />
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getGameInfoListForPage" />
   </div>
 </template>
@@ -64,10 +81,12 @@ import {
 } from '@/api/match'
 import { parseTime } from '@/utils/index'
 import modify from './modify'
+import description from './description'
 export default {
   components: {
     createPaper,
-    modify
+    modify,
+    description
   },
   data() {
     return {
@@ -80,9 +99,10 @@ export default {
       pageSize: 10,
       currentPage: 1,
       gameId: '',
-      fileType: ['WP', '比赛资料', '其他'],
       gameStatus: ['未开始', '进行中', '已结束'],
-      gameType: ['个人', '团队']
+      gameType: ['个人', '团队'],
+      extraParam: {},
+      showDescription: false
     }
   },
   mounted() {
@@ -104,6 +124,10 @@ export default {
     },
     handleCreatePaper(id) {
       this.dialogTableVisible = true
+      this.gameId = id
+    },
+    seeDescription(id) {
+      this.showDescription = true
       this.gameId = id
     },
     deleteGame(id) {
@@ -205,7 +229,7 @@ export default {
     getGameInfoListForPage() {
       getGameInfoListForPage({
         currentPage: this.currentPage,
-        extraParam: {},
+        extraParam: this.extraParam,
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {

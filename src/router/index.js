@@ -1,7 +1,6 @@
 /* eslint-disable no-spaced-func */
 import Vue from 'vue'
 import Router from 'vue-router'
-import env from '../../config/prod.env'
 
 import Layout from '@/components/layout/index'
 Vue.use(Router)
@@ -153,8 +152,7 @@ export const constantRoutes = [{
                 meta: {
                     title: '首页',
                     icon: 'iconfont icon-home'
-                },
-                hidden: true
+                }
             },
             {
                 path: '/modifyPwd',
@@ -166,7 +164,8 @@ export const constantRoutes = [{
                     icon: 'iconfont icon-home'
                 },
                 hidden: true
-            }, {
+            },
+            {
                 path: '/psnDetail',
                 name: 'psnDetail',
                 component: () =>
@@ -188,21 +187,21 @@ export const lastRoutes = [{
     hidden: true
 }]
 
-const createRouter = () => new Router({
-    mode: 'history',
-    base: env.BASE_URL,
-    scrollBehavior: (to, from, savedPosition) => {
-        if (savedPosition) {
-            return savedPosition
-        } else {
-            return {
-                x: 0,
-                y: 0
+const createRouter = () =>
+    new Router({
+        mode: 'history',
+        scrollBehavior: (to, from, savedPosition) => {
+            if (savedPosition) {
+                return savedPosition
+            } else {
+                return {
+                    x: 0,
+                    y: 0
+                }
             }
-        }
-    },
-    routes: constantRoutes
-})
+        },
+        routes: constantRoutes
+    })
 
 const router = createRouter()
 

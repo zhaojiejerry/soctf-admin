@@ -55,7 +55,6 @@
   </el-dialog>
 </template>
 <script>
-import { getCookie } from '@/utils/auth'
 import {
   modifyChoiceQuestion,
   addChoiceQuestion,

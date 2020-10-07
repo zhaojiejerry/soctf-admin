@@ -1,5 +1,4 @@
-/build/
-/config/
-/dist/
-/static/plugin/*.js
-/src/assets/font
+build/*.js
+src/assets
+public
+dist

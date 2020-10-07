@@ -1,13 +1,15 @@
 <template>
   <div>
-    <el-dialog :visible.sync="value" :show-close="false" :title="addSign?'新增':'修改'">
+    <el-dialog :visible.sync="value" :show-close="false" :title="addSign ? '新增' : '修改'">
       <div style="display: flex;">
         <div>
           <div id="user-head-div">
             <img :src=" ruleForm.portrait != null ? ruleForm.portrait : '@/assets/images/avater.jpeg' " class="img1" alt="头像">
           </div>
           <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :on-error="handleAvatarError" :before-upload="beforeAvatarUpload" class="upload-demo" style="text-align: center;" action="/api/oss">
-            <div style="color:#B59758;margin-top: 40px;text-align: center;">【上传头像】</div>
+            <div style="color:#B59758;margin-top: 40px;text-align: center;">
+              【上传头像】
+            </div>
           </el-upload>
         </div>
         <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
@@ -30,7 +32,7 @@
             <el-input v-model="ruleForm.phone" class="itemwidth" />
           </el-form-item>
           <el-form-item label="地区" prop="area">
-            <el-cascader :options="areaOptions" v-model="ruleForm.area" :props="{ checkStrictly: true ,label:'name',value:'name'}" class="itemwidth" clearable />
+            <el-cascader v-model="ruleForm.area" :options="areaOptions" :props="{ checkStrictly: true, label: 'name', value: 'name' }" class="itemwidth" clearable />
           </el-form-item>
           <el-form-item label="个性签名" prop="signature">
             <el-input v-model="ruleForm.signature" class="itemwidth" />
@@ -57,7 +59,6 @@
   </div>
 </template>
 <script>
-import { getCookie } from '@/utils/auth'
 import { modifyUser, addUser } from '@/api/user'
 import areajson from '@/assets/areajson'
 export default {

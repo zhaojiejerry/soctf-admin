@@ -37,13 +37,13 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { playSound } from '@/utils/js-play-sound'
-import wxFooter from '@/components/footer/index'
+// import { playSound } from '@/utils/js-play-sound'
+// import wxFooter from '@/components/footer/index'
 import wxMenu from '@/components/menuBar/index'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   components: {
-    wxFooter,
+    // wxFooter,
     wxMenu,
     Breadcrumb
   },
@@ -78,6 +78,7 @@ export default {
     logout() {
       const _this = this
       this.$confirm('确认要退出登录吗?', '退出')
+        // eslint-disable-next-line space-before-function-paren
         .then(async (action) => {
           await _this.$store.dispatch('logout')
           _this.$router.push({
@@ -85,6 +86,7 @@ export default {
             params: { disableBtn: true }
           })
         })
+        // eslint-disable-next-line space-before-function-paren
         .catch(async (action) => {})
     },
     toPsnDetail() {

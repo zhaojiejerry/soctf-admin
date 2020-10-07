@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { getCookie, setCookie, removeCookie } from '@/utils/auth'
+import { setCookie } from '@/utils/auth'
 import { getLoginCode } from '@/api/user'
 export default {
   name: 'Login',

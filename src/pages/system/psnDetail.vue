@@ -33,7 +33,7 @@
             <el-input v-model="userObj.phone" class="itemwidth" />
           </el-form-item>
           <el-form-item label="地区" prop="area">
-            <el-cascader :options="areaOptions" v-model="userObj.area" :props="{ checkStrictly: true ,label:'name',value:'name'}" class="itemwidth" clearable />
+            <el-cascader v-model="userObj.area" :options="areaOptions" :props="{ checkStrictly: true ,label:'name',value:'name'}" class="itemwidth" clearable />
           </el-form-item>
           <el-form-item label="个性签名" prop="signature">
             <el-input v-model="userObj.signature" class="itemwidth" />

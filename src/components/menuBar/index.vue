@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div class="sys-name">
@@ -19,10 +18,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import menuOne from './menuOne'
-import md5 from 'js-md5'
-import { getCookie, removeCookie } from '@/utils/auth'
 import { clickoutside } from '@/utils/directives'
-import { navRoutes } from '@/router'
+// import { navRoutes } from '@/router'
 export default {
   components: {
     menuOne

@@ -8,7 +8,7 @@ import {
     removeCookie
 } from '@/utils/auth'
 import {
-    asyncRoutes,
+    // asyncRoutes,
     navRoutes
 } from '@/router'
 import router from '@/router'
@@ -84,8 +84,7 @@ const actions = {
         })
     },
     logout({
-        commit,
-        state
+        commit
     }) {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
@@ -95,8 +94,7 @@ const actions = {
         })
     },
     getInfo({
-        commit,
-        state
+        commit
     }) {
         return new Promise((resolve, reject) => {
             getUserTree({

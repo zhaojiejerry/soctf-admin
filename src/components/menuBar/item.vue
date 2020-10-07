@@ -12,7 +12,7 @@ export default {
       default: ''
     }
   },
-  render (h, context) {
+  render(h, context) {
     const { icon, title } = context.props
     const vnodes = []
 
@@ -21,10 +21,12 @@ export default {
     }
 
     if (title) {
-      vnodes.push(<span slot='title'>{(title)}</span>)
+      // eslint-disable-next-line jsx-quotes
+      vnodes.push(<span slot="title">{title}</span>)
     }
 
-    vnodes.push(<em class='active-prefix'></em>)
+    // eslint-disable-next-line jsx-quotes
+    vnodes.push(<em class="active-prefix"></em>)
 
     return vnodes
   }

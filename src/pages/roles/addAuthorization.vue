@@ -25,7 +25,6 @@
 <script>
 import { getCookie } from '@/utils/auth'
 import { addAuthorization } from '@/api/role'
-import { parseTime } from '@/utils/index'
 export default {
   props: {
     value: {

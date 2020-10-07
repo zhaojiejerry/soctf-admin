@@ -39,12 +39,7 @@ export default {
       const first = matched[0]
 
       if (!this.isDashboard(first)) {
-        var home = [
-          {
-            path: '/index',
-            meta: { title: '首页' }
-          }
-        ]
+        var home = []
         matched = home.concat(matched)
       }
 

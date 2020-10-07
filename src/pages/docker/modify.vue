@@ -48,7 +48,6 @@
   </el-dialog>
 </template>
 <script>
-import { getCookie } from '@/utils/auth'
 import {
   editDockerQuestion,
   addDockerQuestion,

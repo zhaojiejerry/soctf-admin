@@ -49,7 +49,6 @@
   </div>
 </template>
 <script>
-import { getCookie } from '@/utils/auth'
 import { addPermission, modifyPermission } from '@/api/permission'
 import { EIconPicker } from 'e-icon-picker'
 export default {

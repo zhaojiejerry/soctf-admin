@@ -5,7 +5,7 @@
       <div slot="header" class="clearfix">
         <span>角色管理</span>
         <div class="right-part">
-          <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
+          <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           <el-button size="small" type="primary" @click="authorization">权限管理</el-button>
         </div>
       </div>
@@ -32,7 +32,7 @@
     </el-card>
     <modify v-model="show" :add-sign="addSign" :rule-form="ruleForm" @getList="getRoleInfoList" />
     <el-dialog :visible.sync="showAuthorization" :show-close="false" title="权限管理">
-      <el-button size="small" style="float: right;margin-bottom: 10px;" type="primary" icon="iconfont icon-add" @click="addauth">新增</el-button>
+      <el-button size="small" style="float: right;margin-bottom: 10px;" type="primary" icon="el-icon-plus" @click="addauth">新增</el-button>
       <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="authorizationList" class="list-table" tooltip-effect="dark" current-row-key="id">
         <el-table-column prop="authCode" align="center" label="权限编码" />
         <el-table-column prop="authName" align="center" label="权限名称" />

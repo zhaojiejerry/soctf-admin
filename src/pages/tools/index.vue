@@ -3,26 +3,23 @@
     <div>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>组织机构管理</span>
+          <span>武器库</span>
           <div class="right-part">
             <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
           </div>
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subAccountList" class="list-table" tooltip-effect="dark" current-row-key="id">
-            <el-table-column prop="orgCode" align="center" label="机构编码" />
-            <el-table-column prop="orgName" align="center" label="机构名称" />
-            <el-table-column label="描述" align="center" prop="description" show-overflow-tooltip />
-            <el-table-column label="备注" align="center" prop="remark" show-overflow-tooltip />
-            <el-table-column prop="createAt" align="center" label="创建时间">
-              <template slot-scope="scope">
-                {{ parseTime(scope.row.createAt) }}
-              </template>
-            </el-table-column>
+            <el-table-column prop="weapName" align="center" label="工具名称" />
+            <el-table-column prop="description" align="center" label="描述" />
+            <el-table-column label="描述URL" align="center" prop="descUrl" show-overflow-tooltip />
+            <el-table-column label="下载URL" align="center" prop="downloadUrl" show-overflow-tooltip />
+            <el-table-column label="图片URL" align="center" prop="iconUrl" show-overflow-tooltip />
+            <el-table-column label="官网URL" align="center" prop="orgUrl" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.orgId)">删除</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row.id)">编辑</el-button>
+                <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -34,51 +31,42 @@
         </div>
       </el-card>
     </div>
-    <modify v-model="showOrganiza" :add-sign="addOrganiza" :rule-form="ruleForm" @getList="getOrganizationListPage" />
+    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getWeaponListForPage" />
   </div>
 </template>
 <script>
-import { getOrganizationListPage, deleteOrganization } from '@/api/organization'
+import { getWeaponListForPage, deleteWeaponTool } from '@/api/tool'
 import { parseTime } from '@/utils/index'
 import modify from './modify'
-import { copyObj } from '@/utils/index'
 export default {
   components: { modify },
   data() {
     return {
-      showOrganiza: false,
-      addOrganiza: false,
+      show: false,
+      addSign: false,
+      mainId: '',
       subAccountList: [],
       subAccountTotal: 0,
       pageSize: 10,
-      currentPage: 1,
-      ruleForm: {}
+      currentPage: 1
     }
   },
   mounted() {
-    this.getOrganizationListPage()
+    this.getWeaponListForPage()
   },
   methods: {
     addNew() {
-      this.showOrganiza = true
-      this.addOrganiza = true
-      this.ruleForm = {
-        createAt: '',
-        createBy: '',
-        description: '',
-        orgCode: '',
-        orgId: '',
-        orgName: '',
-        remark: ''
-      }
+      this.show = true
+      this.addSign = true
+      this.mainId = ''
     },
     parseTime(time) {
       return parseTime(time)
     },
-    handleSubAccountEdit(row) {
-      this.showOrganiza = true
-      this.addOrganiza = false
-      this.ruleForm = copyObj(row)
+    handleSubAccountEdit(id) {
+      this.show = true
+      this.mainId = id
+      this.addSign = false
     },
     handleDeviceDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -87,8 +75,8 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          deleteOrganization({
-            organizationId: id
+          deleteWeaponTool({
+            id: id
           }).then((res) => {
             if (res.success) {
               this.$message({
@@ -96,7 +84,7 @@ export default {
                 message: '删除成功'
               })
               this.currentPage = 1
-              this.getOrganizationListPage()
+              this.getWeaponListForPage()
             } else {
               this.$message({
                 type: 'warning',
@@ -112,8 +100,8 @@ export default {
           })
         })
     },
-    getOrganizationListPage() {
-      getOrganizationListPage({
+    getWeaponListForPage() {
+      getWeaponListForPage({
         currentPage: this.currentPage,
         extraParam: {},
         pageSize: this.pageSize
@@ -126,11 +114,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.getOrganizationListPage()
+      this.getWeaponListForPage()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getOrganizationListPage()
+      this.getWeaponListForPage()
     }
   }
 }

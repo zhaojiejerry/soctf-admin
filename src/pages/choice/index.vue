@@ -3,7 +3,7 @@
     <div>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>选择题管理管理</span>
+          <span>选择题管理</span>
           <div class="right-part">
             <el-button size="small" type="primary" icon="iconfont icon-add" @click="addNew">新增</el-button>
           </div>
@@ -87,7 +87,7 @@ export default {
       })
         .then(() => {
           deleteChoiceQuestion({
-            answerId: id
+            choiceId: id
           }).then((res) => {
             if (res.success) {
               this.$message({

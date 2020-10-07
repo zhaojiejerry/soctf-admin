@@ -13,13 +13,18 @@
         <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="roleInfoList" class="list-table" tooltip-effect="dark" current-row-key="id">
           <el-table-column prop="roleCode" align="center" label="角色编码" />
           <el-table-column prop="roleName" align="center" label="角色名称" />
-          <!-- <el-table-column prop="icon" align="center" label="图标" /> -->
+          <el-table-column prop="icon" align="center" label="图标">
+            <template slot-scope="{row}">
+              <span :class="row.icon" />
+            </template>
+          </el-table-column>
           <el-table-column label="等级" align="center" prop="roleLevel" show-overflow-tooltip />
           <el-table-column label="描述" align="center" prop="description" show-overflow-tooltip />
           <el-table-column fixed="right" align="center" label="操作">
             <template slot-scope="scope">
               <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row)">编辑</el-button>
               <el-button size="small" type="text" @click.native.prevent="deleteRole(scope.row)">删除</el-button>
+              <el-button size="small" type="text" @click.native.prevent="deleteRole(scope.row)">关联权限</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -46,6 +51,7 @@ import { getAuthorizationList, getRoleInfoList, deleteRole } from '@/api/role'
 import { parseTime } from '@/utils/index'
 import modify from './modify'
 import addAuthorization from './addAuthorization'
+import { copyObj } from '@/utils/index'
 export default {
   components: { modify, addAuthorization },
   data() {
@@ -102,18 +108,18 @@ export default {
     },
     handleSubAccountEdit(row) {
       this.show = true
-      this.ruleForm = row
+      this.ruleForm = copyObj(row)
       this.addSign = false
     },
     deleteRole(id) {
-      this.$confirm('此操作将永久删除该比赛, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
           deleteRole({
-            gameId: id
+            roleId: id
           }).then((res) => {
             if (res.success) {
               this.$message({

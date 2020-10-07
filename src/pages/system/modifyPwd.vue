@@ -163,7 +163,7 @@ export default {
       }
       this.codeValue = '正在发送...'
       getMobileCode({
-        bizTyp: 'register',
+        bizTyp: 'modifyPwd',
         phoneNumber: this.ruleForm.phoneNumber
       }).then((res) => {
         if (res.success) {

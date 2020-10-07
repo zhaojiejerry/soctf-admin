@@ -41,7 +41,7 @@ export default {
       if (!this.isDashboard(first)) {
         var home = [
           {
-            path: '/home',
+            path: '/index',
             meta: { title: '首页' }
           }
         ]
@@ -66,12 +66,13 @@ export default {
       return toPath(params)
     },
     handleLink(item) {
+      console.log(item)
       const { redirect, path } = item
       if (redirect) {
         this.$router.push(redirect)
         return
       }
-      this.$router.push(this.pathCompile(path))
+      this.$router.push(path)
     }
   }
 }

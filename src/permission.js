@@ -1,5 +1,5 @@
-import router from './router'
-import store from './store'
+import router from '@/router'
+import store from '@/vuex/store'
 import {
     Message
 } from 'element-ui'
@@ -42,11 +42,8 @@ router.beforeEach(async(to, from, next) => {
                 try {
                     // get user info
                     // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-                    const {
-                        roles
-                    } = await store.dispatch('getInfo')
-
-                    // generate accessible routes map based on roles
+                    const roles = await store.dispatch('getInfo')
+                        // generate accessible routes map based on roles
                     const accessRoutes = await store.dispatch('generateRoutes', roles)
                         // dynamically add accessible routes
                     router.addRoutes(accessRoutes)

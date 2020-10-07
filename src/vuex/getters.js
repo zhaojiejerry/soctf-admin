@@ -1,12 +1,10 @@
 const getters = {
-  token: state => state.token,
-  menu: state => state.menu,
-  user: state => state.user,
-  isLoadMenu: state => state.isLoadMenu,
-  permissionRoutes: state => state.permissionRoutes,
-  btnPermissions: state => state.btnPermissions,
-  multiVideoVisible: state => state.multiVideoVisible,
-  cachedViews: state => state.cachedViews
+    token: state => state.token,
+    avatar: state => state.avatar,
+    name: state => state.name,
+    introduction: state => state.introduction,
+    roles: state => state.roles,
+    permission_routes: state => state.routes
 }
 
 export default getters

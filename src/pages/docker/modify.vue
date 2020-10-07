@@ -229,9 +229,6 @@ export default {
 }
 </script>
 <style>
-.itemwidth {
-  width: 375px;
-}
 .el-upload__tip {
   display: inline-block;
   margin-left: 20px;

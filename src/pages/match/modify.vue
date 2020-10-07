@@ -429,9 +429,6 @@ export default {
 }
 </script>
 <style>
-.itemwidth {
-  width: 375px;
-}
 .el-form-item__content {
   line-height: 0;
 }

@@ -7,18 +7,7 @@ import Layout from '@/components/layout/index'
 Vue.use(Router)
 
 export const navRoutes = [{
-        path: 'index',
-        name: 'Home',
-        component: () =>
-            import ('@/pages/home/index'),
-        meta: {
-            title: '首页',
-            icon: 'iconfont icon-home'
-        },
-        hidden: true
-    },
-    {
-        path: 'question',
+        path: '/question',
         name: 'question',
         component: () =>
             import ('@/pages/question/index'),
@@ -28,7 +17,7 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'match',
+        path: '/match',
         name: 'match',
         component: () =>
             import ('@/pages/match/index'),
@@ -38,7 +27,7 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'choice',
+        path: '/choice',
         name: 'choice',
         component: () =>
             import ('@/pages/choice/index'),
@@ -48,7 +37,7 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'docker',
+        path: '/docker',
         name: 'docker',
         component: () =>
             import ('@/pages/docker/index'),
@@ -58,7 +47,7 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'file',
+        path: '/file',
         name: 'file',
         component: () =>
             import ('@/pages/file/index'),
@@ -68,7 +57,7 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'roles',
+        path: '/roles',
         name: 'roles',
         component: () =>
             import ('@/pages/roles/index'),
@@ -78,7 +67,7 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'organization',
+        path: '/organization',
         name: 'organization',
         component: () =>
             import ('@/pages/organization/index'),
@@ -88,7 +77,7 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'users',
+        path: '/users',
         name: 'users',
         component: () =>
             import ('@/pages/users/index'),
@@ -98,7 +87,7 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'branch',
+        path: '/branch',
         name: 'branch',
         component: () =>
             import ('@/pages/branch/index'),
@@ -108,7 +97,7 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'permission',
+        path: '/permission',
         name: 'permission',
         component: () =>
             import ('@/pages/permission/index'),
@@ -118,28 +107,24 @@ export const navRoutes = [{
         }
     },
     {
-        path: 'modifyPwd',
-        name: 'modifyPwd',
+        path: '/menus',
+        name: 'menus',
         component: () =>
-            import ('@/pages/system/modifyPwd'),
+            import ('@/pages/menus/index'),
         meta: {
-            title: '修改密码',
+            title: '菜单管理',
             icon: 'iconfont icon-home'
-        },
-        hidden: true,
-        children: []
+        }
     },
     {
-        path: 'psnDetail',
-        name: 'psnDetail',
+        path: '/tools',
+        name: 'tools',
         component: () =>
-            import ('@/pages/system/psnDetail'),
-        hidden: true,
+            import ('@/pages/tools/index'),
         meta: {
-            title: '个人中心',
+            title: '武器库',
             icon: 'iconfont icon-home'
-        },
-        children: []
+        }
     }
 ]
 export const constantRoutes = [{
@@ -160,10 +145,43 @@ export const constantRoutes = [{
         path: '/',
         component: Layout,
         redirect: '/index',
-        children: navRoutes
+        children: [{
+                path: '/index',
+                name: 'index',
+                component: () =>
+                    import ('@/pages/home/index'),
+                meta: {
+                    title: '首页',
+                    icon: 'iconfont icon-home'
+                },
+                hidden: true
+            },
+            {
+                path: '/modifyPwd',
+                name: 'modifyPwd',
+                component: () =>
+                    import ('@/pages/system/modifyPwd'),
+                meta: {
+                    title: '修改密码',
+                    icon: 'iconfont icon-home'
+                },
+                hidden: true
+            }, {
+                path: '/psnDetail',
+                name: 'psnDetail',
+                component: () =>
+                    import ('@/pages/system/psnDetail'),
+                hidden: true,
+                meta: {
+                    title: '个人中心',
+                    icon: 'iconfont icon-home'
+                }
+            }
+        ]
     }
 ]
 
+export const asyncRoutes = []
 export const lastRoutes = [{
     path: '*',
     redirect: '/404',

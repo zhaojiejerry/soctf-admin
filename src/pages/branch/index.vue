@@ -41,6 +41,7 @@
 <script>
 import { getBranchListPage, deleteBranch } from '@/api/organization'
 import { parseTime } from '@/utils/index'
+import { copyObj } from '@/utils/index'
 import modify from './modify'
 export default {
   components: { modify },
@@ -79,7 +80,7 @@ export default {
     handleSubAccountEdit(row) {
       this.showOrganiza = true
       this.addOrganiza = false
-      this.ruleForm = row
+      this.ruleForm = copyObj(row)
     },
     handleDeviceDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {

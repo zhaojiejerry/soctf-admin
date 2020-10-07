@@ -152,15 +152,15 @@ export default {
             .then((res) => {
               if (res.success) {
                 setCookie('Token', res.data.accessToken)
-                setCookie('Account', this.loginForm.username)
+                // setCookie('Account', this.loginForm.username)
                 setCookie('usrId', res.data.user.usrId)
-                setCookie('Remember', JSON.stringify(this.rememberPass))
-                setCookie('AutoLogin', JSON.stringify(this.autoLogin))
-                if (this.rememberPass) {
-                  setCookie('Password', this.loginForm.password)
-                } else {
-                  setCookie('Password', '')
-                }
+                // setCookie('Remember', JSON.stringify(this.rememberPass))
+                // setCookie('AutoLogin', JSON.stringify(this.autoLogin))
+                // if (this.rememberPass) {
+                //   setCookie('Password', this.loginForm.password)
+                // } else {
+                //   setCookie('Password', '')
+                // }
                 this.$router.push({ path: this.redirect || '/' })
               } else {
                 this.getChartCode()

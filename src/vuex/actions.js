@@ -1,136 +1,146 @@
 import {
-  login,
-  logout,
-  getInfo
+    login,
+    getUserTree
 } from '@/api/user'
 import {
-  setCookie,
-  removeCookie
+    setCookie,
+    getCookie,
+    removeCookie
 } from '@/utils/auth'
 import {
-  resetRouter,
-  lastRoutes
+    asyncRoutes,
+    navRoutes
 } from '@/router'
 import router from '@/router'
+import Layout from '@/components/layout/index'
 
-export function deepMenu(arr) {
-  let result = []
-  const len = arr.length
-  let j = 0
-  for (let i = 0; i < len; i++) {
-    if (arr[i].children && arr[i].children.length) {
-      const res = deepMenu(arr[i].children)
-      if (res.length) {
-        arr[i].children = []
-        res.forEach((item) => {
-          item.path = arr[i].path + '/' + item.path
-          arr.push(item)
-        })
-      }
-    } else if (arr[i].hidden) {
-      j++
+/**
+ * Use meta.role to determine if the current user has permission
+ * @param roles
+ * @param route
+ */
+function hasPermission(roles, route) {
+    if (route.meta && route.meta.roles) {
+        return roles.some(role => route.meta.roles.includes(role))
+    } else {
+        return true
     }
-    if ((j == (len - 1) && len != 1) || (j == 1 && arr[i].children.length == 0)) {
-      result = [...arr]
-    }
-  }
-  return result
+}
+
+/**
+ * Filter asynchronous routing tables by recursion
+ * @param routes asyncRoutes
+ * @param roles
+ */
+export function filterAsyncRoutes(routes, roles) {
+    const res = []
+
+    routes.forEach(route => {
+        const tmp = {
+            ...route
+        }
+        if (hasPermission(roles, tmp)) {
+            // console.log(tmp.children)
+            if (tmp.children) {
+                tmp.children = filterAsyncRoutes(tmp.children, roles)
+            }
+            res.push({
+                path: tmp.path,
+                component: Layout,
+                redirect: tmp.path,
+                children: [tmp]
+            })
+        }
+    })
+
+    return res
 }
 
 const actions = {
-  login({
-    commit
-  }, userInfo) {
-    const {
-      username,
-      password,
-      verifyCode
-    } = userInfo
-    return new Promise((resolve, reject) => {
-      login({
-        userName: username,
-        password: password,
-        verifyCode: verifyCode,
-        userType: 2
-      }).then(res => {
-        if (res.success) {
-          const str = Math.random().toString(36).substring(2)
-          commit('SET_TOKEN', str)
-          setCookie('Token', str)
-        }
-        resolve(res)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-  logout({
-    commit,
-    state
-  }) {
-    commit('SET_TOKEN', '')
-    commit('SET_MENU', [])
-    commit('SET_CODE', [])
-    commit('SET_ISLOADMENU', false)
-    removeCookie('Token')
-    router.push({
-      path: '/login'
-    })
-    // resetRouter()
-
-    // return new Promise((resolve, reject) => {
-    //     logout().then((res) => {
-    //         if (res.code == 0) {
-    //         }
-    //         resolve()
-    //     }).catch(error => {
-    //         reject(error)
-    //     })
-    // })
-  },
-  getInfo({
-    commit,
-    state
-  }) {
-    return new Promise((resolve, reject) => {
-      getInfo().then(res => {
+    login({
+        commit
+    }, userInfo) {
         const {
-          data
-        } = res
-        if (!data) {
-          reject(new Error('验证失败，请重新登录'))
-        }
-        const {
-          user,
-          menu,
-          codeList
-        } = data
-        // 调整menu数据格式
-        if (menu.length) {
-          deepMenu(menu)
-        }
-        commit('SET_ISLOADMENU', true)
-        commit('SET_MENU', menu)
-        commit('SET_USER', user)
-        commit('SET_CODE', codeList)
-        commit('setWarningTipFlag', data.waitCheckStatus == 1)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-  resetToken({
-    commit
-  }) {
-    return new Promise(resolve => {
-      commit('SET_TOKEN', '')
-      commit('SET_MENU', [])
-      commit('SET_CODE', [])
-      removeCookie('Token')
-      resolve()
-    })
-  }
+            username,
+            password,
+            verifyCode
+        } = userInfo
+        return new Promise((resolve, reject) => {
+            login({
+                userName: username,
+                password: password,
+                verifyCode: verifyCode,
+                userType: 2
+            }).then(res => {
+                if (res.success) {
+                    const str = Math.random().toString(36).substring(2)
+                    commit('SET_TOKEN', str)
+                    setCookie('Token', str)
+                }
+                resolve(res)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    logout({
+        commit,
+        state
+    }) {
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        removeCookie('Token')
+        router.push({
+            path: '/login'
+        })
+    },
+    getInfo({
+        commit,
+        state
+    }) {
+        return new Promise((resolve, reject) => {
+            getUserTree({
+                userId: getCookie('usrId')
+            }).then(res => {
+                const {
+                    data,
+                    success
+                } = res
+                if (!success) {
+                    reject(new Error('验证失败，请重新登录'))
+                }
+                commit('SET_ROLES', data)
+                resolve(data)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    resetToken({
+        commit
+    }) {
+        return new Promise(resolve => {
+            commit('SET_TOKEN', '')
+            commit('SET_ROUTES', [])
+            removeCookie('Token')
+            resolve()
+        })
+    },
+    generateRoutes({
+        commit
+    }, roles) {
+        return new Promise(resolve => {
+            // let accessedRoutes
+            // if (roles.includes('admin')) {
+            //     accessedRoutes = asyncRoutes || []
+            // } else {
+            const accessedRoutes = filterAsyncRoutes(navRoutes, roles)
+                // }
+                // console.log(accessedRoutes, 234)
+            commit('SET_ROUTES', accessedRoutes)
+            resolve(accessedRoutes)
+        })
+    }
 }
 
 export default actions

@@ -323,9 +323,6 @@ export default {
 .pager-container {
   text-align: center;
 }
-.itemwidth {
-  width: 375px;
-}
 .el-upload__tip {
   display: inline-block;
   margin-left: 20px;

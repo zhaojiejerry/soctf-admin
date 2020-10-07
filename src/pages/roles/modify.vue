@@ -33,8 +33,6 @@ import { modifyRole, addRole } from '@/api/role'
 import { parseTime } from '@/utils/index'
 import { getOrganizationList } from '@/api/organization'
 import { EIconPicker } from 'e-icon-picker'
-import 'e-icon-picker/dist/index.css' // 基础样式
-import 'e-icon-picker/dist/main.css' // fontAwesome 图标库样式
 export default {
   components: { EIconPicker },
   props: {
@@ -162,9 +160,6 @@ export default {
 }
 .pager-container {
   text-align: center;
-}
-.itemwidth {
-  width: 375px;
 }
 .el-upload__tip {
   display: inline-block;

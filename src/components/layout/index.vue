@@ -25,7 +25,7 @@
       <el-main style="background-color: #edeef2;">
         <div style="height: 100%;">
           <transition name="fade" mode="out-in">
-            <keep-alive :include="cachedViews">
+            <keep-alive>
               <router-view ref="viewContainer" :key="key" class="content-container" />
             </keep-alive>
           </transition>

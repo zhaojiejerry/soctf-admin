@@ -24,6 +24,7 @@ export default {
   padding-bottom: 0.2rem;
 }
 .itemwidth {
-  width: 100%;
+  max-width: 375px;
+  width: 375px;
 }
 </style>

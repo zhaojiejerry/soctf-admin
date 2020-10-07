@@ -24,6 +24,7 @@
               <template slot-scope="scope">
                 <el-button size="small" type="text" @click.native.prevent="handleSubAccountEdit(scope.row)">编辑</el-button>
                 <el-button size="small" type="text" @click="handleDeviceDelete(scope.row.usrId)">删除</el-button>
+                <el-button size="small" type="text" @click="handleRole(scope.row)">关联角色</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -36,12 +37,27 @@
       </el-card>
     </div>
     <modify v-model="show" :add-sign="addSign" :rule-form="ruleForm" @getList="getUserInfoList" />
+    <el-dialog :visible.sync="showRoleInfo" :show-close="false" title="关联角色">
+      <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="roleInfoList" class="list-table" tooltip-effect="dark" current-row-key="id" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" align="center" width="55" />
+        <el-table-column prop="roleCode" align="center" label="角色编码" />
+        <el-table-column prop="roleName" align="center" label="角色名称" />
+        <el-table-column label="等级" align="center" prop="roleLevel" show-overflow-tooltip />
+        <el-table-column label="描述" align="center" prop="description" show-overflow-tooltip />
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="onSubmit">确定</el-button>
+        <el-button @click="showRoleInfo=false">关闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getUserInfoList, deleteUser } from '@/api/user'
+import { getUserInfoList, deleteUser, linkUserRole } from '@/api/user'
+import { getRoleInfoList } from '@/api/role'
 import { parseTime } from '@/utils/index'
 import modify from './modify'
+import { copyObj } from '@/utils/index'
 export default {
   components: { modify },
   data() {
@@ -54,15 +70,26 @@ export default {
       subAccountTotal: 0,
       pageSize: 10,
       currentPage: 1,
-      fileType: ['WP', '比赛资料', '其他']
+      roleInfoList: [],
+      showRoleInfo: false,
+      usrId: '',
+      multipleSelection: []
     }
   },
   mounted() {
     this.getUserInfoList()
+    this.getRoleInfoList()
   },
   methods: {
     parseTime(time) {
       return parseTime(time)
+    },
+    getRoleInfoList() {
+      getRoleInfoList().then((res) => {
+        if (res.success) {
+          this.roleInfoList = res.data
+        }
+      })
     },
     addNew() {
       this.show = true
@@ -101,8 +128,51 @@ export default {
     },
     handleSubAccountEdit(row) {
       this.show = true
-      this.ruleForm = row
+      this.ruleForm = copyObj(row)
       this.addSign = false
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    handleRole(row) {
+      this.showRoleInfo = true
+      this.usrId = row.usrId
+      this.$nextTick(() => {
+        this.$refs.multipleTable.clearSelection()
+        if (row.roleIds) {
+          row.roleIds.forEach((a) => {
+            this.roleInfoList.forEach((b) => {
+              if (a == b.roleId) {
+                this.$refs.multipleTable.toggleRowSelection(b, true)
+              }
+            })
+          })
+        }
+      })
+    },
+    onSubmit() {
+      var roleIds = []
+      this.multipleSelection.forEach((element) => {
+        roleIds.push(element.roleId)
+      })
+      linkUserRole({
+        usrId: this.usrId,
+        roleIds: roleIds
+      }).then((res) => {
+        if (res.success) {
+          this.$message({
+            type: 'success',
+            message: '角色关联成功'
+          })
+          this.showRoleInfo = false
+          this.getUserInfoList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '角色关联失败'
+          })
+        }
+      })
     },
     handleDeviceDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {

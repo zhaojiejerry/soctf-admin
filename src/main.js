@@ -13,6 +13,11 @@ import router from '@/router/index'
 import store from '@/vuex/store'
 // pxToRem
 import '@/utils/rem'
+
+import './permission'
+
+import 'e-icon-picker/dist/index.css' // 基础样式
+import 'e-icon-picker/dist/main.css' // fontAwesome 图标库样式
 // VueClipboard
 import VueClipboard from 'vue-clipboard2'
 VueClipboard.config.autoSetContainer = true
@@ -22,13 +27,13 @@ Vue.use(Element)
 Vue.use(VueClipboard)
 
 Vue.prototype.$echarts = Echarts
-/* eslint-disable no-new */
+    /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  components: {
-    App
-  },
-  template: '<App/>'
+    el: '#app',
+    router,
+    store,
+    components: {
+        App
+    },
+    template: '<App/>'
 })

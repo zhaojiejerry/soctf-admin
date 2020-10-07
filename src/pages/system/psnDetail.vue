@@ -162,9 +162,6 @@ export default {
 }
 </script>
 <style>
-.itemwidth {
-  width: 375px;
-}
 #user-head-div {
   width: 300px;
   text-align: center;

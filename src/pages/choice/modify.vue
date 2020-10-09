@@ -216,7 +216,7 @@ export default {
               } else {
                 this.$message({
                   type: 'warning',
-                  message: '修改失败'
+                  message: res.message
                 })
               }
             })
@@ -251,7 +251,7 @@ export default {
               } else {
                 this.$message({
                   type: 'warning',
-                  message: '新增失败'
+                  message: res.message
                 })
               }
             })

@@ -88,7 +88,7 @@ export default {
             } else {
               this.$message({
                 type: 'warning',
-                message: '删除失败'
+                message: res.message
               })
             }
           })

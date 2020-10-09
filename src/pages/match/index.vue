@@ -51,11 +51,12 @@
                 <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row.gameId)">编辑</el-button>
                 <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
                 <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="handleCreatePaper(scope.row.gameId)">生成试卷</el-button>
-                <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="startGame(scope.row.gameId)">发布</el-button>
-                <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="endGame(scope.row.gameId)">结束</el-button>
+                <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="startGame(scope.row.gameId)">发布比赛</el-button>
+                <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="endGame(scope.row.gameId)">结束比赛</el-button>
                 <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="seeLive(scope.row.gameId)">观看比赛</el-button>
-                <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="endGame(scope.row.gameId)">运维比赛</el-button>
+                <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="operationsGame(scope.row)">运维管理</el-button>
                 <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="seeDescription(scope.row.gameId)">比赛说明</el-button>
+                <el-button v-if="scope.row.gameStatus==3" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button>
                 <el-button v-if="scope.row.gameStatus==3" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
               </template>
             </el-table-column>
@@ -72,6 +73,7 @@
     <description v-model="showDescription" :game-id="gameId" />
     <achievement v-model="showAchievement" :type="type" :game-id="gameId" />
     <live v-model="showLive" :type="type" :game-id="gameId" />
+    <operations v-model="showOperations" :type="type" :game-id="gameId" />
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getGameInfoListForPage" />
   </div>
 </template>
@@ -80,13 +82,15 @@ import {
   getGameInfoListForPage,
   deleteGame,
   endGame,
-  startGame
+  startGame,
+  rankingInDB
 } from '@/api/match'
 import createPaper from './createPaper'
 import { parseTime } from '@/utils/index'
 import modify from './modify'
 import description from './description'
 import achievement from './achievement'
+import operations from './operations'
 import live from './live'
 export default {
   components: {
@@ -94,7 +98,8 @@ export default {
     modify,
     description,
     achievement,
-    live
+    live,
+    operations
   },
   data() {
     return {
@@ -112,8 +117,9 @@ export default {
       extraParam: {},
       showDescription: false,
       showAchievement: false,
-      type: 1,
-      showLive: false
+      type: '1',
+      showLive: false,
+      showOperations: false
     }
   },
   mounted() {
@@ -147,8 +153,44 @@ export default {
     },
     seeScore(row) {
       this.showAchievement = true
-      this.gameId = row.id
+      this.gameId = row.gameId
       this.type = row.gameType
+    },
+    operationsGame(row) {
+      this.showOperations = true
+      this.gameId = row.gameId
+      this.type = row.gameType
+    },
+    releaseScore(id) {
+      this.$confirm('是否要发布成绩?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          rankingInDB({
+            gameId: id
+          }).then((res) => {
+            if (res.success) {
+              this.$message({
+                type: 'success',
+                message: '成绩发布成功'
+              })
+              this.getGameInfoListForPage()
+            } else {
+              this.$message({
+                type: 'warning',
+                message: res.message
+              })
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布成绩'
+          })
+        })
     },
     deleteGame(id) {
       this.$confirm('此操作将永久删除该比赛, 是否继续?', '提示', {
@@ -170,7 +212,7 @@ export default {
             } else {
               this.$message({
                 type: 'warning',
-                message: '删除失败'
+                message: res.message
               })
             }
           })
@@ -202,7 +244,7 @@ export default {
             } else {
               this.$message({
                 type: 'warning',
-                message: '比赛结束失败'
+                message: res.message
               })
             }
           })
@@ -234,7 +276,7 @@ export default {
             } else {
               this.$message({
                 type: 'warning',
-                message: '比赛发布失败'
+                message: res.message
               })
             }
           })

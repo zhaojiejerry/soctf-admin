@@ -123,7 +123,7 @@ export default {
         } else {
           this.$message({
             type: 'warning',
-            message: '试卷生成失败'
+            message: res.message
           })
         }
       })

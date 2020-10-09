@@ -3,27 +3,23 @@
     <div>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>部门管理</span>
+          <span>公告列表</span>
           <div class="right-part">
             <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           </div>
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
-            <el-table-column prop="branCode" align="center" label="部门编码" />
-            <el-table-column prop="branName" align="center" label="部门名称" />
-            <el-table-column prop="branName" align="center" label="关联机构名称" />
-            <el-table-column label="描述" align="center" prop="description" show-overflow-tooltip />
-            <el-table-column label="备注" align="center" prop="remark" show-overflow-tooltip />
-            <el-table-column prop="createAt" align="center" label="创建时间">
-              <template slot-scope="scope">
-                {{ parseTime(scope.row.createAt) }}
+            <el-table-column prop="title" align="center" label="标题" />
+            <el-table-column prop="body" align="center" label="内容">
+              <template slot-scope="{row}">
+                <div v-html="row.body" />
               </template>
             </el-table-column>
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDelete(scope.row.branId)">删除</el-button>
+                <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row.id)">编辑</el-button>
+                <el-button size="small" type="text" @click="handleDelete(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -35,52 +31,42 @@
         </div>
       </el-card>
     </div>
-    <modify v-model="showOrganiza" :add-sign="addOrganiza" :rule-form="ruleForm" @getList="getBranchListPage" />
+    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getNoticeListForAdmin" />
   </div>
 </template>
 <script>
-import { getBranchListPage, deleteBranch } from '@/api/organization'
+import { getNoticeListForAdmin, delNoticeById } from '@/api/notice'
 import { parseTime } from '@/utils/index'
-import { copyObj } from '@/utils/index'
 import modify from './modify'
 export default {
   components: { modify },
   data() {
     return {
-      showOrganiza: false,
-      addOrganiza: false,
+      show: false,
+      addSign: false,
+      mainId: '',
       tableList: [],
       tableTotal: 0,
       pageSize: 10,
-      currentPage: 1,
-      ruleForm: {}
+      currentPage: 1
     }
   },
   mounted() {
-    this.getBranchListPage()
+    this.getNoticeListForAdmin()
   },
   methods: {
     addNew() {
-      this.showOrganiza = true
-      this.addOrganiza = true
-      this.ruleForm = {
-        branCode: '',
-        branId: '',
-        branName: '',
-        createAt: '',
-        createBy: '',
-        description: '',
-        orgId: '',
-        remark: ''
-      }
+      this.show = true
+      this.addSign = true
+      this.mainId = ''
     },
     parseTime(time) {
       return parseTime(time)
     },
-    handleEdit(row) {
-      this.showOrganiza = true
-      this.addOrganiza = false
-      this.ruleForm = copyObj(row)
+    handleEdit(id) {
+      this.show = true
+      this.mainId = id
+      this.addSign = false
     },
     handleDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -89,8 +75,8 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          deleteBranch({
-            branchId: id
+          delNoticeById({
+            id: id
           }).then((res) => {
             if (res.success) {
               this.$message({
@@ -98,7 +84,7 @@ export default {
                 message: '删除成功'
               })
               this.currentPage = 1
-              this.getBranchListPage()
+              this.getNoticeListForAdmin()
             } else {
               this.$message({
                 type: 'warning',
@@ -114,25 +100,26 @@ export default {
           })
         })
     },
-    getBranchListPage() {
-      getBranchListPage({
-        currentPage: this.currentPage,
-        extraParam: {},
-        pageSize: this.pageSize
+    getNoticeListForAdmin() {
+      getNoticeListForAdmin({
+        gameId: '',
+        pageNo: this.currentPage,
+        pageSize: this.pageSize,
+        type: ''
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data
-          this.tableTotal = res.count
+          this.tableList = res.data.records
+          this.tableTotal = res.data.total
         }
       })
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.getBranchListPage()
+      this.getNoticeListForAdmin()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.getBranchListPage()
+      this.getNoticeListForAdmin()
     }
   }
 }

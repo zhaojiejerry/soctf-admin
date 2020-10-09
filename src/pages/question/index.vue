@@ -3,7 +3,7 @@
     <div>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>问题管理</span>
+          <span>题目管理</span>
           <div class="right-part">
             <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           </div>
@@ -97,7 +97,7 @@ export default {
             } else {
               this.$message({
                 type: 'warning',
-                message: '删除失败'
+                message: res.message
               })
             }
           })

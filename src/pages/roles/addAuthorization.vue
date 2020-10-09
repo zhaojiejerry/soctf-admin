@@ -72,7 +72,7 @@ export default {
             } else {
               this.$message({
                 type: 'warning',
-                message: '新增失败'
+                message: res.message
               })
             }
           })

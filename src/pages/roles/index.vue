@@ -6,7 +6,7 @@
         <span>角色管理</span>
         <div class="right-part">
           <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
-          <el-button size="small" type="primary" @click="authorization">权限管理</el-button>
+          <!-- <el-button size="small" type="primary" @click="authorization">权限管理</el-button> -->
         </div>
       </div>
       <div class="user-child-list">
@@ -24,7 +24,7 @@
             <template slot-scope="scope">
               <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
               <el-button size="small" type="text" @click.native.prevent="deleteRole(scope.row)">删除</el-button>
-              <el-button size="small" type="text" @click.native.prevent="deleteRole(scope.row)">关联权限</el-button>
+              <!-- <el-button size="small" type="text" @click.native.prevent="deleteRole(scope.row)">关联权限</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -130,7 +130,7 @@ export default {
             } else {
               this.$message({
                 type: 'warning',
-                message: '删除失败'
+                message: res.message
               })
             }
           })

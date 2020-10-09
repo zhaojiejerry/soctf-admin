@@ -26,9 +26,9 @@
                 <el-button :disabled="roleId==''" size="small" type="primary" @click="linkRoleMenu">保存</el-button>
               </div>
             </div>
-            <div class="user-child-list">
+            <div style="height: calc( 100vh - 190px );overflow: hidden;">
               <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%">
-                <el-tree ref="tree" :props="props" :data="permissionList" check-strictly show-checkbox @check-change="handleCheckChange" />
+                <el-tree ref="tree" :props="props" :data="permissionTree" default-expand-all node-key="id" check-strictly show-checkbox @check-change="handleCheckChange" />
               </el-scrollbar>
             </div>
           </el-card>
@@ -39,7 +39,11 @@
 </template>
 <script>
 import { getRoleInfoList } from '@/api/role'
-import { getPermissionList, linkRoleMenu } from '@/api/permission'
+import {
+  getPermissionList,
+  linkRoleMenu,
+  getPermissionTree
+} from '@/api/permission'
 export default {
   components: {},
   data() {
@@ -50,22 +54,22 @@ export default {
       roleInfoList: [],
       permissionList: [],
       roleId: '',
+      permissionTree: [],
       props: {
-        label: 'permName'
-        // children: 'zones'
+        label: 'title'
       }
     }
   },
   mounted() {
     this.getRoleInfoList()
-    this.getPermissionList()
+    this.getPermissionTree()
   },
   methods: {
     linkRoleMenu() {
       var menuIds = []
       var nodes = this.$refs.tree.getCheckedNodes()
       nodes.forEach((element) => {
-        menuIds.push(element.permId)
+        menuIds.push(element.id)
       })
       linkRoleMenu({
         menuIds: menuIds,
@@ -79,8 +83,9 @@ export default {
         } else {
           this.$message({
             type: 'warning',
-            message: '保存失败'
+            message: res.message
           })
+          this.getPermissionList()
         }
       })
     },
@@ -104,6 +109,22 @@ export default {
       }).then((res) => {
         if (res.success) {
           this.permissionList = res.data
+          var permissionList = []
+          this.$refs.tree.setCheckedKeys([])
+          this.permissionList.forEach((element) => {
+            permissionList.push(element.permId)
+          })
+          console.log(permissionList)
+          this.$refs.tree.setCheckedKeys(permissionList)
+        }
+      })
+    },
+    getPermissionTree() {
+      getPermissionTree({
+        roleId: ''
+      }).then((res) => {
+        if (res.success) {
+          this.permissionTree = res.data
         }
       })
     }

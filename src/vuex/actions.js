@@ -107,7 +107,7 @@ const actions = {
                 if (!success) {
                     reject(new Error('验证失败，请重新登录'))
                 }
-                commit('SET_ROLES', data)
+                commit('SET_ROLES', data.menu)
                 resolve(data)
             }).catch(error => {
                 reject(error)

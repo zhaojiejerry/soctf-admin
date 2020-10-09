@@ -25,6 +25,7 @@
                 <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
                 <el-button size="small" type="text" @click="handleDelete(scope.row.usrId)">删除</el-button>
                 <el-button size="small" type="text" @click="handleRole(scope.row)">关联角色</el-button>
+                <el-button size="small" type="text" @click="handleDetails(scope.row)">用户详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -50,6 +51,7 @@
         <el-button @click="showRoleInfo=false">关闭</el-button>
       </div>
     </el-dialog>
+    <detailsPage v-model="showDetails" :rule-form="ruleForm" />
   </div>
 </template>
 <script>
@@ -58,8 +60,9 @@ import { getRoleInfoList } from '@/api/role'
 import { parseTime } from '@/utils/index'
 import modify from './modify'
 import { copyObj } from '@/utils/index'
+import detailsPage from './details'
 export default {
-  components: { modify },
+  components: { modify, detailsPage },
   data() {
     return {
       ruleForm: {},
@@ -73,7 +76,8 @@ export default {
       roleInfoList: [],
       showRoleInfo: false,
       usrId: '',
-      multipleSelection: []
+			multipleSelection: [],
+			showDetails: false
     }
   },
   mounted() {
@@ -81,6 +85,10 @@ export default {
     this.getRoleInfoList()
   },
   methods: {
+		handleDetails(row) {
+			this.showDetails = true
+      this.ruleForm = copyObj(row)
+		},
     parseTime(time) {
       return parseTime(time)
     },
@@ -169,7 +177,7 @@ export default {
         } else {
           this.$message({
             type: 'warning',
-            message: '角色关联失败'
+            message: res.message
           })
         }
       })
@@ -194,7 +202,7 @@ export default {
             } else {
               this.$message({
                 type: 'warning',
-                message: '删除失败'
+                message: res.message
               })
             }
           })

@@ -141,7 +141,7 @@ export default {
               usrStatus: this.ruleForm.usrStatus,
               usrSuper: this.ruleForm.usrSuper,
               address: this.ruleForm.address,
-              area: this.ruleForm.area.join('/'),
+              area: this.ruleForm.area == null ? '' : this.ruleForm.area.join('/'),
               company: this.ruleForm.company,
               gender: this.ruleForm.gender,
               school: this.ruleForm.school,

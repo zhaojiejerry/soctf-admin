@@ -28,7 +28,11 @@
             </div>
             <div style="height: calc( 100vh - 190px );overflow: hidden;">
               <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%">
-                <el-tree ref="tree" :props="props" :data="permissionTree" default-expand-all node-key="id" check-strictly show-checkbox @check-change="handleCheckChange" />
+                <el-tree ref="tree" :props="props" :data="permissionTree" default-expand-all node-key="id" check-strictly show-checkbox @check-change="handleCheckChange">
+                  <span slot-scope="{ node ,data}" class="custom-tree-node">
+                    <div>{{ node.label }} <span v-if="data.type==2">( 按钮 )</span></div>
+                  </span>
+                </el-tree>
               </el-scrollbar>
             </div>
           </el-card>

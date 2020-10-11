@@ -134,6 +134,16 @@ export const navRoutes = [{
             title: '公告管理',
             icon: 'iconfont icon-home'
         }
+    },
+    {
+        path: '/ranking',
+        name: 'ranking',
+        component: () =>
+            import ('@/pages/ranking/index'),
+        meta: {
+            title: '排行榜',
+            icon: 'iconfont icon-home'
+        }
     }
 ]
 export const constantRoutes = [{

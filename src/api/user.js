@@ -119,3 +119,75 @@ export function addUser(params) {
         data: params
     })
 }
+
+// 历史战绩 - 题目列表
+export function getHistoricalRecords(data) {
+    return axios({
+        url: '/career/getHistoricalRecords',
+        method: 'post',
+        data
+    })
+}
+
+// 总览数据
+export function getOverviewForUser(data) {
+    return axios({
+        url: '/career/getOverviewForUser',
+        method: 'get',
+        params: data
+    })
+}
+
+// 历史记录 - 个人技能雷达图
+export function getPersonalSkillRadarChart(data) {
+    return axios({
+        url: '/career/getPersonalSkillRadarChart',
+        method: 'post',
+        data
+    })
+}
+
+// 排行榜
+export function getRankingList(data) {
+    return axios({
+        url: '/career/getRankingList',
+        method: 'get',
+        params: data
+    })
+}
+
+// 获取武器库列表
+export function getWeaponListForPage(data) {
+    return axios({
+        url: '/Weapon/getWeaponListForPage',
+        method: 'post',
+        data
+    })
+}
+
+// 查看武器库详情
+export function getOneWeaponToolInfo(data) {
+    return axios({
+        url: '/Weapon/getOneWeaponToolInfo',
+        method: 'get',
+        params: data
+    })
+}
+
+// 荣誉
+export function HistoricalHonor(data) {
+    return axios({
+        url: '/career/HistoricalHonor',
+        method: 'post',
+        data
+    })
+}
+
+// 比赛记录
+export function getCompetitionRecord(data) {
+    return axios({
+        url: '/career/getCompetitionRecord',
+        method: 'post',
+        data
+    })
+}

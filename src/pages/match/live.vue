@@ -11,10 +11,10 @@
               <el-scrollbar style="height:100%">
                 <div v-for="(item,index) in noticeList" :key="index" class="line">
                   {{ item.createAt }} :
-                  <!-- <span>【{{}}】</span>
-									<span>{{username}}</span>
-									攻克了
-									<span>{{questionName}}</span> -->
+                  <span style="color:#E9852D">【{{ item.json.operator }}】</span>
+                  <span style="color:#0DA0B4">{{ item.json.username }}</span>
+                  攻克了
+                  <span style="color:#B59758">{{ item.json.questionName }}</span>
                 </div>
               </el-scrollbar>
             </div>
@@ -36,9 +36,9 @@
                         <img v-else-if="scope.row.rowNum == 2" src="@/assets/images/medal3.png" alt="">
                         <span v-else>{{ scope.row.rowNum }}</span>
                       </div>
-                      <!-- <div class="headimg">
+                      <div class="headimg">
                         <img :src="scope.row.portrait==null?'@/assets/images/avater.jpeg':scope.row.portrait" alt="">
-                      </div> -->
+                      </div>
                       <span class="name">{{ scope.row.userName }}</span>
                     </template>
                   </el-table-column>

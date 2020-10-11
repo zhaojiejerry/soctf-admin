@@ -46,6 +46,17 @@
       </div>
     </el-dialog>
     <el-dialog :visible.sync="dialogTableVisible" :show-close="false" width="70%" title="关联题目">
+      <el-form ref="ruleForm" inline>
+        <el-form-item label="名称">
+          <el-input v-model="name" clearable />
+        </el-form-item>
+        <el-form-item label="类别">
+          <el-select v-model="category" placeholder="请选择类别" clearable>
+            <el-option v-for="(item,index) in subject" :key="index" :label="item.name" :value="item.name" />
+          </el-select>
+        </el-form-item>
+        <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
+      </el-form>
       <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subList" highlight-current-row class="list-table" tooltip-effect="dark" @row-click="rowClick">
         <el-table-column prop="name" align="center" label="题目名称" />
         <el-table-column prop="questionDescribe" align="center" label="文本描述" />
@@ -85,6 +96,7 @@ import {
   getAllQuestion
 } from '@/api/question'
 import { parseTime } from '@/utils/index'
+import { getjson } from '@/api/common'
 export default {
   components: {},
   props: {
@@ -133,7 +145,9 @@ export default {
       pageSize: 10,
       currentPage: 1,
       questionRow: [],
-      questionType: ['容器', '附件', '选择']
+			questionType: ['容器', '附件', '选择'],
+			name: '',
+			category: ''
     }
   },
   watch: {
@@ -160,9 +174,15 @@ export default {
     }
   },
   mounted() {
-    this.getAllQuestion()
+		this.getAllQuestion()
+		this.getjson()
   },
   methods: {
+		getjson() {
+      getjson('ctf.json').then((res) => {
+        this.subject = res.subject
+      })
+    },
     parseTime(time) {
       return parseTime(time)
     },
@@ -173,10 +193,10 @@ export default {
     getAllQuestion() {
       getAllQuestion({
         pageSize: this.pageSize,
-        category: '',
+        category: this.category,
         difficultyLevel: '',
         labs: '',
-        name: '',
+        name: this.name,
         pageNo: this.currentPage,
         userId: ''
       }).then((res) => {

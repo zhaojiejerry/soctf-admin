@@ -22,8 +22,8 @@
           </el-dropdown>
         </div>
       </el-header>
-      <el-main style="background-color: #edeef2;">
-        <div style="height: 100%;">
+      <el-main style="background-color: #edeef2;height: calc(100vh - 60px);overflow: hidden;">
+        <div style="height: 100%;overflow: auto;">
           <transition name="fade" mode="out-in">
             <keep-alive>
               <router-view ref="viewContainer" :key="key" class="content-container" />

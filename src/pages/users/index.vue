@@ -51,7 +51,7 @@
         <el-button @click="showRoleInfo=false">关闭</el-button>
       </div>
     </el-dialog>
-    <detailsPage v-model="showDetails" :rule-form="ruleForm" />
+    <detailsPage v-model="showDetails" :rule-form="ruleForm" @getUserInfoList="getUserInfoList" />
   </div>
 </template>
 <script>

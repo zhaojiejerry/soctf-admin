@@ -8,8 +8,7 @@ import {
     removeCookie
 } from '@/utils/auth'
 import {
-    // asyncRoutes,
-    navRoutes
+    // navRoutes
 } from '@/router'
 import router from '@/router'
 import Layout from '@/components/layout/index'
@@ -53,6 +52,74 @@ export function filterAsyncRoutes(routes, roles) {
         }
     })
 
+    return res
+}
+
+export function BtnChildren(roles, id) {
+    const res = []
+    if (roles.length > 0) {
+        for (let i = 0; i < roles.length; i++) {
+            if (roles[i].type == 2) {
+                var tmp = {
+                    ...roles[i]
+                }
+                res.push(tmp.id)
+            }
+        }
+    }
+    return res
+}
+
+export function RoutesChildren(roles, id) {
+    const res = []
+    if (roles.length > 0) {
+        for (let i = 0; i < roles.length; i++) {
+            if (roles[i].type == 1) {
+                var tmp = {
+                    ...roles[i]
+                }
+                res.push(tmp)
+            }
+        }
+    }
+    return res
+}
+
+export function filterRoutes(roles) {
+    const res = []
+    for (let i = 0; i < roles.length; i++) {
+        if (roles[i].type == 1) {
+            var tmp = {}
+            console.log(RoutesChildren(roles[i].children))
+            if (RoutesChildren(roles[i].children).length == 0) {
+                tmp = {
+                    path: roles[i].path,
+                    component: Layout,
+                    redirect: roles[i].path,
+                    name: roles[i].title,
+                    meta: {
+                        title: roles[i].title,
+                        icon: roles[i].icon,
+                        btn: BtnChildren(roles[i].children)
+                    },
+                    children: filterRoutes(roles[i].children)
+                }
+            } else {
+                tmp = {
+                    path: roles[i].path,
+                    component: () =>
+                        import ('@/pages' + roles[i].redirect),
+                    name: roles[i].title,
+                    meta: {
+                        title: roles[i].title,
+                        icon: roles[i].icon,
+                        btn: BtnChildren(roles[i].children)
+                    }
+                }
+            }
+            res.push(tmp)
+        }
+    }
     return res
 }
 
@@ -128,13 +195,9 @@ const actions = {
         commit
     }, roles) {
         return new Promise(resolve => {
-            // let accessedRoutes
-            // if (roles.includes('admin')) {
-            //     accessedRoutes = asyncRoutes || []
-            // } else {
-            const accessedRoutes = filterAsyncRoutes(navRoutes, roles)
-                // }
-                // console.log(accessedRoutes, 234)
+            // const accessedRoutes = filterAsyncRoutes(navRoutes, roles)
+            const accessedRoutes = filterRoutes(roles)
+            console.log(accessedRoutes, 234)
             commit('SET_ROUTES', accessedRoutes)
             resolve(accessedRoutes)
         })

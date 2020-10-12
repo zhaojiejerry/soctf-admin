@@ -37,7 +37,7 @@
                         <span v-else>{{ scope.row.rowNum }}</span>
                       </div>
                       <div class="headimg">
-                        <img :src="scope.row.portrait==null?'@/assets/images/avater.jpeg':scope.row.portrait" alt="">
+                        <img :src="scope.row.portrait==null?'@/assets/images/avater.png':scope.row.portrait" alt="">
                       </div>
                       <span class="name">{{ scope.row.userName }}</span>
                     </template>

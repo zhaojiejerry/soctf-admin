@@ -6,7 +6,7 @@
           <el-input v-model="ruleForm.weapName" class="itemwidth" />
         </el-form-item>
         <!-- <el-form-item label="图片">
-          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/api/oss">
+          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/baseApi/oss">
             <img v-if="mainPic" :src="mainPic" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>

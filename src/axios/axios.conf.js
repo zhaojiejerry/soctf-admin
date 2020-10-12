@@ -11,7 +11,7 @@ import router from '@/router'
 
 const Axios = axios.create({
     /* eslint-disable no-undef */
-    baseURL: '/api',
+    baseURL: '/baseApi',
     timeout: 10000, // 超时设置
     withCredentials: true // 允许请求携带cookie信息
 })

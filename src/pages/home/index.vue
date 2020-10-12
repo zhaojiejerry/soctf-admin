@@ -2,7 +2,7 @@
   <div class="hb-home">
     <div class="init-info" style="margin-top: 140px;">
       <img src="./lg.png">
-      <p class="home-title" style="font-weight:bold;">欢迎使用，后台管理系统</p>
+      <p class="home-title" style="font-weight:bold;">欢迎使用，SOCTF后台管理系统</p>
     </div>
   </div>
 </template>

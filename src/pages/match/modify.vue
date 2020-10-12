@@ -33,25 +33,25 @@
           <el-input v-model="ruleForm.gameText" type="textarea" class="itemwidth" />
         </el-form-item>
         <el-form-item label="比赛LOGO图片">
-          <el-upload :show-file-list="false" :on-success="handleiconSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/api/oss">
+          <el-upload :show-file-list="false" :on-success="handleiconSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/baseApi/oss">
             <img v-if="iconUrl" :src="iconUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
         <el-form-item label="赛事主图">
-          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/api/oss">
+          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/baseApi/oss">
             <img v-if="mainPic" :src="mainPic" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
         <el-form-item label="赛事说明">
-          <el-upload :on-success="handleRemark" :file-list="remark" class="upload-demo" action="/api/oss" @on-remove="handleRemove1">
+          <el-upload :on-success="handleRemark" :file-list="remark" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove1">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="赛事积分说明">
-          <el-upload :on-success="handleScoreRemark" :file-list="scoreRemark" class="upload-demo" action="/api/oss" @on-remove="handleRemove2">
+          <el-upload :on-success="handleScoreRemark" :file-list="scoreRemark" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove2">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>

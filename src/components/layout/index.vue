@@ -9,7 +9,7 @@
         <div style="float: right;">
           <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
             <div class="avatar-wrapper">
-              <img src="@/assets/images/avater.jpeg" class="user-avatar">
+              <img src="@/assets/images/avater.png" class="user-avatar">
               <i class="el-icon-caret-bottom" />
             </div>
             <el-dropdown-menu slot="dropdown">

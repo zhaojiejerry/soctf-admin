@@ -11,7 +11,7 @@
               <el-row :gutter="20">
                 <el-col :span="9">
                   <div class="bg-purple">
-                    <img :src="userObj.portrait!=''?userObj.portrait:'@/assets/images/avater.jpeg'" alt="头像">
+                    <img :src="userObj.portrait!=''?userObj.portrait:'@/assets/images/avater.png'" alt="头像">
                   </div>
                   <span style="color: rgba(181, 151, 88, 1);padding-left: 25px;  cursor: pointer;" @click="show=true"> [修改信息]</span>
                 </el-col>

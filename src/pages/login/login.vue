@@ -1,9 +1,10 @@
 <template>
   <div class="zztjj-login">
     <div class="left-container">
+      <div style="font-size: 40px;color: #f6b95d; margin-top: 40px;">欢迎使用SOCTF后台管理系统</div>
       <el-carousel :autoplay="false" height="100%" class="banner-pic" arrow="never" indicator-position="none">
         <el-carousel-item>
-          <img src="./login-bg.png">
+          <!-- <img src="./login-bg.png"> -->
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -21,7 +22,6 @@
       </el-form-item>
       <el-form-item prop="verifyCode">
         <el-input v-model="loginForm.verifyCode" class="login-input" type="text" autocomplete="off" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
-          <i slot="prefix" class="icon-pic password" />
           <img slot="suffix" :src="chartCode" style="width: 100px; vertical-align: bottom; padding-top: 6px; padding-right: 10px;" alt="" @click="getChartCode">
         </el-input>
       </el-form-item>
@@ -188,11 +188,9 @@ export default {
 <style lang="scss">
 .login-input {
   .el-input__inner {
-    background-color: #fff7ef;
     border-radius: 24px;
     height: 48px;
     line-height: 48px;
-    border-color: #fff7ef;
     font-size: 16px;
   }
   .el-form-item__error {
@@ -250,8 +248,10 @@ export default {
 
 <style lang="scss" scoped>
 .zztjj-login {
-  background-color: #f4f4f4;
-  height: 100%;
+  // background-color: #f4f4f4;
+	background: url('https://soctf.oss-cn-hangzhou.aliyuncs.com/SoCTF/bg/20201004182308.gif') no-repeat;
+	background-size: 100%;
+  height: 100vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -303,13 +303,10 @@ export default {
   }
 }
 .login-container {
-  background-clip: padding-box;
+	background: url('../../assets/images/login-border.png') no-repeat;
+	background-size: 100% 100%;
   flex: 0 0 350px;
   padding: 32px 30px;
-  background: #fff;
-  border: 2px solid #ffece1;
-  // box-shadow: 0px 0px 10px 0px #eec2a4;
-  border-radius: 8px;
   box-sizing: border-box;
   .title {
     margin: 0 auto 25px auto;

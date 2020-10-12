@@ -34,7 +34,7 @@
           <el-input v-model="ruleForm.type" class="itemwidth" />
         </el-form-item>
         <el-form-item label="答案/文档OSS路径">
-          <el-upload ref="upload" :on-success="handleSuccess" :file-list="fileList" class="upload-demo" action="/api/oss" @on-remove="handleRemove">
+          <el-upload ref="upload" :on-success="handleSuccess" :file-list="fileList" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>

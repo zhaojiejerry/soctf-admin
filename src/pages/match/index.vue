@@ -38,12 +38,12 @@
             </el-table-column>
             <el-table-column prop="startTime" align="center" label="开始时间">
               <template slot-scope="scope">
-                {{ parseTime(scope.row.startTime) }}
+                {{ scope.row.startTime?parseTime(scope.row.startTime):'' }}
               </template>
             </el-table-column>
             <el-table-column prop="endTime" align="center" label="结束时间">
               <template slot-scope="scope">
-                {{ parseTime(scope.row.endTime) }}
+                {{ scope.row.endTime?parseTime(scope.row.endTime):'' }}
               </template>
             </el-table-column>
             <el-table-column fixed="right" align="center" label="操作">

@@ -4,9 +4,9 @@
       <div style="display: flex;">
         <div>
           <div id="user-head-div">
-            <img :src=" ruleForm.portrait != null ? ruleForm.portrait : '@/assets/images/avater.jpeg' " class="img1" alt="头像">
+            <img :src=" ruleForm.portrait != null ? ruleForm.portrait : '@/assets/images/avater.png' " class="img1" alt="头像">
           </div>
-          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :on-error="handleAvatarError" :before-upload="beforeAvatarUpload" class="upload-demo" style="text-align: center;" action="/api/oss">
+          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :on-error="handleAvatarError" :before-upload="beforeAvatarUpload" class="upload-demo" style="text-align: center;" action="/baseApi/oss">
             <div style="color:#B59758;margin-top: 40px;text-align: center;">
               【上传头像】
             </div>

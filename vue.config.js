@@ -20,11 +20,11 @@ module.exports = {
         },
         proxy: {
             // 配置跨域
-            '/api': {
+            '/baseApi': {
                 target: 'http://soctf.rusi.ink/',
                 changOrigin: true,
                 pathRewrite: {
-                    '^/api': '/'
+                    '^/baseApi': '/'
                 }
             },
             '/jsonApi': {

@@ -19,7 +19,7 @@
           <el-table-column align="center" label="头像">
             <template slot-scope="scope">
               <div class="headimg">
-                <img :src="scope.row.portrait==null?'@/assets/images/avater.jpeg':scope.row.portrait" alt="">
+                <img :src="scope.row.portrait==null?'@/assets/images/avater.png':scope.row.portrait" alt="">
               </div>
             </template>
           </el-table-column>

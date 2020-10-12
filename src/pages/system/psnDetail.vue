@@ -7,15 +7,15 @@
       <div style="display: flex;">
         <div>
           <div id="user-head-div">
-            <img :src=" userObj.portrait != null ? userObj.portrait : '@/assets/images/avater.jpeg' " class="img1" alt="头像">
+            <img :src=" userObj.portrait != null ? userObj.portrait : '@/assets/images/avater.png' " class="img1" alt="头像">
           </div>
-          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :on-error="handleAvatarError" :before-upload="beforeAvatarUpload" class="upload-demo" style="text-align: center;" action="/api/oss">
+          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :on-error="handleAvatarError" :before-upload="beforeAvatarUpload" class="upload-demo" style="text-align: center;" action="/baseApi/oss">
             <div style="color:#B59758;margin-top: 40px;text-align: center;">【上传头像】</div>
           </el-upload>
         </div>
         <el-form ref="userObj" :model="userObj" :rules="rules" label-width="100px" class="demo-userObj">
           <el-form-item label="用户名" prop="orgCode">
-            {{ userObj.username }}
+            <el-input v-model="userObj.username" readonly class="itemwidth" />
           </el-form-item>
           <el-form-item label="昵称" prop="realName">
             <el-input v-model="userObj.realName" class="itemwidth" />

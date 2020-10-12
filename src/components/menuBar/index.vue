@@ -1,13 +1,26 @@
 <template>
   <div>
     <div class="sys-name">
-      <img class="icon-logo" src="./logo.png">
+      <img class="icon-logo" src="./logo.png" />
       SOCTF后台管理系统
     </div>
     <div style="height:calc( 100vh - 60px )">
       <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%">
-        <el-menu :default-active="activeMenu" :unique-opened="true" class="hb-menu" mode="vertical" background-color="#323638" text-color="#fff" active-text-color="#B69858">
-          <menu-one v-for="route in navRoutes" :key="route.path" :item="route" :base-path="route.path" />
+        <el-menu
+          :default-active="activeMenu"
+          :unique-opened="true"
+          class="hb-menu"
+          mode="vertical"
+          background-color="#323638"
+          text-color="#fff"
+          active-text-color="#B69858"
+        >
+          <menu-one
+            v-for="route in navRoutes"
+            :key="route.path"
+            :item="route"
+            :base-path="route.path"
+          />
         </el-menu>
       </el-scrollbar>
     </div>
@@ -15,9 +28,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import menuOne from './menuOne'
-import { clickoutside } from '@/utils/directives'
+import { mapGetters } from "vuex";
+import menuOne from "./menuOne";
+import { clickoutside } from "@/utils/directives";
 // import { navRoutes } from '@/router'
 export default {
   components: {
@@ -27,24 +40,24 @@ export default {
     clickoutside
   },
   data() {
-    return {}
+    return {};
   },
   computed: {
-    ...mapGetters(['permission_routes']),
+    ...mapGetters(["permission_routes"]),
     activeMenu() {
-      const route = this.$route
-      const { meta, path } = route
+      const route = this.$route;
+      const { meta, path } = route;
       if (meta.activeMenu) {
-        return meta.activeMenu
+        return meta.activeMenu;
       }
-      return path
+      return path;
     }
   },
   created() {
-    this.navRoutes = this.permission_routes
+    this.navRoutes = this.permission_routes;
   },
   methods: {}
-}
+};
 </script>
 
 <style lang="scss">
@@ -222,7 +235,7 @@ export default {
     height: 32px;
     line-height: 32px;
     min-width: 235px !important;
-    background-color: #333333 !important;
+    background-color: #323638 !important;
 
     &:hover {
       background-color: #000 !important;

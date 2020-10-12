@@ -101,7 +101,7 @@ export const navRoutes = [{
         component: () =>
             import ('@/pages/permission/index'),
         meta: {
-            title: '菜单权限管理',
+            title: '权限管理',
             icon: 'iconfont icon-home'
         }
     },

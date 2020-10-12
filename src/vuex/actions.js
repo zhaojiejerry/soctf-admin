@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
     login,
     getUserTree
@@ -8,7 +9,7 @@ import {
     removeCookie
 } from '@/utils/auth'
 import {
-    // navRoutes
+    navRoutes
 } from '@/router'
 import router from '@/router'
 import Layout from '@/components/layout/index'
@@ -70,56 +71,72 @@ export function BtnChildren(roles, id) {
     return res
 }
 
-export function RoutesChildren(roles, id) {
+export function RoutesChildren(roles) {
     const res = []
     if (roles.length > 0) {
-        for (let i = 0; i < roles.length; i++) {
-            if (roles[i].type == 1) {
-                var tmp = {
-                    ...roles[i]
-                }
+        roles.forEach(element => {
+            var tmp = {
+                path: element.path,
+                component: () =>
+                    import ('@/pages' + element.redirect),
+                name: element.name,
+                hidden: element.hidden,
+                meta: {
+                    title: element.title,
+                    icon: element.icon,
+                    btn: BtnChildren(element.children)
+                },
+            }
+            if (element.type == 1) {
                 res.push(tmp)
             }
-        }
+        });
     }
     return res
 }
 
-export function filterRoutes(roles) {
-    const res = []
-    for (let i = 0; i < roles.length; i++) {
-        if (roles[i].type == 1) {
-            var tmp = {}
-            console.log(RoutesChildren(roles[i].children))
-            if (RoutesChildren(roles[i].children).length == 0) {
-                tmp = {
-                    path: roles[i].path,
-                    component: Layout,
-                    redirect: roles[i].path,
-                    name: roles[i].title,
-                    meta: {
-                        title: roles[i].title,
-                        icon: roles[i].icon,
-                        btn: BtnChildren(roles[i].children)
-                    },
-                    children: filterRoutes(roles[i].children)
-                }
-            } else {
-                tmp = {
-                    path: roles[i].path,
-                    component: () =>
-                        import ('@/pages' + roles[i].redirect),
-                    name: roles[i].title,
-                    meta: {
-                        title: roles[i].title,
-                        icon: roles[i].icon,
-                        btn: BtnChildren(roles[i].children)
-                    }
-                }
-            }
-            res.push(tmp)
+export function filterRoutes(power) {
+    const res = [];
+    power.forEach(item => {
+        console.log(item)
+        const tmp = {
+            ...item
         }
-    }
+        var role = {}
+        if (RoutesChildren(tmp.children).length == 0) {
+            role = {
+                path: tmp.path,
+                component: Layout,
+                redirect: tmp.path,
+                children: [{
+                    path: tmp.path,
+                    component: () =>
+                        import ('@/pages' + tmp.redirect),
+                    name: tmp.name,
+                    hidden: tmp.hidden,
+                    meta: {
+                        title: tmp.title,
+                        icon: tmp.icon,
+                        btn: BtnChildren(tmp.children)
+                    },
+                }]
+            }
+        } else {
+            role = {
+                path: tmp.path,
+                component: Layout,
+                redirect: tmp.path,
+                meta: {
+                    title: tmp.title,
+                    icon: tmp.icon,
+                },
+                children: RoutesChildren(tmp.children)
+            }
+        }
+        if (tmp.type == 1) {
+            res.push(role)
+        }
+    });
     return res
 }
 

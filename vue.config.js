@@ -18,6 +18,7 @@ module.exports = {
             warnings: false,
             errors: true
         },
+        // lintOnSave: false,
         proxy: {
             // 配置跨域
             '/baseApi': {

@@ -62,12 +62,26 @@
         <el-button @click="back">取消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="dialogTableVisible" title="参赛者">
+    <el-dialog :visible.sync="dialogTableVisible" width="70%" title="参赛者">
+      <el-form inline>
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="extraParam.username" placeholder="请输入" clearable />
+        </el-form-item>
+        <el-form-item label="公司" prop="company">
+          <el-input v-model="extraParam.company" placeholder="请输入" clearable />
+        </el-form-item>
+        <el-form-item label="学校" prop="school">
+          <el-input v-model="extraParam.school" placeholder="请输入" clearable />
+        </el-form-item>
+        <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
+      </el-form>
       <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableData" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="username" align="center" label="用户名" />
         <el-table-column prop="phone" align="center" label="电话号码" />
         <el-table-column prop="email" align="center" label="邮箱" />
+        <el-table-column prop="school" align="center" label="学校" />
+        <el-table-column prop="company" align="center" label="公司" />
       </el-table>
       <div class="pager-container mt30">
         <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="subTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
@@ -137,7 +151,8 @@ export default {
       tableData: [],
       subTotal: 0,
       pageSize: 10,
-      currentPage: 1
+			currentPage: 1,
+			extraParam: {}
     }
   },
   watch: {
@@ -235,9 +250,15 @@ export default {
       })
     },
     getUserInfoList() {
+			var extraParam = {}
+			for (var key in this.extraParam) {
+				if (this.extraParam[key] != '') {
+					extraParam[key] = this.extraParam[key]
+				}
+			}
       getUserInfoList({
         currentPage: this.currentPage,
-        extraParam: {},
+        extraParam: extraParam,
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
@@ -361,6 +382,7 @@ export default {
         joiners.push(element.usrId)
       })
       this.$refs.ruleForm.validate((valid) => {
+				console.log(valid)
         if (valid) {
           if (!this.addSign) {
             this.$confirm(

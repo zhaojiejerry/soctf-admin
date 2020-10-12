@@ -191,3 +191,21 @@ export function getCompetitionRecord(data) {
         data
     })
 }
+
+// 比赛记录
+export function hideUserScore(data) {
+    return axios({
+        url: '/hideUserScore',
+        method: 'get',
+        params: data
+    })
+}
+
+// 加分
+export function addScoreToUser(data) {
+    return axios({
+        url: '/career/addScoreToUser',
+        method: 'get',
+        params: data
+    })
+}

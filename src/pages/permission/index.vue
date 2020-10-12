@@ -63,6 +63,11 @@ export default {
         label: 'title'
       }
     }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
+    }
   },
   mounted() {
     this.getRoleInfoList()

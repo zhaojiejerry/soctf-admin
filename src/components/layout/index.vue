@@ -37,13 +37,10 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-// import { playSound } from '@/utils/js-play-sound'
-// import wxFooter from '@/components/footer/index'
 import wxMenu from '@/components/menuBar/index'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   components: {
-    // wxFooter,
     wxMenu,
     Breadcrumb
   },
@@ -65,15 +62,24 @@ export default {
   watch: {
     warningTipFlag(val) {
       this.waitCheckNotice(val)
-    }
+		},
+		$route: {
+			handler(val, oldVal) {
+				console.log(val)
+				this.$store.commit('SET_BTN', val.meta.btn)
+			},
+			deep: true
+		}
   },
-  created() {},
-  mounted() {},
   destroyed() {
     if (this.timer) {
       clearInterval(this.timer)
     }
-  },
+	},
+	mounted() {
+		this.$store.commit('SET_BTN', this.$route.meta.btn)
+		console.log(this.$route)
+	},
   methods: {
     logout() {
       const _this = this

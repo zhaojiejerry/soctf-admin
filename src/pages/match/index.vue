@@ -5,7 +5,7 @@
         <div slot="header" class="clearfix">
           <span>比赛管理</span>
           <div class="right-part">
-            <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
+            <el-button v-if="buttons.indexOf('31')!=-1" size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           </div>
         </div>
         <el-form ref="ruleForm" inline>
@@ -48,16 +48,16 @@
             </el-table-column>
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row.gameId)">编辑</el-button>
-                <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
-                <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="handleCreatePaper(scope.row.gameId)">生成试卷</el-button>
-                <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="startGame(scope.row.gameId)">发布比赛</el-button>
-                <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="endGame(scope.row.gameId)">结束比赛</el-button>
-                <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="seeLive(scope.row.gameId)">观看比赛</el-button>
-                <el-button v-if="scope.row.gameStatus==2" size="small" type="text" @click="operationsGame(scope.row)">运维管理</el-button>
-                <el-button v-if="scope.row.gameStatus==1" size="small" type="text" @click="seeDescription(scope.row.gameId)">比赛说明</el-button>
-                <el-button v-if="scope.row.gameStatus==3" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button>
-                <el-button v-if="scope.row.gameStatus==3" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
+                <el-button v-if="buttons.indexOf('33')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.gameId)">编辑</el-button>
+                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('32')!=-1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
+                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('61')!=-1" size="small" type="text" @click="handleCreatePaper(scope.row.gameId)">生成试卷</el-button>
+                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('36')!=-1" size="small" type="text" @click="startGame(scope.row.gameId)">发布比赛</el-button>
+                <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('60')!=-1" size="small" type="text" @click="endGame(scope.row.gameId)">结束比赛</el-button>
+                <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('30')!=-1" size="small" type="text" @click="seeLive(scope.row.gameId)">观看比赛</el-button>
+                <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('38')!=-1" size="small" type="text" @click="operationsGame(scope.row)">运维管理</el-button>
+                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('40')!=-1" size="small" type="text" @click="seeDescription(scope.row.gameId)">比赛说明</el-button>
+                <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('37')!=-1" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button>
+                <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -83,7 +83,8 @@ import {
   deleteGame,
   endGame,
   startGame,
-  rankingInDB
+	rankingInDB,
+	sendGameToken
 } from '@/api/match'
 import createPaper from './createPaper'
 import { parseTime } from '@/utils/index'
@@ -120,6 +121,11 @@ export default {
       type: '1',
       showLive: false,
       showOperations: false
+    }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
     }
   },
   mounted() {
@@ -270,7 +276,8 @@ export default {
               this.$message({
                 type: 'success',
                 message: '比赛发布成功'
-              })
+							})
+							this.sendGameToken(id)
               this.currentPage = 1
               this.getGameInfoListForPage()
             } else {
@@ -287,7 +294,24 @@ export default {
             message: '已取消发布'
           })
         })
-    },
+		},
+		sendGameToken(id) {
+			sendGameToken({
+				gameId: id
+			}).then((res) => {
+				if (res.success) {
+					this.$message({
+						type: 'success',
+						message: '发送赛事密钥短信成功'
+					})
+				} else {
+					this.$message({
+						type: 'warning',
+						message: res.message
+					})
+				}
+			})
+		},
     getGameInfoListForPage() {
       getGameInfoListForPage({
         currentPage: this.currentPage,

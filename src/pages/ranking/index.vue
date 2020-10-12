@@ -9,9 +9,9 @@
           <el-table-column align="center" label="排行">
             <template slot-scope="scope">
               <div class="order">
-                <img v-if="scope.row.rowNum == 0" src="@/assets/images/medal1.png" alt="">
-                <img v-else-if="scope.row.rowNum == 1" src="@/assets/images/medal2.png" alt="">
-                <img v-else-if="scope.row.rowNum == 2" src="@/assets/images/medal3.png" alt="">
+                <img v-if="scope.row.rowNum == 1" src="@/assets/images/medal1.png" alt="">
+                <img v-else-if="scope.row.rowNum == 2" src="@/assets/images/medal2.png" alt="">
+                <img v-else-if="scope.row.rowNum == 3" src="@/assets/images/medal3.png" alt="">
                 <span v-else>{{ scope.row.rowNum }}</span>
               </div>
             </template>
@@ -26,27 +26,64 @@
           <el-table-column prop="userName" align="center" label="名称" />
           <el-table-column prop="gold_coin" align="center" label="金币" />
           <el-table-column label="积分" align="center" prop="score" />
+          <el-table-column fixed="right" align="center" label="操作">
+            <template slot-scope="scope">
+              <el-button v-if="buttons.indexOf('25')!=-1" size="small" type="text" @click="hideUserScore(scope.row)">{{ scope.row.enable== 1?'隐藏成绩':'显示成绩' }}</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </el-card>
   </div>
 </template>
 <script>
-import { getRankingList } from '@/api/user'
+import { getRankingList, hideUserScore } from '@/api/user'
 export default {
   data() {
     return {
       rankingList: []
+    }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
     }
   },
   mounted() {
     this.getRankingList()
   },
   methods: {
+				hideUserScore(row) {
+			this.$confirm('是否要' + (row.enable == 1 ? '隐藏' : '显示') + '用户竞赛成绩?', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          hideUserScore({
+            userID: row.usr_id
+          }).then((res) => {
+            if (res.success) {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.getRankingList()
+            } else {
+              this.$message({
+                type: 'warning',
+                message: res.message
+              })
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          })
+        })
+    },
     getRankingList() {
-      getRankingList({
-        enable: 1
-      }).then((res) => {
+      getRankingList().then((res) => {
         this.rankingList = res.data
       })
     }

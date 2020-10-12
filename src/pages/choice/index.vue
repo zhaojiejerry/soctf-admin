@@ -5,7 +5,7 @@
         <div slot="header" class="clearfix">
           <span>选择题管理</span>
           <div class="right-part">
-            <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
+            <el-button v-if="buttons.indexOf('13')!=-1" size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           </div>
         </div>
         <div class="user-child-list">
@@ -28,8 +28,8 @@
             <el-table-column label="答题时间/秒" align="center" prop="choiceTime" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row.choiceId)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDelete(scope.row.choiceId)">删除</el-button>
+                <el-button v-if="buttons.indexOf('15')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.choiceId)">编辑</el-button>
+                <el-button v-if="buttons.indexOf('14')!=-1" size="small" type="text" @click="handleDelete(scope.row.choiceId)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -60,6 +60,11 @@ export default {
       pageSize: 10,
       currentPage: 1,
       choiceType: ['单选', '多选']
+    }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
     }
   },
   mounted() {

@@ -5,7 +5,7 @@
         <div slot="header" class="clearfix">
           <span>题目管理</span>
           <div class="right-part">
-            <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
+            <el-button v-if="buttons.indexOf('44')!=-1" size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           </div>
         </div>
         <div class="user-child-list">
@@ -26,8 +26,8 @@
             <el-table-column label="分类" align="center" prop="type" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row.questionId)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDelete(scope.row.id)">删除</el-button>
+                <el-button v-if="buttons.indexOf('46')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.questionId)">编辑</el-button>
+                <el-button v-if="buttons.indexOf('45')!=-1" size="small" type="text" @click="handleDelete(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -58,6 +58,11 @@ export default {
       pageSize: 10,
       currentPage: 1,
       fileType: ['WP', '比赛资料', '其他']
+    }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
     }
   },
   mounted() {

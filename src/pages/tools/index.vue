@@ -5,7 +5,7 @@
         <div slot="header" class="clearfix">
           <span>武器库</span>
           <div class="right-part">
-            <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
+            <el-button v-if="buttons.indexOf('56')!=-1" size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           </div>
         </div>
         <div class="user-child-list">
@@ -18,8 +18,8 @@
             <el-table-column label="官网URL" align="center" prop="orgUrl" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row.id)">编辑</el-button>
-                <el-button size="small" type="text" @click="handleDelete(scope.row.id)">删除</el-button>
+                <el-button v-if="buttons.indexOf('58')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.id)">编辑</el-button>
+                <el-button v-if="buttons.indexOf('57')!=-1" size="small" type="text" @click="handleDelete(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -49,6 +49,11 @@ export default {
       tableTotal: 0,
       pageSize: 10,
       currentPage: 1
+    }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
     }
   },
   mounted() {

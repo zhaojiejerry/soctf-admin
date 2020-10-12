@@ -37,7 +37,7 @@
               <template slot-scope="{row}">
                 <el-input v-if="row.edit" v-model="row.resultScore" size="small" style=" width: calc(100% - 40px);" placeholder="请输入" />
                 <span v-if="!row.edit" style="line-height: 32px;">{{ row.resultScore }}</span>
-                <span v-if="!row.edit" class="el-icon-edit-outline icon" @click="row.edit=true" />
+                <span v-if="!row.edit&&buttons.indexOf('39')!=-1" class="el-icon-edit-outline icon" @click="row.edit=true" />
                 <span v-if="row.edit" class="el-icon-close icon" @click="getScoreViewList" />
                 <span v-if="row.edit" class="el-icon-check icon" @click="modifyContestFinalScore(row)" />
               </template>
@@ -79,6 +79,11 @@ export default {
 			scoreViewList: [],
 			showList: false,
 			scoreId: ''
+    }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
     }
   },
   watch: {
@@ -150,8 +155,9 @@ export default {
     modifyContestFinalScore(row) {
       var that = this
 			var arr = [{
-				'resultScore': row.resultScore,
-				'scoreId': row.scoreId
+				id: row.id,
+				resultScore: row.resultScore,
+				scoreId: row.scoreId
 			}]
 				this.$confirm('是否要修改用户竞赛成绩?', '提示', {
         type: 'warning'

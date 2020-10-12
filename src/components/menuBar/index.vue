@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="sys-name">
-      <img class="icon-logo" src="./logo.png" />
+      <img class="icon-logo" src="./logo.png">
       SOCTF后台管理系统
     </div>
     <div style="height:calc( 100vh - 60px )">
@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import menuOne from "./menuOne";
-import { clickoutside } from "@/utils/directives";
+import { mapGetters } from 'vuex'
+import menuOne from './menuOne'
+import { clickoutside } from '@/utils/directives'
 // import { navRoutes } from '@/router'
 export default {
   components: {
@@ -40,24 +40,24 @@ export default {
     clickoutside
   },
   data() {
-    return {};
+    return {}
   },
   computed: {
-    ...mapGetters(["permission_routes"]),
+    ...mapGetters(['permission_routes']),
     activeMenu() {
-      const route = this.$route;
-      const { meta, path } = route;
+      const route = this.$route
+      const { meta, path } = route
       if (meta.activeMenu) {
-        return meta.activeMenu;
+        return meta.activeMenu
       }
-      return path;
+      return path
     }
   },
   created() {
-    this.navRoutes = this.permission_routes;
+    this.navRoutes = this.permission_routes
   },
   methods: {}
-};
+}
 </script>
 
 <style lang="scss">
@@ -185,10 +185,12 @@ export default {
     text-decoration: none;
   }
 
-  .iconfont {
+  .iconfont ,.fa{
     margin-right: 10px;
     font-size: 14px;
     color: #fff;
+		width: 15px !important;
+    display: inline-block;
   }
 
   &.el-menu {
@@ -198,11 +200,11 @@ export default {
   }
   .el-submenu.is-opened {
     .el-submenu__title {
-      background-color: #000 !important;
+      background-color:#323638 !important;
     }
     .nest-menu .el-menu-item {
       padding-left: 43px !important;
-      background-color: #000 !important;
+      background-color: #323638 !important;
     }
   }
   .el-submenu__icon-arrow {
@@ -213,7 +215,7 @@ export default {
     height: 46px;
     line-height: 46px;
     &:hover {
-      background-color: #000 !important;
+      background-color: #323638 !important;
     }
   }
 
@@ -225,24 +227,24 @@ export default {
     color: #b69858 !important;
   }
 
-  .is-active .iconfont {
-    color: #b69858 !important;
-  }
+  // .is-active .iconfont {
+  //   color: #b69858 !important;
+  // }
 
   .nest-menu .el-submenu > .el-submenu__title,
   .el-submenu .el-menu-item {
-    font-size: 12px;
-    height: 32px;
-    line-height: 32px;
+    font-size: 14px;
+    height: 46px;
+    line-height: 46px;
     min-width: 235px !important;
     background-color: #323638 !important;
 
     &:hover {
-      background-color: #000 !important;
+      background-color: #323638 !important;
     }
   }
   .nest-menu .is-active {
-    background-color: #000 !important;
+    background-color: #323638 !important;
     .active-prefix {
       position: absolute;
       top: 0;

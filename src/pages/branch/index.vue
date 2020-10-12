@@ -55,6 +55,11 @@ export default {
       currentPage: 1,
       ruleForm: {}
     }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
+    }
   },
   mounted() {
     this.getBranchListPage()

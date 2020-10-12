@@ -27,6 +27,7 @@ Vue.use(Element)
 Vue.use(VueClipboard)
 
 Vue.prototype.$echarts = Echarts
+Vue.prototype.$store = store
 
 new Vue({
     router,

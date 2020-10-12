@@ -5,7 +5,7 @@
       <div slot="header" class="clearfix">
         <span>菜单管理</span>
         <div class="right-part">
-          <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
+          <!-- <el-button v-if="buttons.indexOf('47')!=-1" size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button> -->
         </div>
       </div>
       <div class="user-child-list">
@@ -26,8 +26,8 @@
           </el-table-column>
           <el-table-column fixed="right" align="center" label="操作">
             <template slot-scope="scope">
-              <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
-              <el-button size="small" type="text" @click.native.prevent="deletePermission(scope.row.permId)">删除</el-button>
+              <el-button v-if="buttons.indexOf('49')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
+              <el-button v-if="buttons.indexOf('48')!=-1" size="small" type="text" @click.native.prevent="deletePermission(scope.row.permId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -48,6 +48,11 @@ export default {
       addSign: false,
       ruleForm: {},
       tableList: []
+    }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
     }
   },
   mounted() {

@@ -21,7 +21,10 @@ const mutations = {
     SET_ROUTES: (state, routes) => {
         state.addRoutes = routes
         state.routes = constantRoutes.concat(routes)
-        console.log(state.routes)
+            // console.log(state.routes)
+    },
+    SET_BTN: (state, buttons) => {
+        state.buttons = buttons
     }
 }
 

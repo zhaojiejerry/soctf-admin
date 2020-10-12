@@ -136,3 +136,12 @@ export function hideContestUserScore(data) {
         params: data
     })
 }
+
+// 发送赛事密钥短信
+export function sendGameToken(data) {
+    return axios({
+        url: '/sys/sendGameToken',
+        method: 'get',
+        params: data
+    })
+}

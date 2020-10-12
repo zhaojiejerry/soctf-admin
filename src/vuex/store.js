@@ -18,7 +18,8 @@ const state = {
     name: '',
     avatar: '',
     introduction: '',
-    roles: []
+    roles: [],
+    buttons: []
 }
 
 export default new Vuex.Store({

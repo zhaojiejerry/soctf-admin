@@ -5,7 +5,7 @@
       <div slot="header" class="clearfix">
         <span>角色管理</span>
         <div class="right-part">
-          <el-button size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
+          <el-button v-if="buttons.indexOf('51')!=-1" size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           <!-- <el-button size="small" type="primary" @click="authorization">权限管理</el-button> -->
         </div>
       </div>
@@ -22,8 +22,8 @@
           <el-table-column label="描述" align="center" prop="description" show-overflow-tooltip />
           <el-table-column fixed="right" align="center" label="操作">
             <template slot-scope="scope">
-              <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
-              <el-button size="small" type="text" @click.native.prevent="deleteRole(scope.row)">删除</el-button>
+              <el-button v-if="buttons.indexOf('53')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
+              <el-button v-if="buttons.indexOf('52')!=-1" size="small" type="text" @click.native.prevent="deleteRole(scope.row)">删除</el-button>
               <!-- <el-button size="small" type="text" @click.native.prevent="deleteRole(scope.row)">关联权限</el-button> -->
             </template>
           </el-table-column>
@@ -64,6 +64,11 @@ export default {
       showAdd: false,
       authorizationList: [],
       roleInfoList: []
+    }
+	},
+	computed: {
+    buttons() {
+      return this.$store.state.buttons
     }
   },
   mounted() {

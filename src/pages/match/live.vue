@@ -12,7 +12,7 @@
                 <div v-for="(item,index) in noticeList" :key="index" class="line">
                   {{ item.createAt }} :
                   <span style="color:#E9852D">【{{ item.json.operator }}】</span>
-                  <span style="color:#0DA0B4">{{ item.json.username }}</span>
+                  <span style="color:#0DA0B4">{{ item.json.userName }}</span>
                   攻克了
                   <span style="color:#B59758">{{ item.json.questionName }}</span>
                 </div>
@@ -31,9 +31,9 @@
                   <el-table-column align="left">
                     <template slot-scope="scope">
                       <div class="order">
-                        <img v-if="scope.row.rowNum == 0" src="@/assets/images/medal1.png" alt="">
-                        <img v-else-if="scope.row.rowNum == 1" src="@/assets/images/medal2.png" alt="">
-                        <img v-else-if="scope.row.rowNum == 2" src="@/assets/images/medal3.png" alt="">
+                        <img v-if="scope.row.rowNum == 1" src="@/assets/images/medal1.png" alt="">
+                        <img v-else-if="scope.row.rowNum == 2" src="@/assets/images/medal2.png" alt="">
+                        <img v-else-if="scope.row.rowNum == 3" src="@/assets/images/medal3.png" alt="">
                         <span v-else>{{ scope.row.rowNum }}</span>
                       </div>
                       <div class="headimg">

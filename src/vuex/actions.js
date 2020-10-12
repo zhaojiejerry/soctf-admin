@@ -98,7 +98,7 @@ export function RoutesChildren(roles) {
 export function filterRoutes(power) {
     const res = [];
     power.forEach(item => {
-        console.log(item)
+        // console.log(item)
         const tmp = {
             ...item
         }
@@ -214,7 +214,7 @@ const actions = {
         return new Promise(resolve => {
             // const accessedRoutes = filterAsyncRoutes(navRoutes, roles)
             const accessedRoutes = filterRoutes(roles)
-            console.log(accessedRoutes, 234)
+                // console.log(accessedRoutes, 234)
             commit('SET_ROUTES', accessedRoutes)
             resolve(accessedRoutes)
         })

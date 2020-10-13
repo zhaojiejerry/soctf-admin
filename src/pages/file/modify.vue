@@ -14,7 +14,7 @@
       </el-form-item>
       <el-form-item label="难易程度" prop="difficultyLevel">
         <div class="itemwidth" style="padding-top: 10px;">
-          <el-rate v-model="ruleForm.difficultyLevel" />
+          <el-rate v-model="ruleForm.difficultyLevel" :max="3" />
         </div>
       </el-form-item>
       <el-form-item label="金币" prop="goldCoin">

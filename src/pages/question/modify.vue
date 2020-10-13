@@ -46,7 +46,7 @@
       </div>
     </el-dialog>
     <el-dialog :visible.sync="dialogTableVisible" :show-close="false" width="70%" title="关联题目">
-      <el-form ref="ruleForm" inline>
+      <el-form inline>
         <el-form-item label="名称">
           <el-input v-model="name" clearable />
         </el-form-item>
@@ -67,7 +67,7 @@
         </el-table-column>
         <el-table-column label="难易程度" align="center">
           <template slot-scope="scope">
-            <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
+            <el-rate :value="parseInt(scope.row.difficultyLevel)" :max="3" disabled />
           </template>
         </el-table-column>
         <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
@@ -147,7 +147,8 @@ export default {
       questionRow: [],
 			questionType: ['容器', '附件', '选择'],
 			name: '',
-			category: ''
+			category: '',
+			subject: []
     }
   },
   watch: {
@@ -236,9 +237,10 @@ export default {
       }).then((res) => {
         if (res.data) {
           this.ruleForm = res.data
+					this.question = res.data.questionName
+					console.log(this.question)
           if (res.data.fileUrl != '') {
             var fileUrl = res.data.fileUrl.split('/')
-            console.log(fileUrl)
             this.fileList =
               res.data.fileUrl == ''
                 ? []
@@ -249,7 +251,7 @@ export default {
                     }
                   ]
           }
-          this.ruleForm.label = this.getLabel(res.data.label)
+          this.ruleForm.label = this.ruleForm.label == '' ? [] : this.getLabel(res.data.label)
           this.label = this.ruleForm.label
         }
       })

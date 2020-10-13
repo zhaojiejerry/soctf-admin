@@ -11,7 +11,7 @@
       </el-table-column>
       <el-table-column label="难易程度" align="center">
         <template slot-scope="scope">
-          <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
+          <el-rate :value="parseInt(scope.row.difficultyLevel)" :max="3" disabled />
         </template>
       </el-table-column>
       <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />

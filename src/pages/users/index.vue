@@ -182,7 +182,7 @@ export default {
       this.addSign = true
       this.ruleForm = {
         address: '',
-        area: '',
+        area: [],
         company: '',
         email: '',
         gameId: '',
@@ -214,7 +214,8 @@ export default {
     },
     handleEdit(row) {
       this.show = true
-      this.ruleForm = copyObj(row)
+			this.ruleForm = copyObj(row)
+			this.ruleForm.area = this.ruleForm.area ? this.ruleForm.area.split('/') : []
       this.addSign = false
     },
     handleSelectionChange(val) {

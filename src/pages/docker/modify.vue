@@ -17,7 +17,7 @@
       </el-form-item>
       <el-form-item label="难易程度" prop="difficultyLevel">
         <div class="itemwidth" style="padding-top: 10px;">
-          <el-rate v-model="ruleForm.difficultyLevel" />
+          <el-rate v-model="ruleForm.difficultyLevel" :max="3" />
         </div>
       </el-form-item>
       <el-form-item label="金币" prop="goldCoin">
@@ -142,7 +142,7 @@ export default {
         if (res.success) {
           this.ruleForm = res.data
           this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel)
-          this.ruleForm.label = this.getLabel(res.data.label)
+          this.ruleForm.label = this.ruleForm.label == '' ? [] : this.getLabel(res.data.label)
           this.label = this.ruleForm.label
         }
       })

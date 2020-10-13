@@ -14,7 +14,7 @@ export function deleteChoiceQuestion(data) {
     return axios({
         url: '/deleteChoiceQuestion',
         method: 'post',
-        data
+        params: data
     })
 }
 

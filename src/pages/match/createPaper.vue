@@ -60,9 +60,9 @@ export default {
 			// console.log(tab, event)
 		},
     createPaperInfo() {
-      var docker = 	this.$refs.docker.questions
-			var file = 		this.$refs.file.questions
-			var choice = 		this.$refs.choice.questions
+      var docker = this.$refs.docker.questions
+			var file = this.$refs.file.questions
+			var choice = this.$refs.choice.questions
       var questionIds = []
       docker.forEach((element) => {
         questionIds.push(element.id)
@@ -71,7 +71,7 @@ export default {
         questionIds.push(element.id)
 			})
 			choice.forEach((element) => {
-        questionIds.push(element.choiceId)
+        questionIds.push(element.bankId)
 			})
 			if (questionIds.length == 0) {
         this.$message({

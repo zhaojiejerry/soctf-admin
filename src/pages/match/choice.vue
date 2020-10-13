@@ -11,7 +11,7 @@
       </el-table-column>
       <el-table-column label="难易程度" align="center">
         <template slot-scope="scope">
-          <el-rate :value="parseInt(scope.row.difficultyLevel)" disabled />
+          <el-rate :value="parseInt(scope.row.difficultyLevel)" :max="3" disabled />
         </template>
       </el-table-column>
       <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
@@ -63,7 +63,7 @@ export default {
       console.log(selection, row)
       if (!selection.includes(row)) {
         const index = this.questions.findIndex((item) => {
-          return item.choiceId === row.choiceId
+          return item.bankId === row.bankId
         })
         this.questions.splice(index, 1)
       } else {
@@ -74,7 +74,7 @@ export default {
       if (selection.length > 0) {
         this.tableList.forEach((v) => {
           const index = this.questions.findIndex((i) => {
-            return i.choiceId === v.choiceId
+            return i.bankId === v.bankId
           })
           if (index === -1) {
             this.questions.push(v)
@@ -83,9 +83,9 @@ export default {
       } else {
         this.questions.forEach((item, index) => {
           this.tableList.forEach((ms) => {
-            if (item.choiceId == ms.choiceId) {
+            if (item.bankId == ms.bankId) {
               this.questions = this.questions.filter(
-                (item) => item.choiceId != ms.choiceId
+                (item) => item.bankId != ms.bankId
               )
             }
           })
@@ -102,7 +102,7 @@ export default {
           this.tableList = res.data
           this.questions.forEach((a) => {
             this.tableList.forEach((b) => {
-              if (a.choiceId === b.choiceId) {
+              if (a.bankId === b.bankId) {
                 this.$refs.multipleTable.toggleRowSelection(b, true)
               }
             })

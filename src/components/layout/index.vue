@@ -9,7 +9,7 @@
         <div style="float: right;">
           <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
             <div class="avatar-wrapper">
-              <img src="@/assets/images/avater.png" class="user-avatar">
+              <img :src="userObj.portrait ? userObj.portrait :'@/assets/images/avater.png'" class="user-avatar">
               <i class="el-icon-caret-bottom" />
             </div>
             <el-dropdown-menu slot="dropdown">
@@ -36,9 +36,11 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
-import wxMenu from '@/components/menuBar/index'
-import Breadcrumb from '@/components/Breadcrumb'
+import { mapGetters, mapState } from 'vuex';
+import wxMenu from '@/components/menuBar/index';
+import Breadcrumb from '@/components/Breadcrumb';
+import { getOneUserInfo } from '@/api/user';
+import { getCookie } from '@/utils/auth';
 export default {
   components: {
     wxMenu,
@@ -47,13 +49,14 @@ export default {
   data() {
     return {
       timer: '',
-      timestamp: ''
-    }
+      timestamp: '',
+      userObj: {}
+    };
   },
   computed: {
     ...mapGetters(['cachedViews']),
     key() {
-      return this.$route.path
+      return this.$route.path;
     },
     ...mapState({
       warningTipFlag: (state) => state.warningTipFlag
@@ -61,52 +64,62 @@ export default {
   },
   watch: {
     warningTipFlag(val) {
-      this.waitCheckNotice(val)
-		},
-		$route: {
-			handler(val, oldVal) {
-				console.log(val)
-				this.$store.commit('SET_BTN', val.meta.btn)
-			},
-			deep: true
-		}
+      this.waitCheckNotice(val);
+    },
+    $route: {
+      handler(val, oldVal) {
+        console.log(val);
+        this.$store.commit('SET_BTN', val.meta.btn);
+      },
+      deep: true
+    }
   },
   destroyed() {
     if (this.timer) {
-      clearInterval(this.timer)
+      clearInterval(this.timer);
     }
-	},
-	mounted() {
-		this.$store.commit('SET_BTN', this.$route.meta.btn)
-		console.log(this.$route)
-	},
+  },
+  mounted() {
+    this.$store.commit('SET_BTN', this.$route.meta.btn);
+    console.log(this.$route);
+    this.getOneUserInfo();
+  },
   methods: {
+    getOneUserInfo() {
+      getOneUserInfo({
+        usrId: getCookie('usrId')
+      }).then((res) => {
+        if (res.success) {
+          this.userObj = res.data;
+        }
+      });
+    },
     logout() {
-      const _this = this
+      const _this = this;
       this.$confirm('确认要退出登录吗?', '退出')
         // eslint-disable-next-line space-before-function-paren
         .then(async (action) => {
-          await _this.$store.dispatch('logout')
+          await _this.$store.dispatch('logout');
           _this.$router.push({
             name: 'login',
             params: { disableBtn: true }
-          })
+          });
         })
         // eslint-disable-next-line space-before-function-paren
-        .catch(async (action) => {})
+        .catch(async (action) => {});
     },
     toPsnDetail() {
       this.$router.push({
         path: 'psnDetail'
-      })
+      });
     },
     toModifyPwd() {
       this.$router.push({
         path: 'modifyPwd'
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

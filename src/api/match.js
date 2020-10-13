@@ -145,3 +145,21 @@ export function sendGameToken(data) {
         params: data
     })
 }
+
+// 查看竞赛试卷简略信息(本场竞赛题目集合)
+export function getPaperInfoForGame(data) {
+    return axios({
+        url: '/getPaperInfoForGame',
+        method: 'get',
+        params: data
+    })
+}
+
+// 删除试题
+export function deleteQuestions(data) {
+    return axios({
+        url: '/deleteQuestions',
+        method: 'post',
+        data
+    })
+}

@@ -23,7 +23,7 @@
       <el-form-item label="分值" prop="value">
         <el-input v-model.number="ruleForm.value" :min="0" class="itemwidth" />
       </el-form-item>
-      <el-form-item label="答题时间/秒" prop="time">
+      <el-form-item label="答题时间/分" prop="time">
         <el-input v-model.number="ruleForm.time" :min="0" class="itemwidth" />
       </el-form-item>
       <el-form-item label="地址" prop="url">

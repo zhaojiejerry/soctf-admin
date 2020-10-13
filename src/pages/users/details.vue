@@ -1,6 +1,6 @@
 <template>
   <div class="live">
-    <el-dialog :visible.sync="value" width="70%" :show-close="false" title="用户比赛详情">
+    <el-dialog :visible.sync="value" width="70%" title="用户比赛详情" @closed="close">
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
         <el-tab-pane label="总览" name="first">
           <el-card shadow="never">

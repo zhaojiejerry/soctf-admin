@@ -21,7 +21,7 @@
           </div>
         </el-form-item>
         <el-form-item label="比赛时间" prop="description">
-          <el-date-picker v-model="ruleForm.date" class="itemwidth" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
+          <el-date-picker v-model="ruleForm.date" class="itemwidth" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
         </el-form-item>
         <el-form-item label="比赛官网" prop="gameOfficeAddress">
           <el-input v-model="ruleForm.gameOfficeAddress" class="itemwidth" />

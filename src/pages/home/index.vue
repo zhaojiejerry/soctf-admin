@@ -78,9 +78,10 @@ export default {
       font-size: 32px;
       color: #333333;
       font-weight: 700;
-      width: 450px;
       text-align: left;
       margin-top: 20px;
+			width: 100%;
+			text-align: center;
     }
   }
   .statistics-info {

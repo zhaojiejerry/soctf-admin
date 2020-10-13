@@ -58,6 +58,7 @@
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('40')!=-1" size="small" type="text" @click="seeDescription(scope.row.gameId)">比赛说明</el-button>
                 <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('37')!=-1" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button>
                 <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
+                <el-button v-if="buttons.indexOf('72')!=-1" size="small" type="text" @click="seePaper(scope.row.gameId)">比赛试题</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -75,6 +76,8 @@
     <live v-model="showLive" :type="type" :game-id="gameId" />
     <operations v-model="showOperations" :type="type" :game-id="gameId" />
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getGameInfoListForPage" />
+    <paperInfo v-model="showPaperInfo" :game-id="gameId" />
+
   </div>
 </template>
 <script>
@@ -92,6 +95,7 @@ import modify from './modify'
 import description from './description'
 import achievement from './achievement'
 import operations from './operations'
+import paperInfo from './paperInfo'
 import live from './live'
 export default {
   components: {
@@ -100,7 +104,8 @@ export default {
     description,
     achievement,
     live,
-    operations
+		operations,
+		paperInfo
   },
   data() {
     return {
@@ -120,7 +125,8 @@ export default {
       showAchievement: false,
       type: '1',
       showLive: false,
-      showOperations: false
+			showOperations: false,
+			showPaperInfo: false
     }
 	},
 	computed: {
@@ -134,7 +140,11 @@ export default {
   methods: {
     parseTime(time) {
       return parseTime(time)
-    },
+		},
+		seePaper(id) {
+			this.showPaperInfo = true
+      this.gameId = id
+		},
     addNew() {
       this.show = true
       this.addSign = true

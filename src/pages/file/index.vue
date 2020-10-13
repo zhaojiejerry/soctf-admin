@@ -25,7 +25,7 @@
             <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
             <el-table-column label="分值" align="center" prop="value" show-overflow-tooltip />
             <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
-            <el-table-column label="答题时间/秒" align="center" prop="time" show-overflow-tooltip />
+            <el-table-column label="答题时间/分" align="center" prop="time" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
                 <el-button v-if="buttons.indexOf('21')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.id)">编辑</el-button>

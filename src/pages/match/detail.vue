@@ -1,0 +1,174 @@
+<template>
+  <div>
+    <el-dialog :visible.sync="value" width="70%" title="比赛详情" @closed="back">
+      <el-form ref="ruleForm" :model="ruleForm" label-width="150px" class="demo-ruleForm">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="赛事名称" prop="gameName">
+              {{ ruleForm.gameName }}
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="比赛类型" prop="gameType">
+              {{ ruleForm.gameType == '1'?'个人':'团队' }}
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="开始时间" prop="description">
+              {{ ruleForm.startTime?parseTime(ruleForm.startTime):'' }}
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="结束时间" prop="description">
+              {{ ruleForm.endTime?parseTime(ruleForm.endTime):'' }}
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="参赛者">
+          <div class="box">
+            <el-tag v-for="(item,index) in joiners" :key="index" type="info">
+              {{ item.username }}
+            </el-tag>
+          </div>
+        </el-form-item>
+
+        <el-form-item label="比赛官网" prop="gameOfficeAddress">
+          {{ ruleForm.gameOfficeAddress }}
+        </el-form-item>
+        <el-form-item label="赛事描述" prop="description">
+          {{ ruleForm.description }}
+        </el-form-item>
+        <el-form-item label="比赛详细描述" prop="gameText">
+          {{ ruleForm.gameText }}
+        </el-form-item>
+        <el-form-item label="比赛LOGO图片">
+          <img v-if="ruleForm.iconUrl" :src="ruleForm.iconUrl" class="avatar">
+        </el-form-item>
+        <el-form-item label="赛事主图">
+          <img v-if="ruleForm.mainPic" :src="ruleForm.mainPic" class="avatar">
+        </el-form-item>
+        <el-form-item label="赛事说明">
+          <a :href="ruleForm.remark" target="_blank">{{ ruleForm.remark }}</a>
+        </el-form-item>
+        <el-form-item label="赛事积分说明">
+          <a :href="ruleForm.scoreRemark" target="_blank">{{ ruleForm.scoreRemark }}</a>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="back">关闭</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+<script>
+import { getGameInfoDetail } from '@/api/match';
+import { parseTime } from '@/utils/index';
+export default {
+  components: {},
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    },
+    gameId: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {
+      dialogTableVisible: false,
+      joiners: [],
+      ruleForm: {}
+    };
+  },
+  watch: {
+    value(val) {
+      if (val) {
+          this.getGameInfoDetail();
+      }
+    }
+  },
+  methods: {
+		back() {
+      this.$emit('input', false);
+		},
+		parseTime(time) {
+      return parseTime(time);
+		},
+    getGameInfoDetail() {
+      getGameInfoDetail({
+        gameId: this.gameId
+      }).then((res) => {
+        if (res.success) {
+          this.ruleForm = res.data;
+        }
+      });
+    }
+  }
+};
+</script>
+<style>
+.el-form-item__content {
+  line-height: 40px;
+}
+.mt30 {
+  margin-top: 35px;
+}
+.pager-container {
+  text-align: center;
+}
+.box {
+  /* -webkit-appearance: none;
+  background-color: #fff;
+  background-image: none;
+  border-radius: 0.04rem;
+  border: 0.01rem solid #dcdfe6;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #606266;
+  display: inline-block;
+  font-size: inherit;
+  min-height: 0.42rem;
+  line-height: 0.4rem;
+  outline: none;
+  padding: 0 0.15rem;
+  -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); */
+}
+.el-tag {
+  margin-right: 5px;
+  height: 0.3rem;
+}
+.el-upload__tip {
+  display: inline-block;
+  margin-left: 20px;
+  margin-top: 0;
+}
+.el-upload-list {
+  width: 400px;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>

@@ -26,18 +26,18 @@
       <el-form-item label="分值" prop="value">
         <el-input v-model.number="ruleForm.value" :min="0" class="itemwidth" />
       </el-form-item>
-      <el-form-item label="答题时间/秒" prop="time">
+      <el-form-item label="答题时间/分" prop="time">
         <el-input v-model.number="ruleForm.time" :min="0" class="itemwidth" />
       </el-form-item>
       <el-form-item label="描述" prop="questionDescribe">
         <el-input v-model="ruleForm.questionDescribe" type="textarea" class="itemwidth" />
       </el-form-item>
-      <el-form-item label="容器附件" prop="dirName">
-        <el-upload :on-success="handleUrl" :file-list="fileList" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove1">
+      <el-form-item label="容器目录" prop="dirName">
+        <!-- <el-upload :on-success="handleUrl" :file-list="fileList" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove1">
           <el-button size="small" type="primary">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
-        </el-upload>
-        <!-- <el-input v-model="ruleForm.dirName" class="itemwidth" /> -->
+        </el-upload> -->
+        <el-input v-model="ruleForm.dirName" class="itemwidth" />
       </el-form-item>
       <el-form-item label="标签" prop="label">
         <el-select v-model="ruleForm.label" multiple filterable allow-create default-first-option class="itemwidth" placeholder="请选择标签">
@@ -95,7 +95,8 @@ export default {
       },
       label: [],
       rules: {
-        name: [{ required: true, message: '请输入题目名称', trigger: 'blur' }],
+				name: [{ required: true, message: '请输入题目名称', trigger: 'blur' }],
+        dirName: [{ required: true, message: '请输入容器目录', trigger: 'blur' }],
         flag: [{ required: true, message: '请输入答案', trigger: 'blur' }],
         category: [{ required: true, message: '请选择类别', trigger: 'change' }]
       },
@@ -162,8 +163,7 @@ export default {
         if (res.success) {
           this.ruleForm = res.data;
           this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
-          this.ruleForm.label =
-            this.ruleForm.label == '' ? [] : this.getLabel(res.data.label);
+          this.ruleForm.label = res.data.label == '' ? [] : this.getLabel(res.data.label);
           this.label = this.ruleForm.label;
           var dirName = res.data.url.split('/');
           this.fileList =
@@ -185,13 +185,13 @@ export default {
       this.$emit('input', false);
     },
     onSubmit() {
-      if (this.fileList.length == 0) {
-        this.$message({
-          type: 'warning',
-          message: '请上传容器附件'
-        });
-        return;
-      }
+      // if (this.fileList.length == 0) {
+      //   this.$message({
+      //     type: 'warning',
+      //     message: '请上传容器附件'
+      //   });
+      //   return;
+      // }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (!this.addSign) {

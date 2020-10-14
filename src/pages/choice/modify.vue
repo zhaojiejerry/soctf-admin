@@ -38,11 +38,16 @@
       <el-form-item label="分值" prop="choiceScore">
         <el-input v-model.number="ruleForm.choiceScore" :min="0" class="itemwidth" />
       </el-form-item>
-      <el-form-item label="答题时间/秒" prop="choiceTime">
+      <el-form-item label="答题时间/分" prop="choiceTime">
         <el-input v-model.number="ruleForm.choiceTime" :min="0" class="itemwidth" />
       </el-form-item>
       <el-form-item label="描述" prop="choiceDescription">
         <el-input v-model="ruleForm.choiceDescription" type="textarea" class="itemwidth" />
+      </el-form-item>
+      <el-form-item label="标签" prop="label">
+        <el-select v-model="ruleForm.label" multiple filterable allow-create default-first-option class="itemwidth" placeholder="请选择标签">
+          <el-option v-for="(item,index) in label" :key="index" :label="item" :value="item" />
+        </el-select>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input v-model="ruleForm.remark" type="textarea" class="itemwidth" />
@@ -89,7 +94,8 @@ export default {
         choiceType: '',
         correctAnswer: '',
         difficultyLevel: 0,
-        goldCoin: 0,
+				goldCoin: 0,
+				label: '',
         name: '',
         optionArray: '',
         optionVos: [
@@ -132,7 +138,8 @@ export default {
             choiceType: '',
             correctAnswer: '',
             difficultyLevel: 0,
-            goldCoin: 0,
+						goldCoin: 0,
+						label: '',
             name: '',
             optionArray: '',
             optionVos: [
@@ -174,7 +181,9 @@ export default {
         choiceId: this.mainId
       }).then((res) => {
         if (res.success) {
-          this.ruleForm = res.data;
+					this.ruleForm = res.data;
+					this.ruleForm.label = res.data.label == '' ? [] : this.getLabel(res.data.label);
+          this.label = this.ruleForm.label;
           this.ruleForm.correctAnswer =
             res.data.choiceType == 2
               ? res.data.difficultyLevel.split(',')
@@ -203,7 +212,8 @@ export default {
                   ? this.ruleForm.correctAnswer.join(',')
                   : this.ruleForm.correctAnswer,
               difficultyLevel: this.ruleForm.difficultyLevel,
-              goldCoin: this.ruleForm.goldCoin,
+							goldCoin: this.ruleForm.goldCoin,
+							label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               optionArray: this.ruleForm.optionArray,
               optionVos: this.ruleForm.optionVos,
@@ -238,7 +248,8 @@ export default {
                   ? this.ruleForm.correctAnswer.join(',')
                   : this.ruleForm.correctAnswer,
               difficultyLevel: this.ruleForm.difficultyLevel,
-              goldCoin: this.ruleForm.goldCoin,
+							goldCoin: this.ruleForm.goldCoin,
+							label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               optionArray: this.ruleForm.optionArray,
               optionVos: this.ruleForm.optionVos,

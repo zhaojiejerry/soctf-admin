@@ -251,8 +251,7 @@ export default {
                     }
                   ];
           }
-          this.ruleForm.label =
-            this.ruleForm.label == '' ? [] : this.getLabel(res.data.label);
+          this.ruleForm.label = res.data.label == '' ? [] : this.getLabel(res.data.label);
           this.label = this.ruleForm.label;
         }
       });

@@ -26,10 +26,15 @@
       <el-form-item label="答题时间/分" prop="time">
         <el-input v-model.number="ruleForm.time" :min="0" class="itemwidth" />
       </el-form-item>
+      <el-form-item label="标签" prop="label">
+        <el-select v-model="ruleForm.label" multiple filterable allow-create default-first-option class="itemwidth" placeholder="请选择标签">
+          <el-option v-for="(item,index) in label" :key="index" :label="item" :value="item" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="附件地址" prop="url">
         <el-upload :on-success="handleUrl" :file-list="fileList" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove1">
           <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
+          <!-- <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div> -->
         </el-upload>
       </el-form-item>
       <el-form-item label="描述" prop="questionDescribe">
@@ -73,7 +78,8 @@ export default {
         enable: 0,
         flag: '',
         goldCoin: 0,
-        id: '',
+				id: '',
+				label: '',
         name: '',
         questionDescribe: '',
         questionType: 0,
@@ -85,7 +91,8 @@ export default {
         name: [{ required: true, message: '请输入题目名称', trigger: 'blur' }],
         flag: [{ required: true, message: '请输入答案', trigger: 'blur' }],
         category: [{ required: true, message: '请选择类别', trigger: 'change' }]
-      },
+			},
+			label: [],
       subject: [],
       fileList: []
     };
@@ -144,7 +151,9 @@ export default {
         id: this.mainId
       }).then((res) => {
         if (res.success) {
-          this.ruleForm = res.data;
+					this.ruleForm = res.data;
+					this.ruleForm.label = res.data.label == '' ? [] : this.getLabel(res.data.label);
+          this.label = this.ruleForm.label;
           this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
           var url = res.data.url.split('/');
           this.fileList =
@@ -179,7 +188,8 @@ export default {
               enable: this.ruleForm.enable,
               flag: this.ruleForm.flag,
               goldCoin: this.ruleForm.goldCoin,
-              id: this.ruleForm.id,
+							id: this.ruleForm.id,
+							label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               questionDescribe: this.ruleForm.questionDescribe,
               questionType: 2,
@@ -208,7 +218,8 @@ export default {
               enable: 1,
               flag: this.ruleForm.flag,
               goldCoin: this.ruleForm.goldCoin,
-              id: '',
+							id: '',
+							label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               questionDescribe: this.ruleForm.questionDescribe,
               questionType: 2,

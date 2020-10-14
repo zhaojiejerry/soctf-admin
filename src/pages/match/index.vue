@@ -59,6 +59,7 @@
                 <!-- <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('37')!=-1" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button> -->
                 <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
                 <el-button v-if="buttons.indexOf('72')!=-1" size="small" type="text" @click="seePaper(scope.row.gameId)">比赛试题</el-button>
+                <el-button size="small" type="text" @click="seeDetail(scope.row.gameId)">查看详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -77,7 +78,7 @@
     <operations v-model="showOperations" :type="type" :game-id="gameId" />
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getGameInfoListForPage" />
     <paperInfo v-model="showPaperInfo" :game-id="gameId" />
-
+    <matchDetail v-model="showDetail" :game-id="gameId" />
   </div>
 </template>
 <script>
@@ -97,6 +98,7 @@ import achievement from './achievement';
 import operations from './operations';
 import paperInfo from './paperInfo';
 import live from './live';
+import matchDetail from './detail'
 export default {
   components: {
     createPaper,
@@ -105,10 +107,12 @@ export default {
     achievement,
     live,
     operations,
-    paperInfo
+		paperInfo,
+		matchDetail
   },
   data() {
     return {
+			showDetail: false,
       show: false,
       addSign: false,
       mainId: '',
@@ -140,6 +144,10 @@ export default {
   methods: {
     parseTime(time) {
       return parseTime(time);
+		},
+		seeDetail(id) {
+      this.showDetail = true;
+      this.gameId = id;
     },
     seePaper(id) {
       this.showPaperInfo = true;

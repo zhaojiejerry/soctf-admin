@@ -34,13 +34,13 @@
         </el-form-item>
         <el-form-item label="比赛LOGO图片">
           <el-upload :show-file-list="false" :on-success="handleiconSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/baseApi/oss">
-            <img v-if="iconUrl" :src="iconUrl" class="avatar">
+            <img v-if="ruleForm.iconUrl" :src="ruleForm.iconUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
         <el-form-item label="赛事主图">
           <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/baseApi/oss">
-            <img v-if="mainPic" :src="mainPic" class="avatar">
+            <img v-if="ruleForm.mainPic" :src="ruleForm.mainPic" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
@@ -146,8 +146,6 @@ export default {
       },
       remark: [],
       scoreRemark: [],
-      iconUrl: '',
-      mainPic: '',
       tableData: [],
       subTotal: 0,
       pageSize: 10,
@@ -321,17 +319,17 @@ export default {
     },
     handleAvatarSuccess(res, file) {
       if (res.success) {
-        this.mainPic = URL.createObjectURL(file.raw);
+        this.ruleForm.mainPic = URL.createObjectURL(file.raw);
       } else {
-        this.mainPic = '';
+        this.ruleForm.mainPic = '';
         this.$message.error(res.message);
       }
     },
     handleiconSuccess(res, file) {
       if (res.success) {
-        this.iconUrl = URL.createObjectURL(file.raw);
+        this.ruleForm.iconUrl = URL.createObjectURL(file.raw);
       } else {
-        this.iconUrl = '';
+        this.ruleForm.iconUrl = '';
         this.$message.error(res.message);
       }
     },
@@ -408,9 +406,9 @@ export default {
                   gameText: this.ruleForm.gameText,
                   gameType: this.ruleForm.gameType,
                   gameWay: this.ruleForm.gameWay,
-                  iconUrl: this.iconUrl,
+                  iconUrl: this.ruleForm.iconUrl,
                   joinerIds: joiners,
-                  mainPic: this.mainPic,
+                  mainPic: this.ruleForm.mainPic,
                   organizer: this.ruleForm.organizer,
                   remark: this.ruleForm.remark,
                   scoreRemark: this.ruleForm.scoreRemark,
@@ -443,9 +441,9 @@ export default {
               gameText: this.ruleForm.gameText,
               gameType: this.ruleForm.gameType,
               gameWay: this.ruleForm.gameWay,
-              iconUrl: this.iconUrl,
+              iconUrl: this.ruleForm.iconUrl,
               joinerIds: joiners,
-              mainPic: this.mainPic,
+              mainPic: this.ruleForm.mainPic,
               organizer: this.ruleForm.organizer,
               remark: this.ruleForm.remark,
               scoreRemark: this.ruleForm.scoreRemark,

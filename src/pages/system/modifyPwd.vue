@@ -56,40 +56,40 @@
   </div>
 </template>
 <script>
-import { getCookie } from '@/utils/auth'
-import { getLoginCode, getMobileCode, resetPassword } from '@/api/user'
+import { getCookie } from '@/utils/auth';
+import { getLoginCode, getMobileCode, resetPassword } from '@/api/user';
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'))
+        callback(new Error('请输入密码'));
       } else {
         if (this.ruleForm.newPassword !== '') {
-          this.$refs.ruleForm.validateField('newPassword')
+          this.$refs.ruleForm.validateField('newPassword');
         }
-        callback()
+        callback();
       }
-    }
+    };
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'))
+        callback(new Error('请再次输入密码'));
       } else if (value !== this.ruleForm.confirmNewPassword) {
-        callback(new Error('两次输入密码不一致!'))
+        callback(new Error('两次输入密码不一致!'));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     var validatemobile = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号'))
+        callback(new Error('请输入手机号'));
       } else if (!/^1[3456789]\d{9}$/.test(value)) {
-        callback(new Error('请输入正确的手机号!'))
+        callback(new Error('请输入正确的手机号!'));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
-      codeTime: 10,
+      codeTime: 60,
       ruleForm: {},
       chartCode: '', // 图形验证码
       codeValue: '发送验证码',
@@ -104,14 +104,14 @@ export default {
           { trigger: 'blur', required: true, message: '请输入验证码' }
         ]
       }
-    }
+    };
   },
   mounted() {
-    this.getChartCode()
+    this.getChartCode();
   },
   methods: {
     resetPassword() {
-      var that = this
+      var that = this;
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           resetPassword({
@@ -126,42 +126,42 @@ export default {
               this.$message({
                 message: res.message,
                 type: 'success'
-              })
-              that.$store.dispatch('logout')
+              });
+              that.$store.dispatch('logout');
               that.$router.push({
                 name: 'login',
                 params: { disableBtn: true }
-              })
+              });
             } else {
               this.$message({
                 message: res.message,
                 type: 'error'
-              })
+              });
             }
-          })
+          });
         }
-      })
+      });
     },
     sendCode() {
-      const that = this
+      const that = this;
       if (!this.ruleForm.phoneNumber) {
         this.$message({
           message: '请输入手机号',
           type: 'error'
-        })
-        return
+        });
+        return;
       }
       if (!/^1[3456789]\d{9}$/.test(this.ruleForm.phoneNumber)) {
         this.$message({
           message: '手机号码有误',
           type: 'error'
-        })
-        return
+        });
+        return;
       }
       if (this.codeValue != '发送验证码') {
-        return
+        return;
       }
-      this.codeValue = '正在发送...'
+      this.codeValue = '正在发送...';
       getMobileCode({
         bizTyp: 'modifyPwd',
         phoneNumber: this.ruleForm.phoneNumber
@@ -169,19 +169,19 @@ export default {
         if (res.success) {
           that.codeInter = setInterval(() => {
             if (that.codeTime == 0) {
-              that.codeValue = '发送验证码'
-              return
+              that.codeValue = '发送验证码';
+              return;
             }
-            that.codeValue = `${--that.codeTime}s`
-          }, 1000)
+            that.codeValue = `${--that.codeTime}s`;
+          }, 1000);
         } else {
           this.$message({
             message: res.message,
             type: 'error'
-          })
-          that.codeValue = '发送验证码'
+          });
+          that.codeValue = '发送验证码';
         }
-      })
+      });
     },
     getChartCode() {
       getLoginCode().then((data) => {
@@ -192,11 +192,11 @@ export default {
               (data, byte) => data + String.fromCharCode(byte),
               ''
             )
-          )
-      })
+          );
+      });
     }
   }
-}
+};
 </script>
 <style>
 .input-item {

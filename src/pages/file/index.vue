@@ -17,7 +17,7 @@
                 {{ questionType[scope.row.questionType-1] }}
               </template>
             </el-table-column>
-            <el-table-column label="难易程度" align="center">
+            <el-table-column label="难易程度" align="center" width="100">
               <template slot-scope="scope">
                 <el-rate :value="parseInt(scope.row.difficultyLevel)" :max="3" disabled />
               </template>
@@ -45,9 +45,9 @@
   </div>
 </template>
 <script>
-import { getFileQuestion, delFileQuestion } from '@/api/file'
-import { parseTime } from '@/utils/index'
-import modify from './modify'
+import { getFileQuestion, delFileQuestion } from '@/api/file';
+import { parseTime } from '@/utils/index';
+import modify from './modify';
 export default {
   components: { modify },
   data() {
@@ -60,29 +60,29 @@ export default {
       pageSize: 10,
       currentPage: 1,
       questionType: ['容器', '附件', '选择']
-    }
-	},
-	computed: {
+    };
+  },
+  computed: {
     buttons() {
-      return this.$store.state.buttons
+      return this.$store.state.buttons;
     }
   },
   mounted() {
-    this.getFileQuestion()
+    this.getFileQuestion();
   },
   methods: {
     addNew() {
-      this.show = true
-      this.addSign = true
-      this.mainId = ''
+      this.show = true;
+      this.addSign = true;
+      this.mainId = '';
     },
     handleEdit(id) {
-      this.show = true
-      this.mainId = id
-      this.addSign = false
+      this.show = true;
+      this.mainId = id;
+      this.addSign = false;
     },
     parseTime(time) {
-      return parseTime(time)
+      return parseTime(time);
     },
     handleDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -98,23 +98,23 @@ export default {
               this.$message({
                 type: 'success',
                 message: '删除成功'
-              })
-              this.currentPage = 1
-              this.getFileQuestion()
+              });
+              this.currentPage = 1;
+              this.getFileQuestion();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          })
-        })
+          });
+        });
     },
     getFileQuestion() {
       getFileQuestion({
@@ -127,21 +127,21 @@ export default {
         userId: ''
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data.records
-          this.tableTotal = res.data.total
+          this.tableList = res.data.records;
+          this.tableTotal = res.data.total;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getFileQuestion()
+      this.pageSize = val;
+      this.getFileQuestion();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getFileQuestion()
+      this.currentPage = val;
+      this.getFileQuestion();
     }
   }
-}
+};
 </script>
 <style  scoped>
 .mt30 {

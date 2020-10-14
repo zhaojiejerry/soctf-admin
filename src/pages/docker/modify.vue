@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="value" :show-close="false" :title="addSign?'新增':'修改'">
-    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
       <el-form-item label="题目名称" prop="name">
         <el-input v-model="ruleForm.name" class="itemwidth" />
       </el-form-item>
@@ -32,8 +32,12 @@
       <el-form-item label="描述" prop="questionDescribe">
         <el-input v-model="ruleForm.questionDescribe" type="textarea" class="itemwidth" />
       </el-form-item>
-      <el-form-item label="所在文件夹" prop="dirName">
-        <el-input v-model="ruleForm.dirName" class="itemwidth" />
+      <el-form-item label="容器附件" prop="dirName">
+        <el-upload :on-success="handleUrl" :file-list="fileList" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove1">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
+        </el-upload>
+        <!-- <el-input v-model="ruleForm.dirName" class="itemwidth" /> -->
       </el-form-item>
       <el-form-item label="标签" prop="label">
         <el-select v-model="ruleForm.label" multiple filterable allow-create default-first-option class="itemwidth" placeholder="请选择标签">
@@ -52,8 +56,8 @@ import {
   editDockerQuestion,
   addDockerQuestion,
   getDockerQuestionById
-} from '@/api/docker'
-import { getjson } from '@/api/common'
+} from '@/api/docker';
+import { getjson } from '@/api/common';
 export default {
   components: {},
   props: {
@@ -97,13 +101,13 @@ export default {
       },
       fileList: [],
       subject: []
-    }
+    };
   },
   watch: {
     value(val) {
       if (val) {
         if (!this.addSign) {
-          this.getDockerQuestionById()
+          this.getDockerQuestionById();
         } else {
           this.ruleForm = {
             category: '',
@@ -121,39 +125,73 @@ export default {
             questionType: 0,
             time: 0,
             value: 0
-          }
+          };
         }
       }
     }
   },
   mounted() {
-    this.getjson()
+    this.getjson();
   },
   methods: {
     getjson() {
       getjson('ctf.json').then((res) => {
-        this.subject = res.subject
-      })
+        this.subject = res.subject;
+      });
+    },
+    handleUrl(response, file, fileList) {
+      console.log(response, file, fileList);
+      if (response.success) {
+        this.fileList = [{ name: file.name, url: response.message }];
+        this.ruleForm.dirName = response.message;
+      } else {
+        this.fileList = [];
+        this.ruleForm.dirName = '';
+        this.$message.error(response.message);
+      }
+    },
+    handleRemove1(file, fileList) {
+      console.log(file, fileList);
+      this.fileList = [];
+      this.ruleForm.dirName = '';
     },
     getDockerQuestionById() {
       getDockerQuestionById({
         id: this.mainId
       }).then((res) => {
         if (res.success) {
-          this.ruleForm = res.data
-          this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel)
-          this.ruleForm.label = this.ruleForm.label == '' ? [] : this.getLabel(res.data.label)
-          this.label = this.ruleForm.label
+          this.ruleForm = res.data;
+          this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
+          this.ruleForm.label =
+            this.ruleForm.label == '' ? [] : this.getLabel(res.data.label);
+          this.label = this.ruleForm.label;
+          var dirName = res.data.url.split('/');
+          this.fileList =
+            res.data.dirName == ''
+              ? []
+              : [
+                  {
+                    name: dirName[dirName.length - 1],
+                    url: res.data.dirName
+                  }
+                ];
         }
-      })
+      });
     },
     getLabel(label) {
-      return label.split('|')
+      return label.split('|');
     },
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
+      if (this.fileList.length == 0) {
+        this.$message({
+          type: 'warning',
+          message: '请上传容器附件'
+        });
+        return;
+      }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (!this.addSign) {
@@ -178,16 +216,16 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           } else {
             addDockerQuestion({
               category: this.ruleForm.category,
@@ -210,22 +248,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-upload__tip {
@@ -234,6 +272,6 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 </style>

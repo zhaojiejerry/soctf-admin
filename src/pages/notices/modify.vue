@@ -35,9 +35,9 @@
   </div>
 </template>
 <script>
-import { updNotice, addNotice, getNoticeDetails } from '@/api/notice'
-import editor from '@/components/editor'
-import { getGameInfoListForPage } from '@/api/match'
+import { updNotice, addNotice, getNoticeDetails } from '@/api/notice';
+import editor from '@/components/editor';
+import { getGameInfoListForPage } from '@/api/match';
 export default {
   components: {
     editor
@@ -76,13 +76,13 @@ export default {
         title: '',
         type: '1'
       }
-    }
+    };
   },
   watch: {
     value(val) {
       if (val) {
         if (!this.addSign) {
-          this.getNoticeDetails()
+          this.getNoticeDetails();
         } else {
           this.ruleForm = {
             body: '',
@@ -94,17 +94,17 @@ export default {
             orderNode: 0,
             title: '',
             type: 1
-          }
+          };
         }
       }
     }
   },
   mounted() {
-    this.getGameInfoListForPage()
+    this.getGameInfoListForPage();
   },
   methods: {
     change(html) {
-      this.ruleForm.body = html
+      this.ruleForm.body = html;
     },
     getGameInfoListForPage() {
       getGameInfoListForPage({
@@ -113,21 +113,21 @@ export default {
         pageSize: 0
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data
+          this.tableList = res.data;
         }
-      })
+      });
     },
     getNoticeDetails() {
       getNoticeDetails({
         id: this.mainId
       }).then((res) => {
         if (res.success) {
-          this.ruleForm = res.data
+          this.ruleForm = res.data;
         }
-      })
+      });
     },
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
@@ -148,16 +148,16 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           } else {
             addNotice({
               body: this.ruleForm.body,
@@ -174,22 +174,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-form-item__content {
@@ -207,6 +207,6 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 </style>

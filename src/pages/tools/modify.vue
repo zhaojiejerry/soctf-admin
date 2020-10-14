@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog :visible.sync="value" :show-close="false" :title="addSign ? '新增' : '修改'">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
         <el-form-item label="工具名称" prop="weapName">
           <el-input v-model="ruleForm.weapName" class="itemwidth" />
         </el-form-item>
@@ -40,12 +40,12 @@
   </div>
 </template>
 <script>
-import { getCookie } from '@/utils/auth'
+import { getCookie } from '@/utils/auth';
 import {
   updateWeaponTool,
   addWeaponTool,
   getOneWeaponToolInfo
-} from '@/api/tool'
+} from '@/api/tool';
 export default {
   props: {
     value: {
@@ -83,13 +83,13 @@ export default {
         weapName: ''
       },
       mainPic: ''
-    }
+    };
   },
   watch: {
     value(val) {
       if (val) {
         if (!this.addSign) {
-          this.getOneWeaponToolInfo()
+          this.getOneWeaponToolInfo();
         } else {
           this.ruleForm = {
             createById: '',
@@ -103,7 +103,7 @@ export default {
             orgUrl: '',
             weapLabel: '',
             weapName: ''
-          }
+          };
         }
       }
     }
@@ -111,37 +111,37 @@ export default {
   methods: {
     handleAvatarSuccess(res, file) {
       if (res.success) {
-        this.mainPic = URL.createObjectURL(file.raw)
+        this.mainPic = URL.createObjectURL(file.raw);
       } else {
-        this.mainPic = ''
-        this.$message.error(res.message)
+        this.mainPic = '';
+        this.$message.error(res.message);
       }
     },
     beforeAvatarUpload(file) {
-      console.log(file.type)
-      const isJPG = file.type == 'image/jpeg' || 'image/png' || 'image/git'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      console.log(file.type);
+      const isJPG = file.type == 'image/jpeg' || 'image/png' || 'image/git';
+      const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
-        this.$message.error('上传图片只能是 JPG /png /git 格式!')
+        this.$message.error('上传图片只能是 JPG /png /git 格式!');
       }
       if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!')
+        this.$message.error('上传图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M
+      return isJPG && isLt2M;
     },
     getOneWeaponToolInfo() {
       getOneWeaponToolInfo({
         id: this.mainId
       }).then((res) => {
         if (res.success) {
-          this.ruleForm = res.data
-          this.ruleForm.weapLabel = this.getLabel(res.data.weapLabel)
-          this.label = this.ruleForm.weapLabel
+          this.ruleForm = res.data;
+          this.ruleForm.weapLabel = this.getLabel(res.data.weapLabel);
+          this.label = this.ruleForm.weapLabel;
         }
-      })
+      });
     },
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
@@ -163,16 +163,16 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           } else {
             addWeaponTool({
               createById: getCookie('usrId'),
@@ -190,22 +190,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-form-item__content {
@@ -223,6 +223,6 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 </style>

@@ -48,7 +48,7 @@
             </el-table-column>
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button v-if="buttons.indexOf('33')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.gameId)">编辑</el-button>
+                <el-button v-if="scope.row.gameStatus!=3&&buttons.indexOf('33')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.gameId)">编辑</el-button>
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('32')!=-1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('61')!=-1" size="small" type="text" @click="handleCreatePaper(scope.row.gameId)">生成试卷</el-button>
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('36')!=-1" size="small" type="text" @click="startGame(scope.row.gameId)">发布比赛</el-button>
@@ -56,7 +56,7 @@
                 <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('30')!=-1" size="small" type="text" @click="seeLive(scope.row.gameId)">观看比赛</el-button>
                 <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('38')!=-1" size="small" type="text" @click="operationsGame(scope.row)">运维管理</el-button>
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('40')!=-1" size="small" type="text" @click="seeDescription(scope.row.gameId)">比赛说明</el-button>
-                <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('37')!=-1" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button>
+                <!-- <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('37')!=-1" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button> -->
                 <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
                 <el-button v-if="buttons.indexOf('72')!=-1" size="small" type="text" @click="seePaper(scope.row.gameId)">比赛试题</el-button>
               </template>
@@ -86,17 +86,17 @@ import {
   deleteGame,
   endGame,
   startGame,
-	rankingInDB,
-	sendGameToken
-} from '@/api/match'
-import createPaper from './createPaper'
-import { parseTime } from '@/utils/index'
-import modify from './modify'
-import description from './description'
-import achievement from './achievement'
-import operations from './operations'
-import paperInfo from './paperInfo'
-import live from './live'
+  rankingInDB,
+  sendGameToken
+} from '@/api/match';
+import createPaper from './createPaper';
+import { parseTime } from '@/utils/index';
+import modify from './modify';
+import description from './description';
+import achievement from './achievement';
+import operations from './operations';
+import paperInfo from './paperInfo';
+import live from './live';
 export default {
   components: {
     createPaper,
@@ -104,8 +104,8 @@ export default {
     description,
     achievement,
     live,
-		operations,
-		paperInfo
+    operations,
+    paperInfo
   },
   data() {
     return {
@@ -125,57 +125,57 @@ export default {
       showAchievement: false,
       type: '1',
       showLive: false,
-			showOperations: false,
-			showPaperInfo: false
-    }
-	},
-	computed: {
+      showOperations: false,
+      showPaperInfo: false
+    };
+  },
+  computed: {
     buttons() {
-      return this.$store.state.buttons
+      return this.$store.state.buttons;
     }
   },
   mounted() {
-    this.getGameInfoListForPage()
+    this.getGameInfoListForPage();
   },
   methods: {
     parseTime(time) {
-      return parseTime(time)
-		},
-		seePaper(id) {
-			this.showPaperInfo = true
-      this.gameId = id
-		},
+      return parseTime(time);
+    },
+    seePaper(id) {
+      this.showPaperInfo = true;
+      this.gameId = id;
+    },
     addNew() {
-      this.show = true
-      this.addSign = true
-      this.mainId = ''
+      this.show = true;
+      this.addSign = true;
+      this.mainId = '';
     },
     handleEdit(id) {
-      this.show = true
-      this.mainId = id
-      this.addSign = false
+      this.show = true;
+      this.mainId = id;
+      this.addSign = false;
     },
     seeLive(id) {
-      this.showLive = true
-      this.gameId = id
+      this.showLive = true;
+      this.gameId = id;
     },
     handleCreatePaper(id) {
-      this.dialogTableVisible = true
-      this.gameId = id
+      this.dialogTableVisible = true;
+      this.gameId = id;
     },
     seeDescription(id) {
-      this.showDescription = true
-      this.gameId = id
+      this.showDescription = true;
+      this.gameId = id;
     },
     seeScore(row) {
-      this.showAchievement = true
-      this.gameId = row.gameId
-      this.type = row.gameType
+      this.showAchievement = true;
+      this.gameId = row.gameId;
+      this.type = row.gameType;
     },
     operationsGame(row) {
-      this.showOperations = true
-      this.gameId = row.gameId
-      this.type = row.gameType
+      this.showOperations = true;
+      this.gameId = row.gameId;
+      this.type = row.gameType;
     },
     releaseScore(id) {
       this.$confirm('是否要发布成绩?', '提示', {
@@ -191,22 +191,22 @@ export default {
               this.$message({
                 type: 'success',
                 message: '成绩发布成功'
-              })
-              this.getGameInfoListForPage()
+              });
+              this.getGameInfoListForPage();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消发布成绩'
-          })
-        })
+          });
+        });
     },
     deleteGame(id) {
       this.$confirm('此操作将永久删除该比赛, 是否继续?', '提示', {
@@ -222,23 +222,23 @@ export default {
               this.$message({
                 type: 'success',
                 message: '删除成功'
-              })
-              this.currentPage = 1
-              this.getGameInfoListForPage()
+              });
+              this.currentPage = 1;
+              this.getGameInfoListForPage();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          })
-        })
+          });
+        });
     },
     endGame(id) {
       this.$confirm('此操作将结束改比赛, 是否继续?', '提示', {
@@ -254,23 +254,23 @@ export default {
               this.$message({
                 type: 'success',
                 message: '比赛已结束'
-              })
-              this.currentPage = 1
-              this.getGameInfoListForPage()
+              });
+              this.currentPage = 1;
+              this.getGameInfoListForPage();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消结束比赛'
-          })
-        })
+          });
+        });
     },
     startGame(id) {
       this.$confirm('是否要发布比赛?', '提示', {
@@ -286,42 +286,42 @@ export default {
               this.$message({
                 type: 'success',
                 message: '比赛发布成功'
-							})
-							this.sendGameToken(id)
-              this.currentPage = 1
-              this.getGameInfoListForPage()
+              });
+              this.sendGameToken(id);
+              this.currentPage = 1;
+              this.getGameInfoListForPage();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消发布'
-          })
-        })
-		},
-		sendGameToken(id) {
-			sendGameToken({
-				gameId: id
-			}).then((res) => {
-				if (res.success) {
-					this.$message({
-						type: 'success',
-						message: '发送赛事密钥短信成功'
-					})
-				} else {
-					this.$message({
-						type: 'warning',
-						message: res.message
-					})
-				}
-			})
-		},
+          });
+        });
+    },
+    sendGameToken(id) {
+      sendGameToken({
+        gameId: id
+      }).then((res) => {
+        if (res.success) {
+          this.$message({
+            type: 'success',
+            message: '发送赛事密钥短信成功'
+          });
+        } else {
+          this.$message({
+            type: 'warning',
+            message: res.message
+          });
+        }
+      });
+    },
     getGameInfoListForPage() {
       getGameInfoListForPage({
         currentPage: this.currentPage,
@@ -329,26 +329,26 @@ export default {
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data
-          this.tableTotal = res.count
+          this.tableList = res.data;
+          this.tableTotal = res.count;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getGameInfoListForPage()
+      this.pageSize = val;
+      this.getGameInfoListForPage();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getGameInfoListForPage()
+      this.currentPage = val;
+      this.getGameInfoListForPage();
     },
     handleSubAccountStatusStatus(val) {
-      this.subAccountStatus = val
-      this.currentPage = 1
-      this.getGameInfoListForPage()
+      this.subAccountStatus = val;
+      this.currentPage = 1;
+      this.getGameInfoListForPage();
     }
   }
-}
+};
 </script>
 <style  scoped>
 .mt30 {

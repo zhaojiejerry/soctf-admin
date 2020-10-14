@@ -9,7 +9,7 @@
           {{ questionType[scope.row.questionType-1] }}
         </template>
       </el-table-column>
-      <el-table-column label="难易程度" align="center">
+      <el-table-column label="难易程度" align="center" width="100">
         <template slot-scope="scope">
           <el-rate :value="parseInt(scope.row.difficultyLevel)" :max="3" disabled />
         </template>
@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import { getDockerQuestion } from '@/api/docker'
+import { getDockerQuestion } from '@/api/docker';
 export default {
   components: {},
   props: {
@@ -42,54 +42,54 @@ export default {
   },
   data() {
     return {
-			activeName: 'first',
+      activeName: 'first',
       tableList: [],
       tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
-			questions: [],
-			questionType: ['容器', '附件', '选择']
-    }
+      questions: [],
+      questionType: ['容器', '附件', '选择']
+    };
   },
   mounted() {
-    this.getDockerQuestion()
-	},
+    this.getDockerQuestion();
+  },
   methods: {
-		clearAll() {
-			this.$refs.multipleTable.clearSelection()
-			this.questions = []
-		},
+    clearAll() {
+      this.$refs.multipleTable.clearSelection();
+      this.questions = [];
+    },
     select(selection, row) {
-      console.log(selection, row)
+      console.log(selection, row);
       if (!selection.includes(row)) {
         const index = this.questions.findIndex((item) => {
-          return item.id === row.id
-        })
-        this.questions.splice(index, 1)
+          return item.id === row.id;
+        });
+        this.questions.splice(index, 1);
       } else {
-        this.questions.push(row)
+        this.questions.push(row);
       }
     },
     selectAll(selection) {
       if (selection.length > 0) {
         this.tableList.forEach((v) => {
           const index = this.questions.findIndex((i) => {
-            return i.id === v.id
-          })
+            return i.id === v.id;
+          });
           if (index === -1) {
-            this.questions.push(v)
+            this.questions.push(v);
           }
-        })
+        });
       } else {
         this.questions.forEach((item, index) => {
           this.tableList.forEach((ms) => {
             if (item.id == ms.id) {
               this.questions = this.questions.filter(
                 (item) => item.id != ms.id
-              )
+              );
             }
-          })
-        })
+          });
+        });
       }
     },
     getDockerQuestion() {
@@ -103,28 +103,28 @@ export default {
         userId: ''
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data.records
+          this.tableList = res.data.records;
           this.questions.forEach((a) => {
             this.tableList.forEach((b) => {
               if (a.id === b.id) {
-                this.$refs.multipleTable.toggleRowSelection(b, true)
+                this.$refs.multipleTable.toggleRowSelection(b, true);
               }
-            })
-					})
-          this.tableTotal = res.data.total
+            });
+          });
+          this.tableTotal = res.data.total;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getDockerQuestion()
+      this.pageSize = val;
+      this.getDockerQuestion();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getDockerQuestion()
+      this.currentPage = val;
+      this.getDockerQuestion();
     }
   }
-}
+};
 </script>
 <style>
 .mt30 {

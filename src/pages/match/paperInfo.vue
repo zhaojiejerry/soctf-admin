@@ -9,7 +9,7 @@
             {{ questionType[scope.row.questionType-1] }}
           </template>
         </el-table-column>
-        <el-table-column label="难易程度" align="center">
+        <el-table-column label="难易程度" align="center" width="100">
           <template slot-scope="scope">
             <el-rate :value="parseInt(scope.row.difficultyLevel)" :max="3" disabled />
           </template>
@@ -33,7 +33,7 @@
 <script>
 import { getPaperInfoForGame, deleteQuestions } from '@/api/match';
 export default {
-	props: {
+  props: {
     value: {
       type: Boolean,
       default: false
@@ -43,26 +43,26 @@ export default {
       default: ''
     }
   },
-	data() {
-		return {
-			questionList: [],
-			questionType: ['容器', '附件', '选择']
-		}
-	},
-	computed: {
+  data() {
+    return {
+      questionList: [],
+      questionType: ['容器', '附件', '选择']
+    };
+  },
+  computed: {
     buttons() {
-      return this.$store.state.buttons
+      return this.$store.state.buttons;
     }
   },
-	watch: {
-		value(val) {
-			if (val) {
-				this.getPaperInfoForGame()
-			}
-		}
-	},
-	methods: {
-	deleteGame(id) {
+  watch: {
+    value(val) {
+      if (val) {
+        this.getPaperInfoForGame();
+      }
+    }
+  },
+  methods: {
+    deleteGame(id) {
       this.$confirm('此操作将永久删除该试题, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -70,34 +70,34 @@ export default {
       })
         .then(() => {
           deleteQuestions({
-						gameId: this.gameId,
-						questionIds: [id]
+            gameId: this.gameId,
+            questionIds: [id]
           }).then((res) => {
             if (res.success) {
               this.$message({
                 type: 'success',
                 message: '删除成功'
-              })
-              this.getPaperInfoForGame()
+              });
+              this.getPaperInfoForGame();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          })
-        })
+          });
+        });
     },
-		close() {
-      this.$emit('input', false)
+    close() {
+      this.$emit('input', false);
     },
-		getPaperInfoForGame() {
+    getPaperInfoForGame() {
       var that = this;
       getPaperInfoForGame({
         gameId: this.gameId,
@@ -106,10 +106,10 @@ export default {
         type: ''
       }).then((res) => {
         if (res.success) {
-					that.questionList = 	res.data.questionBanks
+          that.questionList = res.data.questionBanks;
         }
       });
     }
-	}
-}
+  }
+};
 </script>

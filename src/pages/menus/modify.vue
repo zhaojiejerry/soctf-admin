@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog :visible.sync="value" :show-close="false" :title="addSign ? '新增' : '修改'">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
         <el-form-item label="权限码" prop="permCode">
           <el-input v-model="ruleForm.permCode" class="itemwidth" />
         </el-form-item>
@@ -49,8 +49,8 @@
   </div>
 </template>
 <script>
-import { addPermission, modifyPermission } from '@/api/permission'
-import { EIconPicker } from 'e-icon-picker'
+import { addPermission, modifyPermission } from '@/api/permission';
+import { EIconPicker } from 'e-icon-picker';
 export default {
   components: { EIconPicker },
   props: {
@@ -69,7 +69,7 @@ export default {
     tableList: {
       type: Array,
       default: () => {
-        return []
+        return [];
       }
     }
   },
@@ -87,12 +87,12 @@ export default {
         addIconList: [],
         removeIconList: []
       }
-    }
+    };
   },
   mounted() {},
   methods: {
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
@@ -117,16 +117,16 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           } else {
             addPermission({
               createTime: new Date(),
@@ -147,22 +147,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-form-item__content {
@@ -180,6 +180,6 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 </style>

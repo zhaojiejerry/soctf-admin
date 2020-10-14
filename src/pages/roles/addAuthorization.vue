@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog :visible.sync="value" :show-close="false" title="新增权限">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
         <el-form-item label="编码" prop="authCode">
           <el-input v-model="ruleForm.authCode" class="itemwidth" />
         </el-form-item>
@@ -23,8 +23,8 @@
   </div>
 </template>
 <script>
-import { getCookie } from '@/utils/auth'
-import { addAuthorization } from '@/api/role'
+import { getCookie } from '@/utils/auth';
+import { addAuthorization } from '@/api/role';
 export default {
   props: {
     value: {
@@ -43,12 +43,12 @@ export default {
           { required: true, message: '请输入权限名称', trigger: 'blur' }
         ]
       }
-    }
+    };
   },
   mounted() {},
   methods: {
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
@@ -66,21 +66,21 @@ export default {
               this.$message({
                 type: 'success',
                 message: '新增成功'
-              })
-              this.back()
-              this.$emit('getList')
+              });
+              this.back();
+              this.$emit('getList');
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-form-item__content {
@@ -98,6 +98,6 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="value" :show-close="false" :title="addSign?'新增':'修改'">
-    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
       <el-form-item label="题目名称" prop="name">
         <el-input v-model="ruleForm.name" class="itemwidth" />
       </el-form-item>
@@ -59,8 +59,8 @@ import {
   modifyChoiceQuestion,
   addChoiceQuestion,
   getOneChoiceQuestion
-} from '@/api/choice'
-import { getjson } from '@/api/common'
+} from '@/api/choice';
+import { getjson } from '@/api/common';
 export default {
   components: {},
   props: {
@@ -114,13 +114,13 @@ export default {
       },
       fileList: [],
       subject: []
-    }
+    };
   },
   watch: {
     value(val) {
       if (val) {
         if (!this.addSign) {
-          this.getOneChoiceQuestion()
+          this.getOneChoiceQuestion();
         } else {
           this.ruleForm = {
             bankId: '',
@@ -143,19 +143,19 @@ export default {
             ],
             remark: '',
             solved: false
-          }
+          };
         }
       }
     }
   },
   mounted() {
-    this.getjson()
+    this.getjson();
   },
   methods: {
     getjson() {
       getjson('ctf.json').then((res) => {
-        this.subject = res.subject
-      })
+        this.subject = res.subject;
+      });
     },
     plus() {
       this.ruleForm.optionVos.push({
@@ -163,24 +163,28 @@ export default {
           64 + this.ruleForm.optionVos.length + 1
         ),
         optionDescription: ''
-      })
-      console.log(this.ruleForm.optionVos)
+      });
+      console.log(this.ruleForm.optionVos);
     },
     remove(index) {
-      this.ruleForm.optionVos.splice(index, 1)
+      this.ruleForm.optionVos.splice(index, 1);
     },
     getOneChoiceQuestion() {
       getOneChoiceQuestion({
         choiceId: this.mainId
       }).then((res) => {
         if (res.success) {
-          this.ruleForm = res.data
-          this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel)
+          this.ruleForm = res.data;
+          this.ruleForm.correctAnswer =
+            res.data.choiceType == 2
+              ? res.data.difficultyLevel.split(',')
+              : res.data.difficultyLevel;
+          this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
         }
-      })
+      });
     },
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
@@ -210,16 +214,16 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           } else {
             addChoiceQuestion({
               bankId: '',
@@ -245,22 +249,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-upload__tip {
@@ -269,6 +273,6 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 </style>

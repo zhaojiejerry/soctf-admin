@@ -21,7 +21,7 @@
           </div>
         </el-form-item>
         <el-form-item label="比赛时间" prop="description">
-          <el-date-picker v-model="ruleForm.date" class="itemwidth" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
+          <el-date-picker v-model="ruleForm.date" class="itemwidth" :picker-options="pickerOptions" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
         </el-form-item>
         <el-form-item label="比赛官网" prop="gameOfficeAddress">
           <el-input v-model="ruleForm.gameOfficeAddress" class="itemwidth" />
@@ -95,8 +95,8 @@
   </div>
 </template>
 <script>
-import { modifyGameInfo, addGameInfo, getGameInfoDetail } from '@/api/match'
-import { getUserInfoList, getTeamInfoListForPage } from '@/api/user'
+import { modifyGameInfo, addGameInfo, getGameInfoDetail } from '@/api/match';
+import { getUserInfoList, getTeamInfoListForPage } from '@/api/user';
 export default {
   components: {},
   props: {
@@ -151,15 +151,20 @@ export default {
       tableData: [],
       subTotal: 0,
       pageSize: 10,
-			currentPage: 1,
-			extraParam: {}
-    }
+      currentPage: 1,
+      extraParam: {},
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() <= Date.now() - 8.64e7; // 选当前时间之后的时间
+        }
+      }
+    };
   },
   watch: {
     value(val) {
       if (val) {
         if (!this.addSign) {
-          this.getGameInfoDetail()
+          this.getGameInfoDetail();
         } else {
           this.ruleForm = {
             date: [],
@@ -179,55 +184,55 @@ export default {
             remark: '',
             scoreRemark: '',
             startTime: ''
-          }
+          };
         }
       }
     }
   },
   mounted() {
     this.$nextTick(() => {
-      this.getUserInfoList()
-    })
+      this.getUserInfoList();
+    });
   },
   methods: {
     getpsn() {
-      this.dialogTableVisible = true
+      this.dialogTableVisible = true;
     },
     handleClose(item, index) {
-      this.joiners.splice(index, 1)
-      this.$refs.multipleTable.toggleRowSelection(item)
+      this.joiners.splice(index, 1);
+      this.$refs.multipleTable.toggleRowSelection(item);
     },
     select(selection, row) {
-      console.log(selection, row)
+      console.log(selection, row);
       if (!selection.includes(row)) {
         const index = this.joiners.findIndex((item) => {
-          return item.usrId === row.usrId
-        })
-        this.joiners.splice(index, 1)
+          return item.usrId === row.usrId;
+        });
+        this.joiners.splice(index, 1);
       } else {
-        this.joiners.push(row)
+        this.joiners.push(row);
       }
     },
     selectAll(selection) {
       if (selection.length > 0) {
         this.tableData.forEach((v) => {
           const index = this.joiners.findIndex((i) => {
-            return i.usrId === v.usrId
-          })
+            return i.usrId === v.usrId;
+          });
           if (index === -1) {
-            this.joiners.push(v)
+            this.joiners.push(v);
           }
-        })
+        });
       } else {
         this.joiners.forEach((item, index) => {
           this.tableData.forEach((ms) => {
             if (item.usrId == ms.usrId) {
               this.joiners = this.joiners.filter(
                 (item) => item.usrId != ms.usrId
-              )
+              );
             }
-          })
-        })
+          });
+        });
       }
     },
     getTeamInfoListForPage() {
@@ -237,120 +242,120 @@ export default {
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.tableData = res.data
+          this.tableData = res.data;
           this.joiners.forEach((a) => {
             this.tableData.forEach((b) => {
               if (a.teamId === b.teamId) {
-                this.$refs.multipleTable.toggleRowSelection(b, true)
+                this.$refs.multipleTable.toggleRowSelection(b, true);
               }
-            })
-          })
-          this.subTotal = res.count
+            });
+          });
+          this.subTotal = res.count;
         }
-      })
+      });
     },
     getUserInfoList() {
-			var extraParam = {}
-			for (var key in this.extraParam) {
-				if (this.extraParam[key] != '') {
-					extraParam[key] = this.extraParam[key]
-				}
-			}
+      var extraParam = {};
+      for (var key in this.extraParam) {
+        if (this.extraParam[key] != '') {
+          extraParam[key] = this.extraParam[key];
+        }
+      }
       getUserInfoList({
         currentPage: this.currentPage,
         extraParam: extraParam,
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.tableData = res.data
+          this.tableData = res.data;
           this.joiners.forEach((a) => {
             this.tableData.forEach((b) => {
               if (a.usrId === b.usrId) {
-                this.$refs.multipleTable.toggleRowSelection(b, true)
+                this.$refs.multipleTable.toggleRowSelection(b, true);
               }
-            })
-          })
-          this.subTotal = res.count
+            });
+          });
+          this.subTotal = res.count;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getUserInfoList()
+      this.pageSize = val;
+      this.getUserInfoList();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getUserInfoList()
+      this.currentPage = val;
+      this.getUserInfoList();
     },
     handleRemark(response, file, fileList) {
-      console.log(response, file, fileList)
+      console.log(response, file, fileList);
       if (response.success) {
-        this.remark = [{ name: file.name, url: response.message }]
-        this.ruleForm.remark = response.message
+        this.remark = [{ name: file.name, url: response.message }];
+        this.ruleForm.remark = response.message;
       } else {
-        this.remark = []
-        this.ruleForm.remark = ''
-        this.$message.error(response.message)
+        this.remark = [];
+        this.ruleForm.remark = '';
+        this.$message.error(response.message);
       }
     },
     handleScoreRemark(response, file, fileList) {
-      console.log(response, file, fileList)
+      console.log(response, file, fileList);
       if (response.success) {
-        this.scoreRemark = [{ name: file.name, url: response.message }]
-        this.ruleForm.scoreRemark = response.message
+        this.scoreRemark = [{ name: file.name, url: response.message }];
+        this.ruleForm.scoreRemark = response.message;
       } else {
-        this.scoreRemark = []
-        this.ruleForm.scoreRemark = ''
-        this.$message.error(response.message)
+        this.scoreRemark = [];
+        this.ruleForm.scoreRemark = '';
+        this.$message.error(response.message);
       }
     },
     handleRemove1(file, fileList) {
-      console.log(file, fileList)
-      this.remark = []
-      this.ruleForm.remark = ''
+      console.log(file, fileList);
+      this.remark = [];
+      this.ruleForm.remark = '';
     },
     handleRemove2(file, fileList) {
-      console.log(file, fileList)
-      this.scoreRemark = []
-      this.ruleForm.scoreRemark = ''
+      console.log(file, fileList);
+      this.scoreRemark = [];
+      this.ruleForm.scoreRemark = '';
     },
     handleAvatarSuccess(res, file) {
       if (res.success) {
-        this.mainPic = URL.createObjectURL(file.raw)
+        this.mainPic = URL.createObjectURL(file.raw);
       } else {
-        this.mainPic = ''
-        this.$message.error(res.message)
+        this.mainPic = '';
+        this.$message.error(res.message);
       }
     },
     handleiconSuccess(res, file) {
       if (res.success) {
-        this.iconUrl = URL.createObjectURL(file.raw)
+        this.iconUrl = URL.createObjectURL(file.raw);
       } else {
-        this.iconUrl = ''
-        this.$message.error(res.message)
+        this.iconUrl = '';
+        this.$message.error(res.message);
       }
     },
     beforeAvatarUpload(file) {
-      console.log(file.type)
-      const isJPG = file.type == 'image/jpeg' || 'image/png' || 'image/git'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      console.log(file.type);
+      const isJPG = file.type == 'image/jpeg' || 'image/png' || 'image/git';
+      const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
-        this.$message.error('上传图片只能是 JPG /png /git 格式!')
+        this.$message.error('上传图片只能是 JPG /png /git 格式!');
       }
       if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!')
+        this.$message.error('上传图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M
+      return isJPG && isLt2M;
     },
     getGameInfoDetail() {
       getGameInfoDetail({
         gameId: this.mainId
       }).then((res) => {
         if (res.success) {
-          this.ruleForm = res.data
-          this.ruleForm.date = [res.data.startTime, res.data.endTime]
-          var remark = res.data.remark.split('/')
-          console.log(remark)
+          this.ruleForm = res.data;
+          this.ruleForm.date = [res.data.startTime, res.data.endTime];
+          var remark = res.data.remark.split('/');
+          console.log(remark);
           this.remark =
             res.data.remark == ''
               ? []
@@ -359,8 +364,8 @@ export default {
                     name: remark[remark.length - 1],
                     url: res.data.remark
                   }
-                ]
-          var scoreRemark = res.data.scoreRemark.split('/')
+                ];
+          var scoreRemark = res.data.scoreRemark.split('/');
           this.scoreRemark =
             res.data.scoreRemark == ''
               ? []
@@ -369,20 +374,20 @@ export default {
                     name: scoreRemark[scoreRemark.length - 1],
                     url: res.data.scoreRemark
                   }
-                ]
+                ];
         }
-      })
+      });
     },
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
-      var joiners = []
+      var joiners = [];
       this.joiners.forEach((element) => {
-        joiners.push(element.usrId)
-      })
+        joiners.push(element.usrId);
+      });
       this.$refs.ruleForm.validate((valid) => {
-				console.log(valid)
+        console.log(valid);
         if (valid) {
           if (!this.addSign) {
             this.$confirm(
@@ -415,18 +420,18 @@ export default {
                     this.$message({
                       type: 'success',
                       message: '修改成功'
-                    })
-                    this.back()
-                    this.$emit('getList')
+                    });
+                    this.back();
+                    this.$emit('getList');
                   } else {
                     this.$message({
                       type: 'warning',
                       message: res.message
-                    })
+                    });
                   }
-                })
+                });
               })
-              .catch(() => {})
+              .catch(() => {});
           } else {
             addGameInfo({
               description: this.ruleForm.description,
@@ -450,22 +455,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-form-item__content {
@@ -506,7 +511,7 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;

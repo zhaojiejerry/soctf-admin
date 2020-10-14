@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog :visible.sync="value" :show-close="false" :title="addSign?'新增':'修改'">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
         <el-form-item label="答案/文档标题" prop="title">
           <el-input v-model="ruleForm.title" class="itemwidth" />
         </el-form-item>
@@ -65,7 +65,7 @@
             {{ questionType[scope.row.questionType-1] }}
           </template>
         </el-table-column>
-        <el-table-column label="难易程度" align="center">
+        <el-table-column label="难易程度" align="center" width="100">
           <template slot-scope="scope">
             <el-rate :value="parseInt(scope.row.difficultyLevel)" :max="3" disabled />
           </template>
@@ -88,15 +88,15 @@
   </div>
 </template>
 <script>
-import { getCookie } from '@/utils/auth'
+import { getCookie } from '@/utils/auth';
 import {
   modifyWriteUp,
   addWriteUp,
   getQuestionWriteUp,
   getAllQuestion
-} from '@/api/question'
-import { parseTime } from '@/utils/index'
-import { getjson } from '@/api/common'
+} from '@/api/question';
+import { parseTime } from '@/utils/index';
+import { getjson } from '@/api/common';
 export default {
   components: {},
   props: {
@@ -145,17 +145,17 @@ export default {
       pageSize: 10,
       currentPage: 1,
       questionRow: [],
-			questionType: ['容器', '附件', '选择'],
-			name: '',
-			category: '',
-			subject: []
-    }
+      questionType: ['容器', '附件', '选择'],
+      name: '',
+      category: '',
+      subject: []
+    };
   },
   watch: {
     value(val) {
       if (val) {
         if (!this.addSign) {
-          this.getQuestionWriteUp()
+          this.getQuestionWriteUp();
         } else {
           this.ruleForm = {
             answerDescription: '',
@@ -169,27 +169,27 @@ export default {
             questionId: '',
             title: '',
             type: ''
-          }
+          };
         }
       }
     }
   },
   mounted() {
-		this.getAllQuestion()
-		this.getjson()
+    this.getAllQuestion();
+    this.getjson();
   },
   methods: {
-		getjson() {
+    getjson() {
       getjson('ctf.json').then((res) => {
-        this.subject = res.subject
-      })
+        this.subject = res.subject;
+      });
     },
     parseTime(time) {
-      return parseTime(time)
+      return parseTime(time);
     },
     rowClick(row) {
-      console.log(row)
-      this.questionRow = [row]
+      console.log(row);
+      this.questionRow = [row];
     },
     getAllQuestion() {
       getAllQuestion({
@@ -202,45 +202,45 @@ export default {
         userId: ''
       }).then((res) => {
         if (res.success) {
-          this.subList = res.data.records
-          this.subTotal = res.data.total
+          this.subList = res.data.records;
+          this.subTotal = res.data.total;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getAllQuestion()
+      this.pageSize = val;
+      this.getAllQuestion();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getAllQuestion()
+      this.currentPage = val;
+      this.getAllQuestion();
     },
     handleSuccess(response, file, fileList) {
-      console.log(response, file, fileList)
+      console.log(response, file, fileList);
       if (response.success) {
-        this.fileList = [{ name: file.name, url: response.message }]
-        this.ruleForm.fileUrl = response.message
+        this.fileList = [{ name: file.name, url: response.message }];
+        this.ruleForm.fileUrl = response.message;
       } else {
-        this.fileList = []
-        this.ruleForm.fileUrl = ''
-        this.$message.error(response.message)
+        this.fileList = [];
+        this.ruleForm.fileUrl = '';
+        this.$message.error(response.message);
       }
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList)
-      this.fileList = []
-      this.ruleForm.fileUrl = ''
+      console.log(file, fileList);
+      this.fileList = [];
+      this.ruleForm.fileUrl = '';
     },
     getQuestionWriteUp() {
       getQuestionWriteUp({
         questionId: this.mainId
       }).then((res) => {
         if (res.data) {
-          this.ruleForm = res.data
-					this.question = res.data.questionName
-					console.log(this.question)
+          this.ruleForm = res.data;
+          this.question = res.data.questionName;
+          console.log(this.question);
           if (res.data.fileUrl != '') {
-            var fileUrl = res.data.fileUrl.split('/')
+            var fileUrl = res.data.fileUrl.split('/');
             this.fileList =
               res.data.fileUrl == ''
                 ? []
@@ -249,38 +249,39 @@ export default {
                       name: fileUrl[fileUrl.length - 1],
                       url: res.data.fileUrl
                     }
-                  ]
+                  ];
           }
-          this.ruleForm.label = this.ruleForm.label == '' ? [] : this.getLabel(res.data.label)
-          this.label = this.ruleForm.label
+          this.ruleForm.label =
+            this.ruleForm.label == '' ? [] : this.getLabel(res.data.label);
+          this.label = this.ruleForm.label;
         }
-      })
+      });
     },
     getLabel(label) {
-      return label.split('|')
+      return label.split('|');
     },
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     isOK() {
       if (this.questionRow.length == 0) {
         this.$message({
           type: 'warning',
           message: '请选择关联题目'
-        })
-        return
+        });
+        return;
       }
-      this.question = this.questionRow[0].name
-      this.ruleForm.questionId = this.questionRow[0].id
-      this.dialogTableVisible = false
+      this.question = this.questionRow[0].name;
+      this.ruleForm.questionId = this.questionRow[0].id;
+      this.dialogTableVisible = false;
     },
     onSubmit() {
       if (this.ruleForm.questionId == '') {
         this.$message({
           type: 'warning',
           message: '您还没有选择关联题目'
-        })
-        return
+        });
+        return;
       }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
@@ -300,16 +301,16 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           } else {
             addWriteUp({
               answerDescription: this.ruleForm.answerDescription,
@@ -328,22 +329,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-form-item__content {
@@ -361,6 +362,6 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 </style>

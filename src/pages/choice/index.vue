@@ -17,7 +17,7 @@
                 {{ choiceType[scope.row.choiceType-1] }}
               </template>
             </el-table-column>
-            <el-table-column label="难易程度" align="center">
+            <el-table-column label="难易程度" align="center" width="100">
               <template slot-scope="scope">
                 <el-rate :value="parseInt(scope.row.difficultyLevel)" :max="3" disabled />
               </template>
@@ -45,9 +45,9 @@
   </div>
 </template>
 <script>
-import { getChoiceListForAdmin, deleteChoiceQuestion } from '@/api/choice'
-import { parseTime } from '@/utils/index'
-import modify from './modify'
+import { getChoiceListForAdmin, deleteChoiceQuestion } from '@/api/choice';
+import { parseTime } from '@/utils/index';
+import modify from './modify';
 export default {
   components: { modify },
   data() {
@@ -60,29 +60,29 @@ export default {
       pageSize: 10,
       currentPage: 1,
       choiceType: ['单选', '多选']
-    }
-	},
-	computed: {
+    };
+  },
+  computed: {
     buttons() {
-      return this.$store.state.buttons
+      return this.$store.state.buttons;
     }
   },
   mounted() {
-    this.getChoiceListForAdmin()
+    this.getChoiceListForAdmin();
   },
   methods: {
     addNew() {
-      this.show = true
-      this.addSign = true
-      this.mainId = ''
+      this.show = true;
+      this.addSign = true;
+      this.mainId = '';
     },
     parseTime(time) {
-      return parseTime(time)
+      return parseTime(time);
     },
     handleEdit(id) {
-      this.show = true
-      this.mainId = id
-      this.addSign = false
+      this.show = true;
+      this.mainId = id;
+      this.addSign = false;
     },
     handleDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -98,23 +98,23 @@ export default {
               this.$message({
                 type: 'success',
                 message: '删除成功'
-              })
-              this.currentPage = 1
-              this.getChoiceListForAdmin()
+              });
+              this.currentPage = 1;
+              this.getChoiceListForAdmin();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          })
-        })
+          });
+        });
     },
     getChoiceListForAdmin() {
       getChoiceListForAdmin({
@@ -123,21 +123,21 @@ export default {
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data
-          this.tableTotal = res.count
+          this.tableList = res.data;
+          this.tableTotal = res.count;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getChoiceListForAdmin()
+      this.pageSize = val;
+      this.getChoiceListForAdmin();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getChoiceListForAdmin()
+      this.currentPage = val;
+      this.getChoiceListForAdmin();
     }
   }
-}
+};
 </script>
 <style  scoped>
 .mt30 {

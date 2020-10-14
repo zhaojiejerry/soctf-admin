@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog :visible.sync="value" :show-close="false" :title="addSign ? '新增' : '修改'">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
         <el-form-item label="编码" prop="roleCode">
           <el-input v-model="ruleForm.roleCode" class="itemwidth" />
         </el-form-item>
@@ -28,11 +28,11 @@
   </div>
 </template>
 <script>
-import { getCookie } from '@/utils/auth'
-import { modifyRole, addRole } from '@/api/role'
-import { parseTime } from '@/utils/index'
-import { getOrganizationList } from '@/api/organization'
-import { EIconPicker } from 'e-icon-picker'
+import { getCookie } from '@/utils/auth';
+import { modifyRole, addRole } from '@/api/role';
+import { parseTime } from '@/utils/index';
+import { getOrganizationList } from '@/api/organization';
+import { EIconPicker } from 'e-icon-picker';
 export default {
   components: { EIconPicker },
   props: {
@@ -66,24 +66,24 @@ export default {
         addIconList: [],
         removeIconList: []
       }
-    }
+    };
   },
   mounted() {
-    this.getOrganizationList()
+    this.getOrganizationList();
   },
   methods: {
     getOrganizationList() {
       getOrganizationList().then((res) => {
         if (res.success) {
-          this.organizationList = res.data
+          this.organizationList = res.data;
         }
-      })
+      });
     },
     parseTime(time) {
-      return parseTime(time)
+      return parseTime(time);
     },
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
@@ -106,16 +106,16 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           } else {
             addRole({
               createBy: getCookie('usrId'),
@@ -134,22 +134,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-form-item__content {
@@ -167,6 +167,6 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 </style>

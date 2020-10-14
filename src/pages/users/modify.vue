@@ -71,8 +71,8 @@
   </div>
 </template>
 <script>
-import { modifyUser, addUser } from '@/api/user'
-import areajson from '@/assets/areajson'
+import { modifyUser, addUser } from '@/api/user';
+import areajson from '@/assets/areajson';
 export default {
   components: {},
   props: {
@@ -110,32 +110,32 @@ export default {
       currentPage: 1,
       questionRow: [],
       questionType: ['容器', '附件', '选择']
-    }
+    };
   },
   mounted() {
-    this.areaOptions = areajson
+    this.areaOptions = areajson;
   },
   methods: {
     handleAvatarSuccess(res, file) {
       if (res.success) {
-        this.ruleForm.portrait = res.message
+        this.ruleForm.portrait = res.message;
       }
     },
     handleAvatarError(err, file, fileList) {
       this.$message({
         message: err.message,
         type: 'error'
-      })
+      });
     },
     beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      return isLt2M
+      return isLt2M;
     },
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
@@ -153,7 +153,8 @@ export default {
               usrStatus: this.ruleForm.usrStatus,
               usrSuper: this.ruleForm.usrSuper,
               address: this.ruleForm.address,
-              area: this.ruleForm.area == null ? '' : this.ruleForm.area.join('/'),
+              area:
+                this.ruleForm.area == null ? '' : this.ruleForm.area.join('/'),
               company: this.ruleForm.company,
               gender: this.ruleForm.gender,
               school: this.ruleForm.school,
@@ -163,16 +164,16 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           } else {
             addUser({
               portrait: this.ruleForm.portrait,
@@ -208,22 +209,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-form-item__content {
@@ -241,7 +242,7 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 #user-head-div {
   width: 200px;

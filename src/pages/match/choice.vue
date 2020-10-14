@@ -9,7 +9,7 @@
           {{ choiceType[scope.row.choiceType-1] }}
         </template>
       </el-table-column>
-      <el-table-column label="难易程度" align="center">
+      <el-table-column label="难易程度" align="center" width="100">
         <template slot-scope="scope">
           <el-rate :value="parseInt(scope.row.difficultyLevel)" :max="3" disabled />
         </template>
@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import { getChoiceListForAdmin } from '@/api/choice'
+import { getChoiceListForAdmin } from '@/api/choice';
 export default {
   components: {},
   props: {
@@ -42,54 +42,54 @@ export default {
   },
   data() {
     return {
-			activeName: 'first',
+      activeName: 'first',
       tableList: [],
       tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
       choiceType: ['单选', '多选'],
       questions: []
-    }
+    };
   },
   mounted() {
-		this.getChoiceListForAdmin()
-	},
+    this.getChoiceListForAdmin();
+  },
   methods: {
-		clearAll() {
-			this.$refs.multipleTable.clearSelection()
-			this.questions = []
-		},
+    clearAll() {
+      this.$refs.multipleTable.clearSelection();
+      this.questions = [];
+    },
     select(selection, row) {
-      console.log(selection, row)
+      console.log(selection, row);
       if (!selection.includes(row)) {
         const index = this.questions.findIndex((item) => {
-          return item.bankId === row.bankId
-        })
-        this.questions.splice(index, 1)
+          return item.bankId === row.bankId;
+        });
+        this.questions.splice(index, 1);
       } else {
-        this.questions.push(row)
+        this.questions.push(row);
       }
     },
     selectAll(selection) {
       if (selection.length > 0) {
         this.tableList.forEach((v) => {
           const index = this.questions.findIndex((i) => {
-            return i.bankId === v.bankId
-          })
+            return i.bankId === v.bankId;
+          });
           if (index === -1) {
-            this.questions.push(v)
+            this.questions.push(v);
           }
-        })
+        });
       } else {
         this.questions.forEach((item, index) => {
           this.tableList.forEach((ms) => {
             if (item.bankId == ms.bankId) {
               this.questions = this.questions.filter(
                 (item) => item.bankId != ms.bankId
-              )
+              );
             }
-          })
-        })
+          });
+        });
       }
     },
     getChoiceListForAdmin() {
@@ -99,28 +99,28 @@ export default {
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data
+          this.tableList = res.data;
           this.questions.forEach((a) => {
             this.tableList.forEach((b) => {
               if (a.bankId === b.bankId) {
-                this.$refs.multipleTable.toggleRowSelection(b, true)
+                this.$refs.multipleTable.toggleRowSelection(b, true);
               }
-            })
-          })
-          this.tableTotal = res.count
+            });
+          });
+          this.tableTotal = res.count;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getChoiceListForAdmin()
+      this.pageSize = val;
+      this.getChoiceListForAdmin();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getChoiceListForAdmin()
+      this.currentPage = val;
+      this.getChoiceListForAdmin();
     }
   }
-}
+};
 </script>
 <style>
 .mt30 {

@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="value" :show-close="false" :title="addSign?'新增':'修改'">
-    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="200px" class="demo-ruleForm">
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
       <el-form-item label="题目名称" prop="name">
         <el-input v-model="ruleForm.name" class="itemwidth" />
       </el-form-item>
@@ -26,8 +26,11 @@
       <el-form-item label="答题时间/分" prop="time">
         <el-input v-model.number="ruleForm.time" :min="0" class="itemwidth" />
       </el-form-item>
-      <el-form-item label="地址" prop="url">
-        <el-input v-model="ruleForm.url" class="itemwidth" />
+      <el-form-item label="附件地址" prop="url">
+        <el-upload :on-success="handleUrl" :file-list="fileList" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove1">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
+        </el-upload>
       </el-form-item>
       <el-form-item label="描述" prop="questionDescribe">
         <el-input v-model="ruleForm.questionDescribe" type="textarea" class="itemwidth" />
@@ -44,8 +47,8 @@ import {
   editFileQuestion,
   addFileQuestion,
   getFileQuestionById
-} from '@/api/file'
-import { getjson } from '@/api/common'
+} from '@/api/file';
+import { getjson } from '@/api/common';
 export default {
   components: {},
   props: {
@@ -83,14 +86,15 @@ export default {
         flag: [{ required: true, message: '请输入答案', trigger: 'blur' }],
         category: [{ required: true, message: '请选择类别', trigger: 'change' }]
       },
-      subject: []
-    }
+      subject: [],
+      fileList: []
+    };
   },
   watch: {
     value(val) {
       if (val) {
         if (!this.addSign) {
-          this.getFileQuestionById()
+          this.getFileQuestionById();
         } else {
           this.ruleForm = {
             category: '',
@@ -105,34 +109,67 @@ export default {
             time: 0,
             url: '',
             value: 0
-          }
+          };
         }
       }
     }
   },
   mounted() {
-    this.getjson()
+    this.getjson();
   },
   methods: {
+    handleUrl(response, file, fileList) {
+      console.log(response, file, fileList);
+      if (response.success) {
+        this.fileList = [{ name: file.name, url: response.message }];
+        this.ruleForm.url = response.message;
+      } else {
+        this.fileList = [];
+        this.ruleForm.url = '';
+        this.$message.error(response.message);
+      }
+    },
+    handleRemove1(file, fileList) {
+      console.log(file, fileList);
+      this.fileList = [];
+      this.ruleForm.Url = '';
+    },
     getjson() {
       getjson('ctf.json').then((res) => {
-        this.subject = res.subject
-      })
+        this.subject = res.subject;
+      });
     },
     getFileQuestionById() {
       getFileQuestionById({
         id: this.mainId
       }).then((res) => {
         if (res.success) {
-          this.ruleForm = res.data
-          this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel)
+          this.ruleForm = res.data;
+          this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
+          var url = res.data.url.split('/');
+          this.fileList =
+            res.data.url == ''
+              ? []
+              : [
+                  {
+                    name: url[url.length - 1],
+                    url: res.data.url
+                  }
+                ];
         }
-      })
+      });
     },
     back() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     onSubmit() {
+      if (this.fileList.length == 0) {
+        this.$message({
+          type: 'warning',
+          message: '请上传附件'
+        });
+        return;
+      }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (!this.addSign) {
@@ -154,16 +191,16 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '修改成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           } else {
             addFileQuestion({
               category: this.ruleForm.category,
@@ -183,22 +220,22 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
-                })
-                this.back()
-                this.$emit('getList')
+                });
+                this.back();
+                this.$emit('getList');
               } else {
                 this.$message({
                   type: 'warning',
                   message: res.message
-                })
+                });
               }
-            })
+            });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 .el-upload__tip {
@@ -207,6 +244,6 @@ export default {
   margin-top: 0;
 }
 .el-upload-list {
-  width: 500px;
+  width: 400px;
 }
 </style>

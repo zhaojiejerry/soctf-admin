@@ -100,8 +100,8 @@ export default {
         this.getRankingList();
         this.directSeeding();
         this.noticeTimer = setInterval(this.getIndexNotice, 1000);
-        this.rankTimer = setInterval(this.getRankingList, 10000);
-        this.seedTimer = setInterval(this.directSeeding, 10000);
+        this.rankTimer = setInterval(this.getRankingList, 60000);
+        this.seedTimer = setInterval(this.directSeeding, 1000 * 60 * 30);
       }
     }
   },

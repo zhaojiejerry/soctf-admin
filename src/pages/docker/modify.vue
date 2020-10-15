@@ -95,8 +95,10 @@ export default {
       },
       label: [],
       rules: {
-				name: [{ required: true, message: '请输入题目名称', trigger: 'blur' }],
-        dirName: [{ required: true, message: '请输入容器目录', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入题目名称', trigger: 'blur' }],
+        dirName: [
+          { required: true, message: '请输入容器目录', trigger: 'blur' }
+        ],
         flag: [{ required: true, message: '请输入答案', trigger: 'blur' }],
         category: [{ required: true, message: '请选择类别', trigger: 'change' }]
       },
@@ -163,18 +165,20 @@ export default {
         if (res.success) {
           this.ruleForm = res.data;
           this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
-          this.ruleForm.label = res.data.label == '' ? [] : this.getLabel(res.data.label);
+          this.ruleForm.label =
+            res.data.label == '' ? [] : this.getLabel(res.data.label);
           this.label = this.ruleForm.label;
-          var dirName = res.data.url.split('/');
-          this.fileList =
-            res.data.dirName == ''
-              ? []
-              : [
-                  {
-                    name: dirName[dirName.length - 1],
-                    url: res.data.dirName
-                  }
-                ];
+          if (res.data.dirName) {
+            var dirName = res.data.dirName.split('/');
+            this.fileList = [
+              {
+                name: dirName[dirName.length - 1],
+                url: res.data.dirName
+              }
+            ];
+          } else {
+            this.fileList = [];
+          }
         }
       });
     },

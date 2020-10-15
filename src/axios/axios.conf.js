@@ -1,6 +1,5 @@
 import axios from 'axios'
 import {
-    MessageBox,
     Message
 } from 'element-ui'
 import {
@@ -85,15 +84,9 @@ Axios.interceptors.response.use(response => {
             })
             // 重新登录
         if (res.code == 401) {
-            MessageBox.confirm('您已退出，请重新登录', '退出确认', {
-                confirmButtonText: '重新登录',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                removeCookie('Token')
-                router.push({
-                    path: '/login'
-                })
+            removeCookie('Token')
+            router.push({
+                path: '/login'
             })
         }
         return res

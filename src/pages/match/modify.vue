@@ -96,7 +96,7 @@
 </template>
 <script>
 import { modifyGameInfo, addGameInfo, getGameInfoDetail } from '@/api/match';
-import { getUserInfoList, getTeamInfoListForPage } from '@/api/user';
+import { getUserInfoList } from '@/api/user';
 export default {
   components: {},
   props: {
@@ -164,6 +164,7 @@ export default {
         if (!this.addSign) {
           this.getGameInfoDetail();
         } else {
+          this.joiners = [];
           this.ruleForm = {
             date: [],
             description: '',
@@ -232,25 +233,6 @@ export default {
           });
         });
       }
-    },
-    getTeamInfoListForPage() {
-      getTeamInfoListForPage({
-        currentPage: this.currentPage,
-        extraParam: {},
-        pageSize: this.pageSize
-      }).then((res) => {
-        if (res.success) {
-          this.tableData = res.data;
-          this.joiners.forEach((a) => {
-            this.tableData.forEach((b) => {
-              if (a.teamId === b.teamId) {
-                this.$refs.multipleTable.toggleRowSelection(b, true);
-              }
-            });
-          });
-          this.subTotal = res.count;
-        }
-      });
     },
     getUserInfoList() {
       var extraParam = {};
@@ -351,28 +333,30 @@ export default {
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data;
+          this.joiners = res.data.joiners ? res.data.joiners : [];
           this.ruleForm.date = [res.data.startTime, res.data.endTime];
-          var remark = res.data.remark.split('/');
-          console.log(remark);
-          this.remark =
-            res.data.remark == ''
-              ? []
-              : [
-                  {
-                    name: remark[remark.length - 1],
-                    url: res.data.remark
-                  }
-                ];
-          var scoreRemark = res.data.scoreRemark.split('/');
-          this.scoreRemark =
-            res.data.scoreRemark == ''
-              ? []
-              : [
-                  {
-                    name: scoreRemark[scoreRemark.length - 1],
-                    url: res.data.scoreRemark
-                  }
-                ];
+          if (res.data.remark) {
+            var remark = res.data.remark.split('/');
+            this.remark = [
+              {
+                name: remark[remark.length - 1],
+                url: res.data.remark
+              }
+            ];
+          } else {
+            this.remark = [];
+          }
+          if (res.data.scoreRemark) {
+            var scoreRemark = res.data.scoreRemark.split('/');
+            this.scoreRemark = [
+              {
+                name: scoreRemark[scoreRemark.length - 1],
+                url: res.data.scoreRemark
+              }
+            ];
+          } else {
+            this.scoreRemark = [];
+          }
         }
       });
     },

@@ -52,6 +52,7 @@
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('32')!=-1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('61')!=-1" size="small" type="text" @click="handleCreatePaper(scope.row.gameId)">生成试卷</el-button>
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('36')!=-1" size="small" type="text" @click="startGame(scope.row.gameId)">发布比赛</el-button>
+                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('74')!=-1" size="small" type="text" @click="sendGameToken(scope.row.gameId)">发送通知</el-button>
                 <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('60')!=-1" size="small" type="text" @click="endGame(scope.row.gameId)">结束比赛</el-button>
                 <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('30')!=-1" size="small" type="text" @click="seeLive(scope.row.gameId)">观看比赛</el-button>
                 <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('38')!=-1" size="small" type="text" @click="operationsGame(scope.row)">运维管理</el-button>
@@ -59,7 +60,7 @@
                 <!-- <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('37')!=-1" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button> -->
                 <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
                 <el-button v-if="buttons.indexOf('72')!=-1" size="small" type="text" @click="seePaper(scope.row.gameId)">比赛试题</el-button>
-                <el-button size="small" type="text" @click="seeDetail(scope.row.gameId)">查看详情</el-button>
+                <el-button size="small" type="text" @click="seeDetail(scope.row)">查看详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -78,7 +79,7 @@
     <operations v-model="showOperations" :type="type" :game-id="gameId" />
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getGameInfoListForPage" />
     <paperInfo v-model="showPaperInfo" :game-id="gameId" />
-    <matchDetail v-model="showDetail" :game-id="gameId" />
+    <matchDetail v-model="showDetail" :game-id="gameId" :game-statu="gameStatu" />
   </div>
 </template>
 <script>
@@ -98,7 +99,7 @@ import achievement from './achievement';
 import operations from './operations';
 import paperInfo from './paperInfo';
 import live from './live';
-import matchDetail from './detail'
+import matchDetail from './detail';
 export default {
   components: {
     createPaper,
@@ -107,12 +108,12 @@ export default {
     achievement,
     live,
     operations,
-		paperInfo,
-		matchDetail
+    paperInfo,
+    matchDetail
   },
   data() {
     return {
-			showDetail: false,
+      showDetail: false,
       show: false,
       addSign: false,
       mainId: '',
@@ -130,7 +131,8 @@ export default {
       type: '1',
       showLive: false,
       showOperations: false,
-      showPaperInfo: false
+      showPaperInfo: false,
+      gameStatu: '1'
     };
   },
   computed: {
@@ -144,10 +146,11 @@ export default {
   methods: {
     parseTime(time) {
       return parseTime(time);
-		},
-		seeDetail(id) {
+    },
+    seeDetail(row) {
       this.showDetail = true;
-      this.gameId = id;
+      this.gameId = row.gameId;
+      this.gameStatu = row.gameStatus;
     },
     seePaper(id) {
       this.showPaperInfo = true;
@@ -295,7 +298,6 @@ export default {
                 type: 'success',
                 message: '比赛发布成功'
               });
-              this.sendGameToken(id);
               this.currentPage = 1;
               this.getGameInfoListForPage();
             } else {
@@ -314,21 +316,34 @@ export default {
         });
     },
     sendGameToken(id) {
-      sendGameToken({
-        gameId: id
-      }).then((res) => {
-        if (res.success) {
-          this.$message({
-            type: 'success',
-            message: '发送赛事密钥短信成功'
+      this.$confirm('是否要发送赛事密钥短信通知?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          sendGameToken({
+            gameId: id
+          }).then((res) => {
+            if (res.success) {
+              this.$message({
+                type: 'success',
+                message: '发送赛事密钥短信成功'
+              });
+            } else {
+              this.$message({
+                type: 'warning',
+                message: res.message
+              });
+            }
           });
-        } else {
+        })
+        .catch(() => {
           this.$message({
-            type: 'warning',
-            message: res.message
+            type: 'info',
+            message: '已取消发送'
           });
-        }
-      });
+        });
     },
     getGameInfoListForPage() {
       getGameInfoListForPage({

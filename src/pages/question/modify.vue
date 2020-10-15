@@ -239,19 +239,19 @@ export default {
           this.ruleForm = res.data;
           this.question = res.data.questionName;
           console.log(this.question);
-          if (res.data.fileUrl != '') {
+          if (res.data.fileUrl) {
             var fileUrl = res.data.fileUrl.split('/');
-            this.fileList =
-              res.data.fileUrl == ''
-                ? []
-                : [
-                    {
-                      name: fileUrl[fileUrl.length - 1],
-                      url: res.data.fileUrl
-                    }
-                  ];
+            this.fileList = [
+              {
+                name: fileUrl[fileUrl.length - 1],
+                url: res.data.fileUrl
+              }
+            ];
+          } else {
+            this.fileList = [];
           }
-          this.ruleForm.label = res.data.label == '' ? [] : this.getLabel(res.data.label);
+          this.ruleForm.label =
+            res.data.label == '' ? [] : this.getLabel(res.data.label);
           this.label = this.ruleForm.label;
         }
       });

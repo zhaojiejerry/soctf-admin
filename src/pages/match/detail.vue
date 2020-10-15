@@ -10,28 +10,20 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="比赛类型" prop="gameType">
-              {{ ruleForm.gameType == '1'?'个人':'团队' }}
+              {{ ruleForm.gameType == "1" ? "个人" : "团队" }}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="开始时间" prop="description">
-              {{ ruleForm.startTime?parseTime(ruleForm.startTime):'' }}
+              {{ ruleForm.startTime ? parseTime(ruleForm.startTime) : "" }}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="结束时间" prop="description">
-              {{ ruleForm.endTime?parseTime(ruleForm.endTime):'' }}
+              {{ ruleForm.endTime ? parseTime(ruleForm.endTime) : "" }}
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="参赛者">
-          <div class="box">
-            <el-tag v-for="(item,index) in joiners" :key="index" type="info">
-              {{ item.username }}
-            </el-tag>
-          </div>
-        </el-form-item>
-
         <el-form-item label="比赛官网" prop="gameOfficeAddress">
           {{ ruleForm.gameOfficeAddress }}
         </el-form-item>
@@ -53,6 +45,14 @@
         <el-form-item label="赛事积分说明">
           <a :href="ruleForm.scoreRemark" target="_blank">{{ ruleForm.scoreRemark }}</a>
         </el-form-item>
+        <el-form-item label="参赛者" />
+        <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="ruleForm.joiners" class="list-table" tooltip-effect="dark">
+          <el-table-column prop="username" align="center" label="用户名" />
+          <el-table-column prop="phone" align="center" label="电话号码" />
+          <el-table-column prop="email" align="center" label="邮箱" />
+          <el-table-column prop="school" align="center" label="学校" />
+          <el-table-column prop="company" align="center" label="公司" />
+        </el-table>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="back">关闭</el-button>
@@ -61,7 +61,7 @@
   </div>
 </template>
 <script>
-import { getGameInfoDetail } from '@/api/match';
+import { getUserInfosByGame, getGameInfoDetail } from '@/api/match';
 import { parseTime } from '@/utils/index';
 export default {
   components: {},
@@ -73,35 +73,56 @@ export default {
     gameId: {
       type: String,
       default: ''
+    },
+    gameStatu: {
+      type: String,
+      default: '1'
     }
   },
   data() {
     return {
       dialogTableVisible: false,
-      joiners: [],
       ruleForm: {}
     };
   },
   watch: {
     value(val) {
       if (val) {
+        if (this.gameStatu != '3') {
           this.getGameInfoDetail();
+        } else {
+          this.getUserInfosByGame();
+        }
       }
     }
   },
   methods: {
-		back() {
+    back() {
       this.$emit('input', false);
-		},
-		parseTime(time) {
+    },
+    parseTime(time) {
       return parseTime(time);
-		},
+    },
     getGameInfoDetail() {
       getGameInfoDetail({
         gameId: this.gameId
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data;
+        }
+      });
+    },
+    getUserInfosByGame() {
+      getUserInfosByGame({
+        gameId: this.gameId
+      }).then((res) => {
+        if (res.success) {
+          this.ruleForm = res.data.gameInfo;
+          if (this.ruleForm.gameType == '1') {
+            this.ruleForm.joiners = res.data.users;
+          } else {
+            this.ruleForm.joiners = res.data.teamInfos;
+          }
         }
       });
     }

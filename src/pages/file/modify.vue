@@ -78,8 +78,8 @@ export default {
         enable: 0,
         flag: '',
         goldCoin: 0,
-				id: '',
-				label: '',
+        id: '',
+        label: '',
         name: '',
         questionDescribe: '',
         questionType: 0,
@@ -91,8 +91,8 @@ export default {
         name: [{ required: true, message: '请输入题目名称', trigger: 'blur' }],
         flag: [{ required: true, message: '请输入答案', trigger: 'blur' }],
         category: [{ required: true, message: '请选择类别', trigger: 'change' }]
-			},
-			label: [],
+      },
+      label: [],
       subject: [],
       fileList: []
     };
@@ -151,20 +151,22 @@ export default {
         id: this.mainId
       }).then((res) => {
         if (res.success) {
-					this.ruleForm = res.data;
-					this.ruleForm.label = res.data.label == '' ? [] : this.getLabel(res.data.label);
+          this.ruleForm = res.data;
+          this.ruleForm.label =
+            res.data.label == '' ? [] : this.getLabel(res.data.label);
           this.label = this.ruleForm.label;
           this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
-          var url = res.data.url.split('/');
-          this.fileList =
-            res.data.url == ''
-              ? []
-              : [
-                  {
-                    name: url[url.length - 1],
-                    url: res.data.url
-                  }
-                ];
+          if (res.data.url) {
+            var url = res.data.url.split('/');
+            this.fileList = [
+              {
+                name: url[url.length - 1],
+                url: res.data.url
+              }
+            ];
+          } else {
+            this.fileList = [];
+          }
         }
       });
     },
@@ -188,8 +190,8 @@ export default {
               enable: this.ruleForm.enable,
               flag: this.ruleForm.flag,
               goldCoin: this.ruleForm.goldCoin,
-							id: this.ruleForm.id,
-							label: this.ruleForm.label.join('|'),
+              id: this.ruleForm.id,
+              label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               questionDescribe: this.ruleForm.questionDescribe,
               questionType: 2,
@@ -218,8 +220,8 @@ export default {
               enable: 1,
               flag: this.ruleForm.flag,
               goldCoin: this.ruleForm.goldCoin,
-							id: '',
-							label: this.ruleForm.label.join('|'),
+              id: '',
+              label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               questionDescribe: this.ruleForm.questionDescribe,
               questionType: 2,

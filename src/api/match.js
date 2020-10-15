@@ -163,3 +163,21 @@ export function deleteQuestions(data) {
         data
     })
 }
+
+// 获取详情
+export function getUserInfosByGame(data) {
+    return axios({
+        url: '/game/getUserInfosByGame',
+        method: 'get',
+        params: data
+    })
+}
+
+// 获取直播折线图
+export function directSeeding(data) {
+    return axios({
+        url: '/game/directSeeding',
+        method: 'get',
+        params: data
+    })
+}

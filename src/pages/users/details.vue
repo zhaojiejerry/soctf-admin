@@ -355,7 +355,7 @@ export default {
         category: type
       }).then((res) => {
         if (res.success) {
-          that.getEcharts2(res.data)
+          that.getEcharts2(res.data, type)
         }
       })
     },
@@ -370,7 +370,7 @@ export default {
         '秒'
       return val
     },
-    getEcharts2(data) {
+    getEcharts2(data, type) {
       var myChart = echarts.init(document.getElementById('skill-chart2'))
       var xAxis = []
       var legend = []
@@ -420,7 +420,7 @@ export default {
             data: series,
             type: 'line',
             smooth: true,
-            name: 'dd',
+            name: type,
             itemStyle: {
               normal: {
                 color: '#B59757', // 折线点的颜色

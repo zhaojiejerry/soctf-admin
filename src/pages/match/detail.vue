@@ -46,7 +46,18 @@
           <a :href="ruleForm.scoreRemark" target="_blank">{{ ruleForm.scoreRemark }}</a>
         </el-form-item>
         <el-form-item label="参赛者" />
-        <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="ruleForm.joiners" class="list-table" tooltip-effect="dark">
+        <el-collapse v-if="ruleForm.gameType != '1'">
+          <el-collapse-item v-for="(item,index) in teamInfos" :key="index" :title="item.teamName" :name="index">
+            <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="item.joiners" class="list-table" tooltip-effect="dark">
+              <el-table-column prop="username" align="center" label="用户名" />
+              <el-table-column prop="phone" align="center" label="电话号码" />
+              <el-table-column prop="email" align="center" label="邮箱" />
+              <el-table-column prop="school" align="center" label="学校" />
+              <el-table-column prop="company" align="center" label="公司" />
+            </el-table>
+          </el-collapse-item>
+        </el-collapse>
+        <el-table v-else ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="joiners" class="list-table" tooltip-effect="dark">
           <el-table-column prop="username" align="center" label="用户名" />
           <el-table-column prop="phone" align="center" label="电话号码" />
           <el-table-column prop="email" align="center" label="邮箱" />
@@ -82,7 +93,9 @@ export default {
   data() {
     return {
       dialogTableVisible: false,
-      ruleForm: {}
+			ruleForm: {},
+			teamInfos: [],
+			joiners: []
     };
   },
   watch: {
@@ -119,9 +132,9 @@ export default {
         if (res.success) {
           this.ruleForm = res.data.gameInfo;
           if (this.ruleForm.gameType == '1') {
-            this.ruleForm.joiners = res.data.users;
+            this.joiners = res.data.users;
           } else {
-            this.ruleForm.joiners = res.data.teamInfos;
+            this.teamInfos = res.data.teamInfos;
           }
         }
       });
@@ -131,35 +144,13 @@ export default {
 </script>
 <style>
 .el-form-item__content {
-  line-height: 40px;
+  line-height: 40px !important;
 }
 .mt30 {
   margin-top: 35px;
 }
 .pager-container {
   text-align: center;
-}
-.box {
-  /* -webkit-appearance: none;
-  background-color: #fff;
-  background-image: none;
-  border-radius: 0.04rem;
-  border: 0.01rem solid #dcdfe6;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  color: #606266;
-  display: inline-block;
-  font-size: inherit;
-  min-height: 0.42rem;
-  line-height: 0.4rem;
-  outline: none;
-  padding: 0 0.15rem;
-  -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); */
-}
-.el-tag {
-  margin-right: 5px;
-  height: 0.3rem;
 }
 .el-upload__tip {
   display: inline-block;

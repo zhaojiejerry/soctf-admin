@@ -70,7 +70,7 @@ export default {
     },
     handleEdit(id) {
       this.show = true
-      this.mainId = id
+      this.mainId = id.toString()
       this.addSign = false
     },
     handleDelete(id) {

@@ -182,12 +182,12 @@ export default {
       }).then((res) => {
         if (res.success) {
 					this.ruleForm = res.data;
-					this.ruleForm.label = res.data.label == '' ? [] : this.getLabel(res.data.label);
+					this.ruleForm.label = res.data.label ? res.data.label.split('|') : [] ;
           this.label = this.ruleForm.label;
           this.ruleForm.correctAnswer =
             res.data.choiceType == 2
-              ? res.data.difficultyLevel.split(',')
-              : res.data.difficultyLevel;
+              ? res.data.correctAnswer.split(',')
+              : res.data.correctAnswer;
           this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
         }
       });

@@ -48,7 +48,7 @@
               <template slot-scope="scope">
                 <el-button v-if="buttons.indexOf('24')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
                 <el-button v-if="buttons.indexOf('23')!=-1" size="small" type="text" @click="handleDelete(scope.row.usrId)">删除</el-button>
-                <el-button v-if="buttons.indexOf('70')!=-1" size="small" type="text" @click="handleRole(scope.row)">关联角色</el-button>
+                <el-button v-if="buttons.indexOf('70')!=-1&&scope.row.userTyp==2" size="small" type="text" @click="handleRole(scope.row)">关联角色</el-button>
                 <el-button v-if="buttons.indexOf('71')!=-1" size="small" type="text" @click="handleDetails(scope.row)">用户详情</el-button>
                 <el-button v-if="buttons.indexOf('26')!=-1" size="small" type="text" @click="handleReward(scope.row)">奖励</el-button>
               </template>

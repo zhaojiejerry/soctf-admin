@@ -33,10 +33,6 @@
         <el-input v-model="ruleForm.questionDescribe" type="textarea" class="itemwidth" />
       </el-form-item>
       <el-form-item label="容器目录" prop="dirName">
-        <!-- <el-upload :on-success="handleUrl" :file-list="fileList" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove1">
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
-        </el-upload> -->
         <el-input v-model="ruleForm.dirName" class="itemwidth" />
       </el-form-item>
       <el-form-item label="标签" prop="label">
@@ -142,22 +138,6 @@ export default {
         this.subject = res.subject;
       });
     },
-    handleUrl(response, file, fileList) {
-      console.log(response, file, fileList);
-      if (response.success) {
-        this.fileList = [{ name: file.name, url: response.message }];
-        this.ruleForm.dirName = response.message;
-      } else {
-        this.fileList = [];
-        this.ruleForm.dirName = '';
-        this.$message.error(response.message);
-      }
-    },
-    handleRemove1(file, fileList) {
-      console.log(file, fileList);
-      this.fileList = [];
-      this.ruleForm.dirName = '';
-    },
     getDockerQuestionById() {
       getDockerQuestionById({
         id: this.mainId
@@ -165,25 +145,10 @@ export default {
         if (res.success) {
           this.ruleForm = res.data;
           this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
-          this.ruleForm.label =
-            res.data.label == '' ? [] : this.getLabel(res.data.label);
+          this.ruleForm.label = res.data.label ? res.data.label.split('|') : [];
           this.label = this.ruleForm.label;
-          if (res.data.dirName) {
-            var dirName = res.data.dirName.split('/');
-            this.fileList = [
-              {
-                name: dirName[dirName.length - 1],
-                url: res.data.dirName
-              }
-            ];
-          } else {
-            this.fileList = [];
-          }
         }
       });
-    },
-    getLabel(label) {
-      return label.split('|');
     },
     back() {
       this.$emit('input', false);

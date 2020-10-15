@@ -21,6 +21,8 @@
                   <span style="color:#0DA0B4">{{ item.json.userName }}</span>
                   攻克了
                   <span style="color:#B59758">{{ item.json.questionName }}</span>
+                  , 共耗时
+                  <span style="color:#04b69d;">{{ item.json.time }}</span>
                 </div>
               </el-scrollbar>
             </div>
@@ -99,7 +101,7 @@ export default {
         this.getIndexNotice();
         this.getRankingList();
         this.directSeeding();
-        this.noticeTimer = setInterval(this.getIndexNotice, 1000);
+        this.noticeTimer = setInterval(this.getIndexNotice, 5000);
         this.rankTimer = setInterval(this.getRankingList, 60000);
         this.seedTimer = setInterval(this.directSeeding, 1000 * 60 * 30);
       }
@@ -137,6 +139,9 @@ export default {
         });
       });
       var option = {
+				tooltip: {
+          trigger: 'axis'
+        },
         grid: {
           left: '3%',
           right: '4%',

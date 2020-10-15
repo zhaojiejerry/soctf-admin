@@ -171,7 +171,7 @@ export const constantRoutes = [{
                     import ('@/pages/home/index'),
                 meta: {
                     title: '首页',
-                    icon: 'iconfont icon-home'
+                    icon: 'el-icon-s-home'
                 }
             },
             {

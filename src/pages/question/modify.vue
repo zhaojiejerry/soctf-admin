@@ -157,6 +157,7 @@ export default {
         if (!this.addSign) {
           this.getQuestionWriteUp();
         } else {
+					this.fileList = []
           this.ruleForm = {
             answerDescription: '',
             createAt: '',
@@ -250,14 +251,10 @@ export default {
           } else {
             this.fileList = [];
           }
-          this.ruleForm.label =
-            res.data.label == '' ? [] : this.getLabel(res.data.label);
+          this.ruleForm.label = res.data.label ? res.data.label.split('|') : [] ;
           this.label = this.ruleForm.label;
         }
       });
-    },
-    getLabel(label) {
-      return label.split('|');
     },
     back() {
       this.$emit('input', false);

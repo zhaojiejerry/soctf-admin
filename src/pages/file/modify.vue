@@ -103,12 +103,14 @@ export default {
         if (!this.addSign) {
           this.getFileQuestionById();
         } else {
+					this.fileList = []
           this.ruleForm = {
             category: '',
             difficultyLevel: 0,
             enable: 0,
             flag: '',
-            goldCoin: 0,
+						goldCoin: 0,
+						label: [],
             id: '',
             name: '',
             questionDescribe: '',
@@ -153,7 +155,7 @@ export default {
         if (res.success) {
           this.ruleForm = res.data;
           this.ruleForm.label =
-            res.data.label == '' ? [] : this.getLabel(res.data.label);
+            res.data.label ? res.data.label.split('|') : [];
           this.label = this.ruleForm.label;
           this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
           if (res.data.url) {
@@ -220,7 +222,6 @@ export default {
               enable: 1,
               flag: this.ruleForm.flag,
               goldCoin: this.ruleForm.goldCoin,
-              id: '',
               label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               questionDescribe: this.ruleForm.questionDescribe,

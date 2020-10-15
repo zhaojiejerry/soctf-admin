@@ -164,7 +164,9 @@ export default {
         if (!this.addSign) {
           this.getGameInfoDetail();
         } else {
-          this.joiners = [];
+					this.joiners = [];
+					this.remark = []
+					this.scoreRemark = []
           this.ruleForm = {
             date: [],
             description: '',

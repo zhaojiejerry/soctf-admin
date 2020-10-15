@@ -135,7 +135,7 @@ export default {
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data;
-          this.ruleForm.weapLabel = this.getLabel(res.data.weapLabel);
+          this.ruleForm.weapLabel = res.data.weapLabel ? res.data.weapLabel.split('|') : [];
           this.label = this.ruleForm.weapLabel;
         }
       });

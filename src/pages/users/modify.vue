@@ -26,13 +26,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="用户状态" prop="usrStatus">
-            <el-select v-model="ruleForm.usrStatus" clearable>
+            <el-select v-model="ruleForm.usrStatus" clearable class="itemwidth">
               <el-option label="正常" value="1" />
               <el-option label="不可用" value="2" />
             </el-select>
           </el-form-item>
           <el-form-item label="用户类型" prop="userType">
-            <el-select v-model="ruleForm.userType" clearable>
+            <el-select v-model="ruleForm.userType" clearable class="itemwidth">
               <el-option label="用户端" value="1" />
               <el-option label="管理端" value="2" />
             </el-select>

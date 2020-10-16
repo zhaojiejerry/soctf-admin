@@ -38,9 +38,9 @@
       <el-form-item label="分值" prop="choiceScore">
         <el-input v-model.number="ruleForm.choiceScore" :min="0" class="itemwidth" />
       </el-form-item>
-      <el-form-item label="答题时间/分" prop="choiceTime">
+      <!-- <el-form-item label="答题时间/分" prop="choiceTime">
         <el-input v-model.number="ruleForm.choiceTime" :min="0" class="itemwidth" />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="描述" prop="choiceDescription">
         <el-input v-model="ruleForm.choiceDescription" type="textarea" class="itemwidth" />
       </el-form-item>
@@ -94,8 +94,8 @@ export default {
         choiceType: '',
         correctAnswer: '',
         difficultyLevel: 0,
-				goldCoin: 0,
-				label: '',
+        goldCoin: 0,
+        label: '',
         name: '',
         optionArray: '',
         optionVos: [
@@ -116,7 +116,17 @@ export default {
         correctAnswer: [
           { required: true, message: '请选择答案', trigger: 'change' }
         ],
-        category: [{ required: true, message: '请选择类别', trigger: 'change' }]
+        category: [
+          { required: true, message: '请选择类别', trigger: 'change' }
+        ],
+        choiceTime: [
+          {
+            required: true,
+            message: '请输入答题时间',
+            type: 'number',
+            trigger: 'blur'
+          }
+        ]
       },
       fileList: [],
       subject: []
@@ -138,8 +148,8 @@ export default {
             choiceType: '',
             correctAnswer: '',
             difficultyLevel: 0,
-						goldCoin: 0,
-						label: '',
+            goldCoin: 0,
+            label: '',
             name: '',
             optionArray: '',
             optionVos: [
@@ -181,8 +191,8 @@ export default {
         choiceId: this.mainId
       }).then((res) => {
         if (res.success) {
-					this.ruleForm = res.data;
-					this.ruleForm.label = res.data.label ? res.data.label.split('|') : [] ;
+          this.ruleForm = res.data;
+          this.ruleForm.label = res.data.label ? res.data.label.split('|') : [];
           this.label = this.ruleForm.label;
           this.ruleForm.correctAnswer =
             res.data.choiceType == 2
@@ -212,8 +222,8 @@ export default {
                   ? this.ruleForm.correctAnswer.join(',')
                   : this.ruleForm.correctAnswer,
               difficultyLevel: this.ruleForm.difficultyLevel,
-							goldCoin: this.ruleForm.goldCoin,
-							label: this.ruleForm.label.join('|'),
+              goldCoin: this.ruleForm.goldCoin,
+              label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               optionArray: this.ruleForm.optionArray,
               optionVos: this.ruleForm.optionVos,
@@ -248,8 +258,8 @@ export default {
                   ? this.ruleForm.correctAnswer.join(',')
                   : this.ruleForm.correctAnswer,
               difficultyLevel: this.ruleForm.difficultyLevel,
-							goldCoin: this.ruleForm.goldCoin,
-							label: this.ruleForm.label.join('|'),
+              goldCoin: this.ruleForm.goldCoin,
+              label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               optionArray: this.ruleForm.optionArray,
               optionVos: this.ruleForm.optionVos,

@@ -24,7 +24,7 @@
         <el-input v-model.number="ruleForm.value" :min="0" class="itemwidth" />
       </el-form-item>
       <el-form-item label="答题时间/分" prop="time">
-        <el-input v-model.number="ruleForm.time" :min="0" class="itemwidth" />
+        <el-input v-model.number="ruleForm.time" :min="1" class="itemwidth" />
       </el-form-item>
       <el-form-item label="标签" prop="label">
         <el-select v-model="ruleForm.label" multiple filterable allow-create default-first-option class="itemwidth" placeholder="请选择标签">
@@ -83,14 +83,24 @@ export default {
         name: '',
         questionDescribe: '',
         questionType: 0,
-        time: 0,
+        time: 1,
         url: '',
         value: 0
       },
       rules: {
         name: [{ required: true, message: '请输入题目名称', trigger: 'blur' }],
         flag: [{ required: true, message: '请输入答案', trigger: 'blur' }],
-        category: [{ required: true, message: '请选择类别', trigger: 'change' }]
+        category: [
+          { required: true, message: '请选择类别', trigger: 'change' }
+        ],
+        time: [
+          {
+            required: true,
+            message: '请输入答题时间',
+            type: 'number',
+            trigger: 'blur'
+          }
+        ]
       },
       label: [],
       subject: [],
@@ -103,19 +113,19 @@ export default {
         if (!this.addSign) {
           this.getFileQuestionById();
         } else {
-					this.fileList = []
+          this.fileList = [];
           this.ruleForm = {
             category: '',
             difficultyLevel: 0,
             enable: 0,
             flag: '',
-						goldCoin: 0,
-						label: [],
+            goldCoin: 0,
+            label: [],
             id: '',
             name: '',
             questionDescribe: '',
             questionType: 0,
-            time: 0,
+            time: 1,
             url: '',
             value: 0
           };
@@ -130,7 +140,7 @@ export default {
     handleUrl(response, file, fileList) {
       console.log(response, file, fileList);
       if (response.success) {
-        this.fileList = [{ name: file.name, url: response.message }];
+        this.fileList = [{ name: response.message, url: response.message }];
         this.ruleForm.url = response.message;
       } else {
         this.fileList = [];
@@ -154,15 +164,13 @@ export default {
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data;
-          this.ruleForm.label =
-            res.data.label ? res.data.label.split('|') : [];
+          this.ruleForm.label = res.data.label ? res.data.label.split('|') : [];
           this.label = this.ruleForm.label;
           this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
           if (res.data.url) {
-            var url = res.data.url.split('/');
             this.fileList = [
               {
-                name: url[url.length - 1],
+                name: res.data.url,
                 url: res.data.url
               }
             ];
@@ -176,13 +184,6 @@ export default {
       this.$emit('input', false);
     },
     onSubmit() {
-      if (this.fileList.length == 0) {
-        this.$message({
-          type: 'warning',
-          message: '请上传附件'
-        });
-        return;
-      }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (!this.addSign) {

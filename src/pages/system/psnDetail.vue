@@ -59,53 +59,52 @@
   </div>
 </template>
 <script>
-import { getOneUserInfo, modifyUser } from '@/api/user'
-import areajson from '@/assets/areajson'
-import { getCookie } from '@/utils/auth'
+import { getOneUserInfo, modifyUser } from '@/api/user';
+import areajson from '@/assets/areajson';
+import { getCookie } from '@/utils/auth';
 export default {
   data() {
     return {
       areaOptions: [],
       userObj: {},
       rules: {}
-    }
+    };
   },
   created() {
-    this.areaOptions = areajson
-    this.getOneUserInfo()
+    this.areaOptions = areajson;
+    this.getOneUserInfo();
   },
   methods: {
     handleAvatarSuccess(res, file) {
       if (res.success) {
-        this.userObj.portrait = res.message
+        this.userObj.portrait = res.message;
       }
     },
     handleAvatarError(err, file, fileList) {
       this.$message({
         message: err.message,
         type: 'error'
-      })
+      });
     },
     beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      return isLt2M
+      return isLt2M;
     },
     toUserInfo() {
-      this.$router.push({ name: 'career' })
+      this.$router.push({ name: 'career' });
     },
     getOneUserInfo() {
       getOneUserInfo({
         usrId: getCookie('usrId')
       }).then((res) => {
         if (res.success) {
-          this.userObj = res.data
-          this.userObj.area =
-            res.data.area == null ? [] : res.data.area.split('/')
+          this.userObj = res.data;
+          this.userObj.area = res.data.area ? res.data.area.split('/') : [];
         }
-      })
+      });
     },
     modifyUser() {
       if (this.userObj.phone != null) {
@@ -113,18 +112,18 @@ export default {
           this.$message({
             message: '请输入合法的手机号码',
             type: 'error'
-          })
-          return
+          });
+          return;
         }
       }
-      var a = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/
+      var a = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
       if (this.userObj.email != '') {
         if (!a.test(this.userObj.email)) {
           this.$message({
             message: '请输入合法的邮箱号码',
             type: 'error'
-          })
-          return
+          });
+          return;
         }
       }
       modifyUser({
@@ -149,17 +148,17 @@ export default {
           this.$message({
             type: 'success',
             message: '修改成功'
-          })
+          });
         } else {
           this.$message({
             type: 'warning',
             message: res.message
-          })
+          });
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 #user-head-div {

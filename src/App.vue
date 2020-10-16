@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'App'
-}
+};
 </script>
 
 <style>
@@ -22,6 +22,12 @@ export default {
 	overflow: auto; */
   background: white;
   padding-bottom: 0.2rem;
+}
+.el-upload-list__item-name {
+  overflow: auto !important;
+  word-wrap: break-word;
+  white-space: normal !important;
+  word-break: break-all;
 }
 .itemwidth {
   max-width: 375px;

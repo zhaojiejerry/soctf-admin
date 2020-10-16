@@ -164,9 +164,9 @@ export default {
         if (!this.addSign) {
           this.getGameInfoDetail();
         } else {
-					this.joiners = [];
-					this.remark = []
-					this.scoreRemark = []
+          this.joiners = [];
+          this.remark = [];
+          this.scoreRemark = [];
           this.ruleForm = {
             date: [],
             description: '',
@@ -270,9 +270,8 @@ export default {
       this.getUserInfoList();
     },
     handleRemark(response, file, fileList) {
-      console.log(response, file, fileList);
       if (response.success) {
-        this.remark = [{ name: file.name, url: response.message }];
+        this.remark = [{ name: response.message, url: response.message }];
         this.ruleForm.remark = response.message;
       } else {
         this.remark = [];
@@ -281,9 +280,8 @@ export default {
       }
     },
     handleScoreRemark(response, file, fileList) {
-      console.log(response, file, fileList);
       if (response.success) {
-        this.scoreRemark = [{ name: file.name, url: response.message }];
+        this.scoreRemark = [{ name: response.message, url: response.message }];
         this.ruleForm.scoreRemark = response.message;
       } else {
         this.scoreRemark = [];
@@ -292,7 +290,6 @@ export default {
       }
     },
     handleRemove1(file, fileList) {
-      console.log(file, fileList);
       this.remark = [];
       this.ruleForm.remark = '';
     },
@@ -338,10 +335,9 @@ export default {
           this.joiners = res.data.joiners ? res.data.joiners : [];
           this.ruleForm.date = [res.data.startTime, res.data.endTime];
           if (res.data.remark) {
-            var remark = res.data.remark.split('/');
             this.remark = [
               {
-                name: remark[remark.length - 1],
+                name: res.data.remark,
                 url: res.data.remark
               }
             ];
@@ -349,10 +345,9 @@ export default {
             this.remark = [];
           }
           if (res.data.scoreRemark) {
-            var scoreRemark = res.data.scoreRemark.split('/');
             this.scoreRemark = [
               {
-                name: scoreRemark[scoreRemark.length - 1],
+                name: res.data.scoreRemark,
                 url: res.data.scoreRemark
               }
             ];

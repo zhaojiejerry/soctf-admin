@@ -27,7 +27,7 @@
         <el-input v-model.number="ruleForm.value" :min="0" class="itemwidth" />
       </el-form-item>
       <el-form-item label="答题时间/分" prop="time">
-        <el-input v-model.number="ruleForm.time" :min="0" class="itemwidth" />
+        <el-input v-model.number="ruleForm.time" :min="1" class="itemwidth" />
       </el-form-item>
       <el-form-item label="描述" prop="questionDescribe">
         <el-input v-model="ruleForm.questionDescribe" type="textarea" class="itemwidth" />
@@ -86,7 +86,7 @@ export default {
         name: '',
         questionDescribe: '',
         questionType: 0,
-        time: 0,
+        time: 1,
         value: 0
       },
       label: [],
@@ -96,7 +96,17 @@ export default {
           { required: true, message: '请输入容器目录', trigger: 'blur' }
         ],
         flag: [{ required: true, message: '请输入答案', trigger: 'blur' }],
-        category: [{ required: true, message: '请选择类别', trigger: 'change' }]
+        category: [
+          { required: true, message: '请选择类别', trigger: 'change' }
+        ],
+        time: [
+          {
+            required: true,
+            message: '请输入答题时间',
+            type: 'number',
+            trigger: 'blur'
+          }
+        ]
       },
       fileList: [],
       subject: []
@@ -122,7 +132,7 @@ export default {
             name: '',
             questionDescribe: '',
             questionType: 0,
-            time: 0,
+            time: 1,
             value: 0
           };
         }
@@ -154,13 +164,6 @@ export default {
       this.$emit('input', false);
     },
     onSubmit() {
-      // if (this.fileList.length == 0) {
-      //   this.$message({
-      //     type: 'warning',
-      //     message: '请上传容器附件'
-      //   });
-      //   return;
-      // }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (!this.addSign) {

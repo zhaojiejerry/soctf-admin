@@ -157,7 +157,7 @@ export default {
         if (!this.addSign) {
           this.getQuestionWriteUp();
         } else {
-					this.fileList = []
+          this.fileList = [];
           this.ruleForm = {
             answerDescription: '',
             createAt: '',
@@ -217,9 +217,8 @@ export default {
       this.getAllQuestion();
     },
     handleSuccess(response, file, fileList) {
-      console.log(response, file, fileList);
       if (response.success) {
-        this.fileList = [{ name: file.name, url: response.message }];
+        this.fileList = [{ name: response.message, url: response.message }];
         this.ruleForm.fileUrl = response.message;
       } else {
         this.fileList = [];
@@ -228,7 +227,6 @@ export default {
       }
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
       this.fileList = [];
       this.ruleForm.fileUrl = '';
     },
@@ -241,17 +239,16 @@ export default {
           this.question = res.data.questionName;
           console.log(this.question);
           if (res.data.fileUrl) {
-            var fileUrl = res.data.fileUrl.split('/');
             this.fileList = [
               {
-                name: fileUrl[fileUrl.length - 1],
+                name: res.data.fileUrl,
                 url: res.data.fileUrl
               }
             ];
           } else {
             this.fileList = [];
           }
-          this.ruleForm.label = res.data.label ? res.data.label.split('|') : [] ;
+          this.ruleForm.label = res.data.label ? res.data.label.split('|') : [];
           this.label = this.ruleForm.label;
         }
       });

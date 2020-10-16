@@ -135,7 +135,9 @@ export default {
       }).then((res) => {
         if (res.success) {
           this.ruleForm = res.data;
-          this.ruleForm.weapLabel = res.data.weapLabel ? res.data.weapLabel.split('|') : [];
+          this.ruleForm.weapLabel = res.data.weapLabel
+            ? res.data.weapLabel.split('|')
+            : [];
           this.label = this.ruleForm.weapLabel;
         }
       });
@@ -208,9 +210,6 @@ export default {
 };
 </script>
 <style>
-.el-form-item__content {
-  line-height: 0;
-}
 .mt30 {
   margin-top: 35px;
 }

@@ -22,7 +22,7 @@
                   攻克了
                   <span style="color:#B59758">{{ item.json.questionName }}</span>
                   , 共耗时
-                  <span style="color:#04b69d;">{{ item.json.time }}</span>
+                  <span style="color:#04b69d;">{{ item.json.time }}</span> 分钟
                 </div>
               </el-scrollbar>
             </div>
@@ -139,7 +139,7 @@ export default {
         });
       });
       var option = {
-				tooltip: {
+        tooltip: {
           trigger: 'axis'
         },
         grid: {

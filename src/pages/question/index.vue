@@ -3,7 +3,7 @@
     <div>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>题目管理</span>
+          <span>资料管理</span>
           <div class="right-part">
             <el-button v-if="buttons.indexOf('44')!=-1" size="small" type="primary" icon="el-icon-plus" @click="addNew">新增</el-button>
           </div>
@@ -26,7 +26,7 @@
             <el-table-column label="分类" align="center" prop="type" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
-                <el-button v-if="buttons.indexOf('46')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.questionId)">编辑</el-button>
+                <el-button v-if="buttons.indexOf('46')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
                 <el-button v-if="buttons.indexOf('45')!=-1" size="small" type="text" @click="handleDelete(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
@@ -39,12 +39,12 @@
         </div>
       </el-card>
     </div>
-    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getWriteUpForPage" />
+    <modify v-model="show" :add-sign="addSign" :rule-form="ruleForm" @getList="getWriteUpForPage" />
   </div>
 </template>
 <script>
 import { getWriteUpForPage, deleteWriteUp } from '@/api/question'
-import { parseTime } from '@/utils/index'
+import { parseTime, copyObj } from '@/utils/index'
 import modify from './modify'
 export default {
   components: { modify },
@@ -52,12 +52,12 @@ export default {
     return {
       show: false,
       addSign: false,
-      mainId: '',
       tableList: [],
       tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
-      fileType: ['WP', '比赛资料', '其他']
+			fileType: ['WP', '比赛资料', '其他'],
+			ruleForm: {}
     }
 	},
 	computed: {
@@ -75,11 +75,24 @@ export default {
     addNew() {
       this.show = true
       this.addSign = true
-      this.mainId = ''
+       this.ruleForm = {
+				answerDescription: '',
+				createAt: '',
+				createById: '',
+				fileType: '',
+				fileUrl: '',
+				id: 0,
+				label: [],
+				mainBody: '',
+				questionId: '',
+				title: '',
+				type: ''
+			};
     },
-    handleEdit(id) {
+    handleEdit(row) {
       this.show = true
-      this.mainId = id
+			this.ruleForm = copyObj(row)
+			this.ruleForm.label = row.label ? row.label.split('|') : [];
       this.addSign = false
     },
     handleDelete(id) {

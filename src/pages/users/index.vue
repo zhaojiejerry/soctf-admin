@@ -17,7 +17,7 @@
               <el-input v-model="extraParam.company" placeholder="请输入" clearable />
             </el-form-item>
             <el-form-item label="用户类型" prop="userType">
-              <el-select v-model="extraParam.userType" clearable>
+              <el-select v-model="extraParam.userType" clearable @change="handleCurrentChange(1)">
                 <el-option label="用户端" value="1" />
                 <el-option label="管理端" value="2" />
               </el-select>
@@ -26,7 +26,7 @@
               <el-input v-model="extraParam.school" placeholder="请输入" clearable />
             </el-form-item>
             <el-form-item label="用户状态" prop="usrStatus">
-              <el-select v-model="extraParam.usrStatus" clearable>
+              <el-select v-model="extraParam.usrStatus" clearable @change="handleCurrentChange(1)">
                 <el-option label="正常" value="1" />
                 <el-option label="不可用" value="2" />
               </el-select>
@@ -38,7 +38,17 @@
             <el-table-column label="昵称" align="center" prop="realName" show-overflow-tooltip />
             <el-table-column prop="createAt" align="center" label="性别">
               <template slot-scope="scope">
-                {{ scope.row.gender==1?'男':'女' }}
+                {{ gender[scope.row.gender-1] }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="createAt" align="center" label="用户类型">
+              <template slot-scope="scope">
+                {{ scope.row.userTyp=='1' ? '用户端':'管理端' }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="createAt" align="center" label="用户状态">
+              <template slot-scope="scope">
+                {{ scope.row.usrStatus == '1' ?'正常':'不可用' }}
               </template>
             </el-table-column>
             <el-table-column prop="phone" align="center" label="手机号" />
@@ -118,6 +128,7 @@ export default {
 			multipleSelection: [],
 			showDetails: false,
 			extraParam: {},
+			gender: ['男', '女'],
 			showReward: false,
 			reward: {
 				'goldCoin': 0,
@@ -155,6 +166,7 @@ export default {
 						type: 'success',
 						message: '奖励成功'
 					})
+					this.showReward = false
 				} else {
 					this.$message({
 						type: 'warning',
@@ -165,7 +177,8 @@ export default {
 		},
 		handleDetails(row) {
 			this.showDetails = true
-      this.ruleForm = copyObj(row)
+			this.ruleForm = copyObj(row)
+			this.ruleForm.password = ''
 		},
     parseTime(time) {
       return parseTime(time)

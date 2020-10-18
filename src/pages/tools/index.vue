@@ -10,8 +10,8 @@
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
-            <el-table-column prop="weapName" align="center" label="工具名称" />
-            <el-table-column prop="description" align="center" label="描述" />
+            <el-table-column prop="weapName" align="center" label="工具名称" show-overflow-tooltip />
+            <el-table-column prop="description" align="center" label="描述" show-overflow-tooltip />
             <el-table-column label="描述URL" align="center" prop="descUrl" show-overflow-tooltip />
             <el-table-column label="下载URL" align="center" prop="downloadUrl" show-overflow-tooltip />
             <el-table-column label="图片URL" align="center" prop="iconUrl" show-overflow-tooltip />

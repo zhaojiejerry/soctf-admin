@@ -165,9 +165,6 @@ export default {
 };
 </script>
 <style>
-.el-form-item__content {
-  line-height: 0;
-}
 .mt30 {
   margin-top: 35px;
 }

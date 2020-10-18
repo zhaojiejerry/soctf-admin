@@ -2,7 +2,7 @@
   <div>
     <div class="sys-name">
       <img class="icon-logo" src="./logo.png">
-      SOCTF后台管理系统
+      SOCTF管理系统
     </div>
     <div style="height:calc( 100vh - 60px )">
       <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%">

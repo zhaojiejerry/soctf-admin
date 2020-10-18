@@ -14,7 +14,17 @@
         </div>
         <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="用户名" prop="username">
-            <el-input v-model="ruleForm.username" class="itemwidth" />
+            <el-input v-model="ruleForm.username" :disabled="!addSign" class="itemwidth" />
+          </el-form-item>
+          <el-form-item v-if="addSign" label="密码" prop="password">
+            <el-input v-model="ruleForm.password" :type="showPsw?'text':'password'" class="itemwidth">
+              <i slot="suffix" class="el-icon-view" style="font-size: 19px;vertical-align: middle; padding-right: 5px;" @click="showPsw=!showPsw" />
+            </el-input>
+          </el-form-item>
+          <el-form-item v-else label="密码">
+            <el-input v-model="ruleForm.password" :type="showPsw?'text':'password'" class="itemwidth">
+              <i slot="suffix" class="el-icon-view" style="font-size: 19px;vertical-align: middle; padding-right: 5px;" @click="showPsw=!showPsw" />
+            </el-input>
           </el-form-item>
           <el-form-item label="昵称" prop="realName">
             <el-input v-model="ruleForm.realName" class="itemwidth" />
@@ -31,8 +41,8 @@
               <el-option label="不可用" value="2" />
             </el-select>
           </el-form-item>
-          <el-form-item label="用户类型" prop="userType">
-            <el-select v-model="ruleForm.userType" clearable class="itemwidth">
+          <el-form-item label="用户类型" prop="userTyp">
+            <el-select v-model="ruleForm.userTyp" clearable class="itemwidth">
               <el-option label="用户端" value="1" />
               <el-option label="管理端" value="2" />
             </el-select>
@@ -96,11 +106,14 @@ export default {
       question: '',
       label: [],
       rules: {
-        title: [
-          { required: true, message: '请输入答案/文档标题', trigger: 'blur' }
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+				],
+				password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
         ],
-        fileType: [
-          { required: true, message: '请选择文档类型', trigger: 'change' }
+        userTyp: [
+          { required: true, message: '请选择用户类型', trigger: 'change' }
         ]
       },
       fileList: [],
@@ -109,9 +122,18 @@ export default {
       pageSize: 10,
       currentPage: 1,
       questionRow: [],
-      questionType: ['容器', '附件', '选择']
+			questionType: ['容器', '附件', '选择'],
+			showPsw: false
     };
-  },
+	},
+	watch: {
+		value(val) {
+			if (val) {
+				this.ruleForm.password = ''
+				this.showPsw = false
+			}
+		}
+	},
   mounted() {
     this.areaOptions = areajson;
   },
@@ -158,7 +180,9 @@ export default {
               company: this.ruleForm.company,
               gender: this.ruleForm.gender,
               school: this.ruleForm.school,
-              signature: this.ruleForm.signature
+							signature: this.ruleForm.signature,
+							password: this.ruleForm.password,
+							userTyp: this.ruleForm.userTyp
             }).then((res) => {
               if (res.success) {
                 this.$message({
@@ -196,13 +220,13 @@ export default {
               idcardNo: '',
               idcardTyp: '',
               joinGame: false,
-              password: '',
+              password: this.ruleForm.password,
               roleIds: [],
               score: 0,
               specialRoleId: 0,
               teamId: '',
               teamOwner: false,
-              userTyp: '',
+              userTyp: this.ruleForm.userTyp,
               username: this.ruleForm.username
             }).then((res) => {
               if (res.success) {

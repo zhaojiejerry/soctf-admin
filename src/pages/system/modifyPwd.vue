@@ -64,9 +64,6 @@ export default {
       if (value === '') {
         callback(new Error('请输入密码'));
       } else {
-        if (this.ruleForm.newPassword !== '') {
-          this.$refs.ruleForm.validateField('newPassword');
-        }
         callback();
       }
     };
@@ -94,8 +91,8 @@ export default {
       chartCode: '', // 图形验证码
       codeValue: '发送验证码',
       rules: {
-        confirmNewPassword: [{ validator: validatePass, trigger: 'blur' }],
-        newPassword: [{ validator: validatePass2, trigger: 'blur' }],
+        confirmNewPassword: [{ validator: validatePass2, trigger: 'blur' }],
+        newPassword: [{ validator: validatePass, trigger: 'blur' }],
         phoneNumber: [{ validator: validatemobile, trigger: 'blur' }],
         mobileCode: [
           { trigger: 'blur', required: true, message: '请输入短信验证码' }

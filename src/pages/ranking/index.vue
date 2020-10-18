@@ -59,7 +59,7 @@ export default {
       })
         .then(() => {
           hideUserScore({
-            userID: row.usr_id
+            id: row.id
           }).then((res) => {
             if (res.success) {
               this.$message({

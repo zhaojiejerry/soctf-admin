@@ -6,3 +6,11 @@ export function getjson(url) {
         baseURL: '/jsonApi'
     })
 }
+
+export function getfilen(url) {
+    return axios({
+        url: url,
+        responseType: 'blob',
+        baseURL: '/jsonApi'
+    })
+}

@@ -10,7 +10,7 @@
         </div>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
-            <el-table-column prop="name" align="center" label="题目名称" />
+            <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
             <el-table-column prop="choiceDescription" align="center" label="文本描述" show-overflow-tooltip />
             <el-table-column label="题型" align="center" show-overflow-tooltip>
               <template slot-scope="scope">

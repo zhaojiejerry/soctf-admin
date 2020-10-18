@@ -148,9 +148,6 @@ export default {
 .el-collapse-item__header {
   padding-left: 20px;
 }
-.el-form-item__content {
-  line-height: 40px !important;
-}
 .mt30 {
   margin-top: 35px;
 }

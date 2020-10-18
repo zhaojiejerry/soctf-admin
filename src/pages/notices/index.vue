@@ -9,13 +9,40 @@
           </div>
         </div>
         <div class="user-child-list">
+          <el-form ref="ruleForm" inline>
+            <el-form-item label="公告类型" prop="userType">
+              <el-select v-model="type" clearable @change="handleCurrentChange(1)">
+                <el-option label="系统公告" value="1" />
+                <el-option label="赛事公告" value="2" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="赛事" prop="gameId">
+              <el-select v-model="gameId" clearable @change="handleCurrentChange(1)">
+                <el-option v-for="(item,index) in gameList" :key="index" :label="item.gameName" :value="item.gameId">
+                  {{ item.gameName }}
+                  <span style="float: right;">{{ gameStatus[item.gameStatus-1] }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
             <el-table-column prop="title" align="center" label="标题" />
-            <el-table-column prop="body" align="center" label="内容">
+            <!-- <el-table-column prop="body" align="center" label="内容">
               <template slot-scope="{row}">
                 <div v-html="row.body" />
               </template>
+            </el-table-column> -->
+            <el-table-column align="center" label="公告类型">
+              <template slot-scope="scope">
+                {{ scope.row.type=='1' ? '系统公告':'赛事公告' }}
+              </template>
             </el-table-column>
+            <el-table-column align="center" label="是否显示" width="100">
+              <template slot-scope="scope">
+                <el-switch :value="scope.row.enable" :width="50" :active-value="1" :inactive-value="0" disabled />
+              </template>
+            </el-table-column>
+            <el-table-column prop="createAt" align="center" label="创建时间" />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
                 <el-button v-if="buttons.indexOf('41')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.id)">编辑</el-button>
@@ -31,13 +58,14 @@
         </div>
       </el-card>
     </div>
-    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getNoticeListForAdmin" />
+    <modify v-model="show" :add-sign="addSign" :main-id="mainId" :game-list="gameList" @getList="getNoticeListForAdmin" />
   </div>
 </template>
 <script>
 import { getNoticeListForAdmin, delNoticeById } from '@/api/notice'
 import { parseTime } from '@/utils/index'
 import modify from './modify'
+import { getGameInfoListForPage } from '@/api/match';
 export default {
   components: { modify },
   data() {
@@ -48,7 +76,11 @@ export default {
       tableList: [],
       tableTotal: 0,
       pageSize: 10,
-      currentPage: 1
+			currentPage: 1,
+			type: '',
+			gameList: [],
+			gameId: '',
+			gameStatus: ['未开始', '进行中', '已结束']
     }
 	},
 	computed: {
@@ -58,8 +90,20 @@ export default {
   },
   mounted() {
     this.getNoticeListForAdmin()
-  },
+    this.getGameInfoListForPage();
+	},
   methods: {
+		getGameInfoListForPage() {
+      getGameInfoListForPage({
+        currentPage: 0,
+        extraParam: {},
+        pageSize: 0
+      }).then((res) => {
+        if (res.success) {
+          this.gameList = res.data;
+        }
+      });
+    },
     addNew() {
       this.show = true
       this.addSign = true
@@ -107,10 +151,10 @@ export default {
     },
     getNoticeListForAdmin() {
       getNoticeListForAdmin({
-        gameId: '',
+        gameId: this.gameId,
         pageNo: this.currentPage,
         pageSize: this.pageSize,
-        type: ''
+        type: this.type
       }).then((res) => {
         if (res.success) {
           this.tableList = res.data.records

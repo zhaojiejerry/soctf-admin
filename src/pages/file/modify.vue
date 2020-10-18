@@ -18,10 +18,10 @@
         </div>
       </el-form-item>
       <el-form-item label="金币" prop="goldCoin">
-        <el-input v-model.number="ruleForm.goldCoin" :min="0" class="itemwidth" />
+        <el-input v-model.number="ruleForm.goldCoin" :min="1" class="itemwidth" />
       </el-form-item>
       <el-form-item label="分值" prop="value">
-        <el-input v-model.number="ruleForm.value" :min="0" class="itemwidth" />
+        <el-input v-model.number="ruleForm.value" :min="2" class="itemwidth" />
       </el-form-item>
       <el-form-item label="答题时间/分" prop="time">
         <el-input v-model.number="ruleForm.time" :min="1" class="itemwidth" />
@@ -34,11 +34,17 @@
       <el-form-item label="附件地址" prop="url">
         <el-upload :on-success="handleUrl" :file-list="fileList" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove1">
           <el-button size="small" type="primary">点击上传</el-button>
-          <!-- <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div> -->
         </el-upload>
+        <div v-if="ruleForm.url" class="itemwidth" style="line-height: 25px;margin-top: 15px;">
+          点击下载 :
+          <a :download="ruleForm.url" :href="ruleForm.url" target="_blank" style="color: #B69858;cursor: pointer;">{{ ruleForm.url }}</a>
+        </div>
       </el-form-item>
       <el-form-item label="描述" prop="questionDescribe">
         <el-input v-model="ruleForm.questionDescribe" type="textarea" class="itemwidth" />
+      </el-form-item>
+      <el-form-item label="是否可见" prop="enable">
+        <el-switch v-model="ruleForm.enable" :width="50" :active-value="1" :inactive-value="0" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -75,17 +81,17 @@ export default {
       ruleForm: {
         category: '',
         difficultyLevel: 0,
-        enable: 0,
+        enable: 1,
         flag: '',
-        goldCoin: 0,
+        goldCoin: 1,
         id: '',
-        label: '',
+        label: [],
         name: '',
         questionDescribe: '',
         questionType: 0,
         time: 1,
         url: '',
-        value: 0
+        value: 1
       },
       rules: {
         name: [{ required: true, message: '请输入题目名称', trigger: 'blur' }],
@@ -99,8 +105,22 @@ export default {
             message: '请输入答题时间',
             type: 'number',
             trigger: 'blur'
-          }
-        ]
+					}
+        ],
+				goldCoin: [
+				{
+					required: true,
+					message: '请输入金币',
+					type: 'number',
+					trigger: 'blur'
+				}],
+				value: [
+				{
+					required: true,
+					message: '请输入分值',
+					type: 'number',
+					trigger: 'blur'
+				}]
       },
       label: [],
       subject: [],
@@ -117,9 +137,9 @@ export default {
           this.ruleForm = {
             category: '',
             difficultyLevel: 0,
-            enable: 0,
+            enable: 1,
             flag: '',
-            goldCoin: 0,
+            goldCoin: 1,
             label: [],
             id: '',
             name: '',
@@ -127,7 +147,7 @@ export default {
             questionType: 0,
             time: 1,
             url: '',
-            value: 0
+            value: 1
           };
         }
       }
@@ -220,7 +240,7 @@ export default {
             addFileQuestion({
               category: this.ruleForm.category,
               difficultyLevel: this.ruleForm.difficultyLevel,
-              enable: 1,
+              enable: this.ruleForm.enable,
               flag: this.ruleForm.flag,
               goldCoin: this.ruleForm.goldCoin,
               label: this.ruleForm.label.join('|'),

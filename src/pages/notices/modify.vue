@@ -9,20 +9,28 @@
           <el-input v-model.number="ruleForm.orderNode" class="itemwidth" />
         </el-form-item>
         <el-form-item label="是否启用" prop="enable">
-          <el-select v-model="ruleForm.enable" class="itemwidth" placeholder="请选择">
-            <el-option label="是" value="1" />
-            <el-option label="否" value="0" />
-          </el-select>
+          <el-switch v-model="ruleForm.enable" :width="50" :active-value="1" :inactive-value="0" />
         </el-form-item>
         <el-form-item label="类型" prop="title">
-          <el-select v-model="ruleForm.type" class="itemwidth" placeholder="请选择类型">
-            <el-option label="系统公告" value="1" />
-            <el-option label="赛事公告" value="2" />
+          <el-select v-model="ruleForm.type" class="itemwidth" placeholder="请选择类型" clearable>
+            <el-option label="系统公告" :value="1" />
+            <el-option label="赛事公告" :value="2" />
           </el-select>
         </el-form-item>
-        <el-form-item label="赛事" prop="gameId">
+        <el-form-item v-if="ruleForm.type==1" label="赛事">
           <el-select v-model="ruleForm.gameId" class="itemwidth" placeholder="请选择">
-            <el-option v-for="(item,index) in tableList" :key="index" :label="item.gameName" :value="item.gameId" />
+            <el-option v-for="(item,index) in gameList" :key="index" :label="item.gameName" :value="item.gameId">
+              {{ item.gameName }}
+              <span style="float: right;">{{ gameStatus[item.gameStatus-1] }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-else label="赛事" prop="gameId">
+          <el-select v-model="ruleForm.gameId" class="itemwidth" placeholder="请选择">
+            <el-option v-for="(item,index) in gameList" :key="index" :label="item.gameName" :value="item.gameId">
+              {{ item.gameName }}
+              <span style="float: right;">{{ gameStatus[item.gameStatus-1] }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
         <editor :content="ruleForm.body" @change="change" />
@@ -37,7 +45,6 @@
 <script>
 import { updNotice, addNotice, getNoticeDetails } from '@/api/notice';
 import editor from '@/components/editor';
-import { getGameInfoListForPage } from '@/api/match';
 export default {
   components: {
     editor
@@ -54,27 +61,36 @@ export default {
     mainId: {
       type: String,
       default: ''
-    }
+		},
+		gameList: {
+      type: Array,
+      default: () => {
+				return []
+			}
+		}
   },
   data() {
     return {
+			gameStatus: ['未开始', '进行中', '已结束'],
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         orgId: [
           { required: true, message: '请选择关联机构', trigger: 'change' }
+				],
+				gameId: [
+          { required: true, message: '请选择关联赛事', trigger: 'change' }
         ]
       },
-      tableList: [],
       ruleForm: {
         body: '',
         createAt: '',
         del: 0,
-        enable: '0',
+        enable: 0,
         gameId: '',
         id: 0,
         orderNode: 0,
         title: '',
-        type: '1'
+        type: 1
       }
     };
   },
@@ -99,23 +115,9 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getGameInfoListForPage();
-  },
   methods: {
     change(html) {
       this.ruleForm.body = html;
-    },
-    getGameInfoListForPage() {
-      getGameInfoListForPage({
-        currentPage: 0,
-        extraParam: {},
-        pageSize: 0
-      }).then((res) => {
-        if (res.success) {
-          this.tableList = res.data;
-        }
-      });
     },
     getNoticeDetails() {
       getNoticeDetails({
@@ -135,7 +137,7 @@ export default {
           if (!this.addSign) {
             updNotice({
               body: this.ruleForm.body,
-              createAt: this.ruleForm.createAt,
+              // createAt: this.ruleForm.createAt,
               del: this.ruleForm.del,
               enable: this.ruleForm.enable,
               gameId: this.ruleForm.gameId,
@@ -161,7 +163,7 @@ export default {
           } else {
             addNotice({
               body: this.ruleForm.body,
-              createAt: new Date(),
+              // createAt: new Date(),
               del: 0,
               enable: this.ruleForm.enable,
               gameId: this.ruleForm.gameId,
@@ -192,9 +194,6 @@ export default {
 };
 </script>
 <style>
-.el-form-item__content {
-  line-height: 0;
-}
 .mt30 {
   margin-top: 35px;
 }

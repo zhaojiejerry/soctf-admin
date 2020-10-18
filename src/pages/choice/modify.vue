@@ -33,10 +33,10 @@
         </div>
       </el-form-item>
       <el-form-item label="金币" prop="goldCoin">
-        <el-input v-model.number="ruleForm.goldCoin" :min="0" class="itemwidth" />
+        <el-input v-model.number="ruleForm.goldCoin" :min="1" class="itemwidth" />
       </el-form-item>
       <el-form-item label="分值" prop="choiceScore">
-        <el-input v-model.number="ruleForm.choiceScore" :min="0" class="itemwidth" />
+        <el-input v-model.number="ruleForm.choiceScore" :min="1" class="itemwidth" />
       </el-form-item>
       <!-- <el-form-item label="答题时间/分" prop="choiceTime">
         <el-input v-model.number="ruleForm.choiceTime" :min="0" class="itemwidth" />
@@ -89,14 +89,14 @@ export default {
         category: '',
         choiceDescription: '',
         choiceId: '',
-        choiceScore: 0,
-        choiceTime: 0,
+        choiceScore: 1,
+        choiceTime: 1,
         choiceType: '',
         correctAnswer: '',
         difficultyLevel: 0,
-        goldCoin: 0,
+        goldCoin: 1,
         label: '',
-        name: '',
+				name: '',
         optionArray: '',
         optionVos: [
           {
@@ -126,7 +126,21 @@ export default {
             type: 'number',
             trigger: 'blur'
           }
-        ]
+				],
+				goldCoin: [
+				{
+					required: true,
+					message: '请输入金币',
+					type: 'number',
+					trigger: 'blur'
+				}],
+				choiceScore: [
+				{
+					required: true,
+					message: '请输入分值',
+					type: 'number',
+					trigger: 'blur'
+				}]
       },
       fileList: [],
       subject: []
@@ -143,14 +157,14 @@ export default {
             category: '',
             choiceDescription: '',
             choiceId: '',
-            choiceScore: 0,
-            choiceTime: 0,
+            choiceScore: 1,
+            choiceTime: 1,
             choiceType: '',
             correctAnswer: '',
             difficultyLevel: 0,
-            goldCoin: 0,
+            goldCoin: 1,
             label: '',
-            name: '',
+						name: '',
             optionArray: '',
             optionVos: [
               {
@@ -228,7 +242,7 @@ export default {
               optionArray: this.ruleForm.optionArray,
               optionVos: this.ruleForm.optionVos,
               remark: this.ruleForm.remark,
-              solved: this.ruleForm.solved
+							solved: this.ruleForm.solved
             }).then((res) => {
               if (res.success) {
                 this.$message({
@@ -264,7 +278,7 @@ export default {
               optionArray: this.ruleForm.optionArray,
               optionVos: this.ruleForm.optionVos,
               remark: this.ruleForm.remark,
-              solved: false
+							solved: false
             }).then((res) => {
               if (res.success) {
                 this.$message({

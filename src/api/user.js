@@ -205,7 +205,7 @@ export function hideUserScore(data) {
 export function addScoreToUser(data) {
     return axios({
         url: '/career/addScoreToUser',
-        method: 'get',
-        params: data
+        method: 'post',
+        data
     })
 }

@@ -21,10 +21,10 @@
         </div>
       </el-form-item>
       <el-form-item label="金币" prop="goldCoin">
-        <el-input v-model.number="ruleForm.goldCoin" :min="0" class="itemwidth" />
+        <el-input v-model.number="ruleForm.goldCoin" :min="1" class="itemwidth" />
       </el-form-item>
       <el-form-item label="分值" prop="value">
-        <el-input v-model.number="ruleForm.value" :min="0" class="itemwidth" />
+        <el-input v-model.number="ruleForm.value" :min="1" class="itemwidth" />
       </el-form-item>
       <el-form-item label="答题时间/分" prop="time">
         <el-input v-model.number="ruleForm.time" :min="1" class="itemwidth" />
@@ -39,6 +39,9 @@
         <el-select v-model="ruleForm.label" multiple filterable allow-create default-first-option class="itemwidth" placeholder="请选择标签">
           <el-option v-for="(item,index) in label" :key="index" :label="item" :value="item" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="是否可见" prop="enable">
+        <el-switch v-model="ruleForm.enable" :width="50" :active-value="1" :inactive-value="0" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -78,16 +81,16 @@ export default {
         deploymentType: '',
         difficultyLevel: 0,
         dirName: '',
-        enable: 0,
+        enable: 1,
         frpType: 1,
-        goldCoin: 0,
+        goldCoin: 1,
         id: '',
         label: '',
         name: '',
         questionDescribe: '',
         questionType: 0,
         time: 1,
-        value: 0
+        value: 1
       },
       label: [],
       rules: {
@@ -106,7 +109,21 @@ export default {
             type: 'number',
             trigger: 'blur'
           }
-        ]
+				],
+				goldCoin: [
+				{
+					required: true,
+					message: '请输入金币',
+					type: 'number',
+					trigger: 'blur'
+				}],
+				value: [
+				{
+					required: true,
+					message: '请输入分值',
+					type: 'number',
+					trigger: 'blur'
+				}]
       },
       fileList: [],
       subject: []
@@ -124,16 +141,16 @@ export default {
             deploymentType: '',
             difficultyLevel: 0,
             dirName: '',
-            enable: 0,
+            enable: 1,
             frpType: 1,
-            goldCoin: 0,
+            goldCoin: 1,
             id: '',
             label: '',
             name: '',
             questionDescribe: '',
             questionType: 0,
             time: 1,
-            value: 0
+            value: 1
           };
         }
       }
@@ -205,10 +222,9 @@ export default {
               deploymentType: this.ruleForm.deploymentType,
               difficultyLevel: this.ruleForm.difficultyLevel,
               dirName: this.ruleForm.dirName,
-              enable: 1,
+              enable: this.ruleForm.enable,
               frpType: this.ruleForm.frpType,
               goldCoin: this.ruleForm.goldCoin,
-              id: '',
               label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               questionDescribe: this.ruleForm.questionDescribe,

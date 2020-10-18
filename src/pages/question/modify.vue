@@ -12,7 +12,7 @@
             <el-option label="其他" value="3" />
           </el-select>
         </el-form-item>
-        <el-form-item label="关联题目">
+        <el-form-item v-if="ruleForm.fileType==1" label="关联题目">
           <div class="itemwidth el-input" @click="dialogTableVisible=true">
             <div class="el-input__inner">
               {{ question }}
@@ -22,9 +22,9 @@
         <el-form-item label="文档描述" prop="mainBody">
           <el-input v-model="ruleForm.mainBody" type="textarea" class="itemwidth" />
         </el-form-item>
-        <el-form-item label="答案/文档描述" prop="answerDescription">
+        <!-- <el-form-item label="答案描述" prop="answerDescription">
           <el-input v-model="ruleForm.answerDescription" class="itemwidth" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="标签" prop="label">
           <el-select v-model="ruleForm.label" multiple filterable allow-create default-first-option class="itemwidth" placeholder="请选择标签">
             <el-option v-for="(item,index) in label" :key="index" :label="item" :value="item" />
@@ -58,8 +58,8 @@
         <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
       </el-form>
       <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="subList" highlight-current-row class="list-table" tooltip-effect="dark" @row-click="rowClick">
-        <el-table-column prop="name" align="center" label="题目名称" />
-        <el-table-column prop="questionDescribe" align="center" label="文本描述" />
+        <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
+        <el-table-column prop="questionDescribe" align="center" label="文本描述" show-overflow-tooltip />
         <el-table-column label="题型" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             {{ questionType[scope.row.questionType-1] }}
@@ -92,7 +92,6 @@ import { getCookie } from '@/utils/auth';
 import {
   modifyWriteUp,
   addWriteUp,
-  getQuestionWriteUp,
   getAllQuestion
 } from '@/api/question';
 import { parseTime } from '@/utils/index';
@@ -108,28 +107,15 @@ export default {
       type: Boolean,
       default: false
     },
-    mainId: {
-      type: String,
-      default: ''
+    ruleForm: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
     return {
       dialogTableVisible: false,
       question: '',
-      ruleForm: {
-        answerDescription: '',
-        createAt: '',
-        createById: '',
-        fileType: '',
-        fileUrl: '',
-        id: 0,
-        label: [],
-        mainBody: '',
-        questionId: '',
-        title: '',
-        type: ''
-      },
       label: [],
       rules: {
         title: [
@@ -154,23 +140,24 @@ export default {
   watch: {
     value(val) {
       if (val) {
+				this.label = this.ruleForm.label;
         if (!this.addSign) {
-          this.getQuestionWriteUp();
+					this.question = this.ruleForm.questionName;
+          console.log(this.question);
+          if (this.ruleForm.fileUrl) {
+            this.fileList = [
+              {
+                name: this.ruleForm.fileUrl,
+                url: this.ruleForm.fileUrl
+              }
+            ];
+          } else {
+            this.fileList = [];
+          }
+					console.log(this.label)
         } else {
+					this.question = ''
           this.fileList = [];
-          this.ruleForm = {
-            answerDescription: '',
-            createAt: '',
-            createById: '',
-            fileType: '',
-            fileUrl: '',
-            id: 0,
-            label: [],
-            mainBody: '',
-            questionId: '',
-            title: '',
-            type: ''
-          };
         }
       }
     }
@@ -230,29 +217,6 @@ export default {
       this.fileList = [];
       this.ruleForm.fileUrl = '';
     },
-    getQuestionWriteUp() {
-      getQuestionWriteUp({
-        questionId: this.mainId
-      }).then((res) => {
-        if (res.data) {
-          this.ruleForm = res.data;
-          this.question = res.data.questionName;
-          console.log(this.question);
-          if (res.data.fileUrl) {
-            this.fileList = [
-              {
-                name: res.data.fileUrl,
-                url: res.data.fileUrl
-              }
-            ];
-          } else {
-            this.fileList = [];
-          }
-          this.ruleForm.label = res.data.label ? res.data.label.split('|') : [];
-          this.label = this.ruleForm.label;
-        }
-      });
-    },
     back() {
       this.$emit('input', false);
     },
@@ -269,13 +233,6 @@ export default {
       this.dialogTableVisible = false;
     },
     onSubmit() {
-      if (this.ruleForm.questionId == '') {
-        this.$message({
-          type: 'warning',
-          message: '您还没有选择关联题目'
-        });
-        return;
-      }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (!this.addSign) {
@@ -286,7 +243,7 @@ export default {
               id: this.ruleForm.id,
               label: this.ruleForm.label.join('|'),
               mainBody: this.ruleForm.mainBody,
-              questionId: this.ruleForm.questionId,
+              questionId: this.ruleForm.fileType == 1 ? this.ruleForm.questionId : '',
               title: this.ruleForm.title,
               type: this.ruleForm.type
             }).then((res) => {
@@ -314,7 +271,7 @@ export default {
               id: 0,
               label: this.ruleForm.label.join('|'),
               mainBody: this.ruleForm.mainBody,
-              questionId: this.ruleForm.questionId,
+              questionId: this.ruleForm.fileType == 1 ? this.ruleForm.questionId : '',
               title: this.ruleForm.title,
               type: this.ruleForm.type
             }).then((res) => {
@@ -340,9 +297,6 @@ export default {
 };
 </script>
 <style>
-.el-form-item__content {
-  line-height: 0;
-}
 .mt30 {
   margin-top: 35px;
 }

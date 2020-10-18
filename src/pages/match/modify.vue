@@ -150,7 +150,10 @@ export default {
       subTotal: 0,
       pageSize: 10,
       currentPage: 1,
-      extraParam: {},
+      extraParam: {
+				userType: '1',
+				usrStatus: '1'
+			},
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() <= Date.now() - 8.64e7; // 选当前时间之后的时间
@@ -162,7 +165,7 @@ export default {
     value(val) {
       if (val) {
         if (!this.addSign) {
-          this.getGameInfoDetail();
+					this.getGameInfoDetail();
         } else {
           this.joiners = [];
           this.remark = [];
@@ -191,13 +194,25 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.getUserInfoList();
-    });
+		this.$nextTick(() => {
+			// this.$refs.multipleTable.clearSelection();
+			this.getUserInfoList();
+		})
   },
   methods: {
     getpsn() {
-      this.dialogTableVisible = true;
+			this.dialogTableVisible = true;
+			this.$nextTick(() => {
+				this.$refs.multipleTable.clearSelection();
+				this.joiners.forEach((a) => {
+					this.tableData.forEach((b) => {
+						if (a.usrId == b.usrId) {
+							console.log(b)
+							this.$refs.multipleTable.toggleRowSelection(b, true);
+						}
+					});
+				});
+			})
     },
     handleClose(item, index) {
       this.joiners.splice(index, 1);
@@ -207,7 +222,7 @@ export default {
       console.log(selection, row);
       if (!selection.includes(row)) {
         const index = this.joiners.findIndex((item) => {
-          return item.usrId === row.usrId;
+          return item.usrId == row.usrId;
         });
         this.joiners.splice(index, 1);
       } else {
@@ -218,9 +233,9 @@ export default {
       if (selection.length > 0) {
         this.tableData.forEach((v) => {
           const index = this.joiners.findIndex((i) => {
-            return i.usrId === v.usrId;
+            return i.usrId == v.usrId;
           });
-          if (index === -1) {
+          if (index == -1) {
             this.joiners.push(v);
           }
         });
@@ -249,10 +264,12 @@ export default {
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.tableData = res.data;
+					this.tableData = res.data;
+					console.log(this.joiners)
           this.joiners.forEach((a) => {
             this.tableData.forEach((b) => {
-              if (a.usrId === b.usrId) {
+              if (a.usrId == b.usrId) {
+								console.log(b)
                 this.$refs.multipleTable.toggleRowSelection(b, true);
               }
             });
@@ -452,9 +469,6 @@ export default {
 };
 </script>
 <style>
-.el-form-item__content {
-  line-height: 0;
-}
 .mt30 {
   margin-top: 35px;
 }

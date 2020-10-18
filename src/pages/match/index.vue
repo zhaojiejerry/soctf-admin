@@ -24,7 +24,7 @@
         </el-form>
         <div class="user-child-list">
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
-            <el-table-column prop="gameName" align="center" label="赛事名称" />
+            <el-table-column prop="gameName" align="center" label="赛事名称" show-overflow-tooltip />
             <el-table-column prop="gameText" align="center" show-overflow-tooltip label="比赛详细描述" />
             <el-table-column prop="gameStatus" align="center" label="赛事状态">
               <template slot-scope="scope">
@@ -46,21 +46,48 @@
                 {{ scope.row.endTime?parseTime(scope.row.endTime):'' }}
               </template>
             </el-table-column>
-            <el-table-column fixed="right" align="center" label="操作">
+            <el-table-column fixed="right" align="center" label="操作" width="200">
               <template slot-scope="scope">
                 <el-button v-if="scope.row.gameStatus!=3&&buttons.indexOf('33')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.gameId)">编辑</el-button>
-                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('32')!=-1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
-                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('61')!=-1" size="small" type="text" @click="handleCreatePaper(scope.row.gameId)">生成试卷</el-button>
-                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('36')!=-1" size="small" type="text" @click="startGame(scope.row.gameId)">发布比赛</el-button>
-                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('74')!=-1" size="small" type="text" @click="sendGameToken(scope.row.gameId)">发送通知</el-button>
-                <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('60')!=-1" size="small" type="text" @click="endGame(scope.row.gameId)">结束比赛</el-button>
-                <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('30')!=-1" size="small" type="text" @click="seeLive(scope.row.gameId)">观看比赛</el-button>
-                <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('38')!=-1" size="small" type="text" @click="operationsGame(scope.row)">运维管理</el-button>
-                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('40')!=-1" size="small" type="text" @click="seeDescription(scope.row.gameId)">比赛说明</el-button>
-                <!-- <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('37')!=-1" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button> -->
-                <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
-                <el-button v-if="buttons.indexOf('72')!=-1" size="small" type="text" @click="seePaper(scope.row.gameId)">比赛试题</el-button>
                 <el-button size="small" type="text" @click="seeDetail(scope.row)">查看详情</el-button>
+                <el-dropdown style="margin-left: 10px;">
+                  <el-button size="small" type="text">更多操作 <i class="el-icon-arrow-down el-icon--right" /></el-button>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('32')!=-1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('61')!=-1" size="small" type="text" @click="handleCreatePaper(scope.row.gameId)">生成试卷</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('36')!=-1" size="small" type="text" @click="startGame(scope.row.gameId)">发布比赛</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('74')!=-1" size="small" type="text" @click="sendGameToken(scope.row.gameId)">发送通知</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('60')!=-1" size="small" type="text" @click="endGame(scope.row.gameId)">结束比赛</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('30')!=-1" size="small" type="text" @click="seeLive(scope.row.gameId)">观看比赛</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('38')!=-1" size="small" type="text" @click="operationsGame(scope.row)">运维管理</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('40')!=-1" size="small" type="text" @click="seeDescription(scope.row.gameId)">比赛说明</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <!-- <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('37')!=-1" size="small" type="text" @click="releaseScore(scope.row.gameId)">发布成绩</el-button> -->
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="buttons.indexOf('72')!=-1" size="small" type="text" @click="seePaper(scope.row.gameId)">比赛试题</el-button>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
               </template>
             </el-table-column>
           </el-table>

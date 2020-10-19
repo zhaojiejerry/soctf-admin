@@ -30,6 +30,7 @@
               <template slot-scope="scope">
                 <el-button v-if="buttons.indexOf('15')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.choiceId)">编辑</el-button>
                 <el-button v-if="buttons.indexOf('14')!=-1" size="small" type="text" @click="handleDelete(scope.row.choiceId)">删除</el-button>
+                <el-button size="small" type="text" @click="answerDetail(scope.row.choiceId)">作答详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -42,14 +43,16 @@
       </el-card>
     </div>
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getChoiceListForAdmin" />
+    <answerDetail v-model="showDetail" />
   </div>
 </template>
 <script>
 import { getChoiceListForAdmin, deleteChoiceQuestion } from '@/api/choice';
 import { parseTime } from '@/utils/index';
 import modify from './modify';
+import answerDetail from '@/components/answerDetail';
 export default {
-  components: { modify },
+  components: { modify, answerDetail },
   data() {
     return {
       show: false,
@@ -59,7 +62,8 @@ export default {
       tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
-      choiceType: ['单选', '多选']
+      choiceType: ['单选', '多选'],
+      showDetail: false
     };
   },
   computed: {
@@ -71,6 +75,13 @@ export default {
     this.getChoiceListForAdmin();
   },
   methods: {
+    answerDetail(id) {
+      this.showDetail = true;
+      // this.$router.push({
+      //   name: 'answerDetail',
+      //   query: { id: id }
+      // });
+    },
     addNew() {
       this.show = true;
       this.addSign = true;

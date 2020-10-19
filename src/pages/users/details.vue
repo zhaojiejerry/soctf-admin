@@ -136,136 +136,142 @@
   </div>
 </template>
 <script>
-import modify from './modify'
-import echarts from 'echarts' // 引入echarts
-import { getOverviewForUser, getHistoricalRecords, getPersonalSkillRadarChart, getCompetitionRecord, HistoricalHonor } from '@/api/user'
+import modify from './modify';
+import echarts from 'echarts'; // 引入echarts
+import {
+  getOverviewForUser,
+  getHistoricalRecords,
+  getPersonalSkillRadarChart,
+  getCompetitionRecord,
+  HistoricalHonor
+} from '@/api/user';
 export default {
-	components: { modify },
-	props: {
-		value: Boolean,
-		ruleForm: {
+  components: { modify },
+  props: {
+    value: Boolean,
+    ruleForm: {
       type: Object,
       default: () => {}
     }
-	},
-	data() {
-		return {
-			show: false,
-			activeName: 'first',
-			kdaList: [],
-			userObj: {},
-			categoryList: [],
-			listRecords: [],
+  },
+  data() {
+    return {
+      show: false,
+      activeName: 'first',
+      kdaList: [],
+      userObj: {},
+      categoryList: [],
+      listRecords: [],
       total: 0,
-			currentPage: 1,
-			pageSize: 10,
-			type: '',
-			rankingList: [],
-			listRecord: []
-		}
-	},
-	watch: {
-		value(val) {
-			if (val) {
-				this.activeName = 'first'
-				this.getOverviewForUser()
-			}
-		}
-	},
-	methods: {
-		getUserInfoList() {
-			this.$emit('getUserInfoList')
-			if (this.activeName == 'first') {
-				this.getOverviewForUser()
-			}
-		},
-		handleClick(tab) {
-			this.currentPage = 1
-			this.getData()
-		},
-		getData() {
-			switch (this.activeName) {
-				case 'first': {
-					this.getOverviewForUser()
-					break
-				}
-					case 'second': {
-						this.getHistoricalRecords()
-						this.getPersonalSkillRadarChart(this.categoryList[0])
-					break
-				}
-				case 'third': {
-					this.getCompetitionRecord()
-					break
-				}
-				case 'fourth': {
-					this.HistoricalHonor()
-					break
-				}
-			}
-		},
-		handleSizeChange(val) {
-      this.pageSize = val
-      this.getData()
+      currentPage: 1,
+      pageSize: 10,
+      type: '',
+      rankingList: [],
+      listRecord: []
+    };
+  },
+  watch: {
+    value(val) {
+      if (val) {
+        this.activeName = 'first';
+        this.getOverviewForUser();
+      }
+    }
+  },
+  methods: {
+    getUserInfoList() {
+      this.$emit('getUserInfoList');
+      if (this.activeName == 'first') {
+        this.getOverviewForUser();
+      }
+    },
+    handleClick(tab) {
+      this.currentPage = 1;
+      this.getData();
+    },
+    getData() {
+      switch (this.activeName) {
+        case 'first': {
+          this.getOverviewForUser();
+          break;
+        }
+        case 'second': {
+          this.getHistoricalRecords();
+          this.getPersonalSkillRadarChart(this.categoryList[0]);
+          break;
+        }
+        case 'third': {
+          this.getCompetitionRecord();
+          break;
+        }
+        case 'fourth': {
+          this.HistoricalHonor();
+          break;
+        }
+      }
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.getData();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getData()
+      this.currentPage = val;
+      this.getData();
     },
-		fixed(num) {
-      return num.toFixed(2)
-		},
-		HistoricalHonor() {
-      var that = this
+    fixed(num) {
+      return num.toFixed(2);
+    },
+    HistoricalHonor() {
+      var that = this;
       HistoricalHonor({
         pageNo: this.currentPage,
         pageSize: 9,
         userId: this.ruleForm.usrId
       }).then((res) => {
         if (res.success) {
-          that.listRecord = res.data.records
-          that.total = res.data.total
+          that.listRecord = res.data.records;
+          that.total = res.data.total;
         }
-      })
+      });
     },
-		getCompetitionRecord() {
-      var that = this
+    getCompetitionRecord() {
+      var that = this;
       getCompetitionRecord({
         pageNo: this.currentPage,
         pageSize: 20,
         userId: this.ruleForm.usrId
       }).then((res) => {
-        that.rankingList = res.data.records
-        that.total = res.data.total
-      })
+        that.rankingList = res.data.records;
+        that.total = res.data.total;
+      });
     },
-		getOverviewForUser() {
-      var that = this
+    getOverviewForUser() {
+      var that = this;
       getOverviewForUser({
         userId: this.ruleForm.usrId
       }).then((res) => {
         if (res.success) {
-          that.userObj = res.data.userInfo
-          that.kdaList = res.data.kda
-          that.getEcharts(res.data.kda)
-          that.categoryList = []
+          that.userObj = res.data.userInfo;
+          that.kdaList = res.data.kda;
+          that.getEcharts(res.data.kda);
+          that.categoryList = [];
           that.kdaList.forEach((item) => {
-            that.categoryList.push(item.category)
-          })
+            that.categoryList.push(item.category);
+          });
         }
-      })
-		},
-		getEcharts(data) {
-      var myChart = echarts.init(document.getElementById('skill-chart'))
-      var indicator = []
-      var series = []
+      });
+    },
+    getEcharts(data) {
+      var myChart = echarts.init(document.getElementById('skill-chart'));
+      var indicator = [];
+      var series = [];
       data.forEach((element) => {
         indicator.push({
           name: element.category,
           max: element.allCount
-        })
-        series.push(element.Count)
-      })
+        });
+        series.push(element.Count);
+      });
       var option = {
         radar: {
           name: {
@@ -316,14 +322,14 @@ export default {
             ]
           }
         ]
-      }
-      myChart.setOption(option)
+      };
+      myChart.setOption(option);
     },
-		close() {
-			this.$emit('input', false)
-		},
-		getHistoricalRecords() {
-      var that = this
+    close() {
+      this.$emit('input', false);
+    },
+    getHistoricalRecords() {
+      var that = this;
       getHistoricalRecords({
         category: '',
         difficultyLevel: '',
@@ -333,21 +339,21 @@ export default {
         userId: this.ruleForm.usrId
       }).then((res) => {
         if (res.success) {
-          that.listRecords = res.data.records
-          that.total = res.data.total
+          that.listRecords = res.data.records;
+          that.total = res.data.total;
         }
-      })
+      });
     },
     currentChange(val) {
-      this.currentPage = val
-      this.getHistoricalRecords()
+      this.currentPage = val;
+      this.getHistoricalRecords();
     },
     getPersonalSkillRadarChart(type) {
-      this.type = type
-      var date = new Date()
-      var time = date.getTime() - 6 * 24 * 60 * 60 * 1000
-      var tragetTime = new Date(time)
-      var that = this
+      this.type = type;
+      var date = new Date();
+      var time = date.getTime() - 6 * 24 * 60 * 60 * 1000;
+      var tragetTime = new Date(time);
+      var that = this;
       getPersonalSkillRadarChart({
         endTime: date,
         startTime: tragetTime,
@@ -355,36 +361,36 @@ export default {
         category: type
       }).then((res) => {
         if (res.success) {
-          that.getEcharts2(res.data, type)
+          that.getEcharts2(res.data, type);
         }
-      })
+      });
     },
     formatSeconds(time) {
-      const min = Math.floor(time % 3600)
+      const min = Math.floor(time % 3600);
       const val =
         Math.floor(time / 3600) +
         '时' +
         Math.floor(min / 60) +
         '分' +
         (time % 60) +
-        '秒'
-      return val
+        '秒';
+      return val;
     },
     getEcharts2(data, type) {
-      var myChart = echarts.init(document.getElementById('skill-chart2'))
-      var xAxis = []
-      var legend = []
-      var series = []
+      var myChart = echarts.init(document.getElementById('skill-chart2'));
+      var xAxis = [];
+      var legend = [];
+      var series = [];
       data.forEach((element) => {
         if (element.category != null) {
-          series.push(element.count)
+          series.push(element.count);
         } else {
-          series.push(0)
+          series.push(0);
         }
         if (xAxis.indexOf(element.date) == -1) {
-          xAxis.push(element.date)
+          xAxis.push(element.date);
         }
-      })
+      });
       var option = {
         tooltip: {
           trigger: 'axis'
@@ -431,26 +437,32 @@ export default {
             }
           }
         ]
-      }
-      myChart.setOption(option)
+      };
+      myChart.setOption(option);
     }
-	}
-}
+  }
+};
 </script>
 <style >
-#category-box{
-    text-align: center;
-  }
-#category-box  div{
-	display: inline-block;
-	font-size: 14px;
-	color: #fff;
-	margin: 0 15px;
-	cursor: pointer;
+.mt30 {
+  margin-top: 35px;
+}
+.pager-container {
+  text-align: center;
+}
+#category-box {
+  text-align: center;
+}
+#category-box div {
+  display: inline-block;
+  font-size: 14px;
+  color: #fff;
+  margin: 0 15px;
+  cursor: pointer;
 }
 #skill-chart2 {
-	width: 100%;
-	height: 413px;
+  width: 100%;
+  height: 413px;
 }
 .category-box {
   width: 126px;
@@ -460,12 +472,12 @@ export default {
   border: 1px solid #313537;
   background: #b5975817;
 }
-.p1{
-	color: #0baac0;
+.p1 {
+  color: #0baac0;
   font-size: 20px;
 }
-.p2{
-	text-align: center;
+.p2 {
+  text-align: center;
   width: 96px;
 }
 .box-act {
@@ -475,80 +487,80 @@ export default {
   border: 1px solid #313537;
   line-height: 27px;
 }
-.bg-purple{
-	background-image: url('../../assets/images/icon-head1.png');
+.bg-purple {
+  background-image: url('../../assets/images/icon-head1.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
-	width: 96px;
+  width: 96px;
   height: 96px;
-	text-align: center;
+  text-align: center;
   line-height: 96px;
-	display: inline-block;
+  display: inline-block;
 }
-.bg-purple img{
-	width: 70px;
-	height: 70px;
-	border-radius: 70px;
-	vertical-align: middle;
+.bg-purple img {
+  width: 70px;
+  height: 70px;
+  border-radius: 70px;
+  vertical-align: middle;
 }
 #skill-chart {
-	width: 378px;
-	height: 324px;
+  width: 378px;
+  height: 324px;
 }
 #skill-title {
-	text-align: center;
-	margin-top: 40px;
+  text-align: center;
+  margin-top: 40px;
 }
 #skill-title img {
-	width: 33px;
-	height: 33px;
-	margin-right: 5px;
-	vertical-align: middle;
+  width: 33px;
+  height: 33px;
+  margin-right: 5px;
+  vertical-align: middle;
 }
-#skill-title  span {
-	font-size: 14px;
-	font-family: FZLanTingHeiS-R-GB;
-	font-weight: 400;
-	vertical-align: middle;
+#skill-title span {
+  font-size: 14px;
+  font-family: FZLanTingHeiS-R-GB;
+  font-weight: 400;
+  vertical-align: middle;
 }
 .skill-item {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 .name {
-	font-size: 16px;
-	font-family: FZLanTingHeiS-R-GB;
-	font-weight: 400;
-	color: rgba(181, 151, 88, 1);
-	margin-right: 20px;
-	display: inline-block;
-	width: 70px;
+  font-size: 16px;
+  font-family: FZLanTingHeiS-R-GB;
+  font-weight: 400;
+  color: rgba(181, 151, 88, 1);
+  margin-right: 20px;
+  display: inline-block;
+  width: 70px;
 }
 .stars {
-	width: 79px;
-	height: 75px;
-	margin-right: -20px;
-	position: relative;
-	z-index: 1;
+  width: 79px;
+  height: 75px;
+  margin-right: -20px;
+  position: relative;
+  z-index: 1;
 }
 .progress {
-	width: 250px;
-	height: 20px;
-	background: rgba(38, 47, 58, 1);
+  width: 250px;
+  height: 20px;
+  background: rgba(38, 47, 58, 1);
 }
-.progress	p {
-		height: 100%;
-		background: linear-gradient(
-			270deg,
-			rgba(181, 151, 88, 1) 0%,
-			rgba(255, 245, 224, 1) 100%
-		);
-	}
+.progress p {
+  height: 100%;
+  background: linear-gradient(
+    270deg,
+    rgba(181, 151, 88, 1) 0%,
+    rgba(255, 245, 224, 1) 100%
+  );
+}
 .billie {
-	font-size: 16px;
-	font-family: FZLanTingHeiS-R-GB;
-	font-weight: 400;
-	color: rgba(181, 151, 88, 1);
-	margin-left: 16px;
+  font-size: 16px;
+  font-family: FZLanTingHeiS-R-GB;
+  font-weight: 400;
+  color: rgba(181, 151, 88, 1);
+  margin-left: 16px;
 }
 </style>

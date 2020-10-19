@@ -35,27 +35,27 @@
 </template>
 
 <script>
-import { setCookie } from '@/utils/auth'
-import { getLoginCode } from '@/api/user'
+import { setCookie } from '@/utils/auth';
+import { getLoginCode } from '@/api/user';
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length == 0) {
-        callback(new Error('请输入账号'))
+        callback(new Error('请输入账号'));
       } else {
-        callback()
+        callback();
       }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length == 0) {
-        callback(new Error('请输入密码'))
-      } else if (value.length < 6) {
-        callback(new Error('密码至少为6位'))
-      } else {
-        callback()
-      }
-    }
+    };
+    // const validatePassword = (rule, value, callback) => {
+    //   if (value.length == 0) {
+    //     callback(new Error('请输入密码'));
+    //   } else if (value.length < 6) {
+    //     callback(new Error('密码至少为6位'));
+    //   } else {
+    //     callback();
+    //   }
+    // };
     return {
       loginForm: {
         username: '',
@@ -68,7 +68,7 @@ export default {
       autoLogin: true, // 自动登录
       loginRules: {
         username: [{ validator: validateUsername, trigger: 'change' }],
-        password: [{ validator: validatePassword, trigger: 'change' }]
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       },
       loading: false,
       passwordType: 'password',
@@ -77,18 +77,18 @@ export default {
       // hack chrome表单自动填充
       readAccount: true,
       readPassword: true
-    }
+    };
   },
   watch: {
     $route: {
       handler(route) {
-        this.redirect = route.query && route.query.redirect
+        this.redirect = route.query && route.query.redirect;
       },
       immediate: true
     }
   },
   created() {
-    this.getChartCode()
+    this.getChartCode();
     // this.disabledBtn =
     //   (this.$route.params && this.$route.params.disableBtn) || false
     // this.loginForm.username = getCookie('Account') || ''
@@ -125,24 +125,24 @@ export default {
               (data, byte) => data + String.fromCharCode(byte),
               ''
             )
-          )
-      })
+          );
+      });
     },
     handleChangePass(val) {
       if (val) {
-        this.rememberPass = true
+        this.rememberPass = true;
       }
     },
     handleChangeAuto(val) {
       if (!val) {
-        this.autoLogin = false
+        this.autoLogin = false;
       }
     },
     handleLogin() {
-      console.log(123)
+      console.log(123);
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store
             .dispatch('login', {
               username: this.loginForm.username,
@@ -151,9 +151,9 @@ export default {
             })
             .then((res) => {
               if (res.success) {
-                setCookie('Token', res.data.accessToken)
+                setCookie('Token', res.data.accessToken);
                 // setCookie('Account', this.loginForm.username)
-                setCookie('usrId', res.data.user.usrId)
+                setCookie('usrId', res.data.user.usrId);
                 // setCookie('Remember', JSON.stringify(this.rememberPass))
                 // setCookie('AutoLogin', JSON.stringify(this.autoLogin))
                 // if (this.rememberPass) {
@@ -161,28 +161,28 @@ export default {
                 // } else {
                 //   setCookie('Password', '')
                 // }
-                this.$router.push({ path: this.redirect || '/' })
+                this.$router.push({ path: this.redirect || '/' });
               } else {
-                this.getChartCode()
+                this.getChartCode();
                 this.$message({
                   message: res.message,
                   type: 'error'
-                })
+                });
               }
-              this.loading = false
+              this.loading = false;
             })
             .catch((error) => {
-              console.log(error)
-              this.loading = false
-            })
+              console.log(error);
+              this.loading = false;
+            });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log('error submit!!');
+          return false;
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -249,8 +249,9 @@ export default {
 <style lang="scss" scoped>
 .zztjj-login {
   // background-color: #f4f4f4;
-	background: url('https://soctf.oss-cn-hangzhou.aliyuncs.com/SoCTF/bg/20201004182308.gif') no-repeat;
-	background-size: 100%;
+  background: url('https://soctf.oss-cn-hangzhou.aliyuncs.com/SoCTF/bg/20201004182308.gif')
+    no-repeat;
+  background-size: 100%;
   height: 100vh;
   display: flex;
   justify-content: space-between;
@@ -303,8 +304,8 @@ export default {
   }
 }
 .login-container {
-	background: url('../../assets/images/login-border.png') no-repeat;
-	background-size: 100% 100%;
+  background: url('../../assets/images/login-border.png') no-repeat;
+  background-size: 100% 100%;
   flex: 0 0 350px;
   padding: 32px 30px;
   box-sizing: border-box;

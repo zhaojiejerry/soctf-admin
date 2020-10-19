@@ -195,7 +195,19 @@ export const constantRoutes = [{
                     title: '个人中心',
                     icon: 'iconfont icon-home'
                 }
+            },
+            {
+                path: '/answerDetail',
+                name: 'answerDetail',
+                component: () =>
+                    import ('@/pages/system/answerDetail'),
+                hidden: true,
+                meta: {
+                    title: '作答详情',
+                    icon: 'iconfont icon-home'
+                }
             }
+
         ]
     }
 ]

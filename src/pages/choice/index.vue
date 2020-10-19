@@ -43,14 +43,14 @@
       </el-card>
     </div>
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getChoiceListForAdmin" />
-    <answerDetail v-model="showDetail" />
+    <answerDetail v-model="showDetail" :main-id="mainId" />
   </div>
 </template>
 <script>
 import { getChoiceListForAdmin, deleteChoiceQuestion } from '@/api/choice';
 import { parseTime } from '@/utils/index';
 import modify from './modify';
-import answerDetail from '@/components/answerDetail';
+import answerDetail from './answerDetail';
 export default {
   components: { modify, answerDetail },
   data() {
@@ -76,7 +76,8 @@ export default {
   },
   methods: {
     answerDetail(id) {
-      this.showDetail = true;
+			this.showDetail = true;
+			this.mainId = id;
       // this.$router.push({
       //   name: 'answerDetail',
       //   query: { id: id }

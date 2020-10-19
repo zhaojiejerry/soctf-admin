@@ -44,3 +44,21 @@ export function modifyChoiceQuestion(data) {
         data
     })
 }
+
+// 选择题答题结果明细
+export function getChoiceRstDetail(data) {
+    return axios({
+        url: '/getChoiceRstDetailByQuestion',
+        method: 'post',
+        data
+    })
+}
+
+// 选择题答题情况统计
+export function getChoiceStatistics(data) {
+    return axios({
+        url: '/getChoiceStatisticsByQuestion',
+        method: 'get',
+        params: data
+    })
+}

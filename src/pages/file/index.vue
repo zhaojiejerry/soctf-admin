@@ -30,6 +30,7 @@
               <template slot-scope="scope">
                 <el-button v-if="buttons.indexOf('21')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.id)">编辑</el-button>
                 <el-button v-if="buttons.indexOf('20')!=-1" size="small" type="text" @click="handleDelete(scope.row.id)">删除</el-button>
+                <el-button size="small" type="text" @click="answerDetail(scope.row.id)">作答详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -42,14 +43,16 @@
       </el-card>
     </div>
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getFileQuestion" />
+    <answerDetail v-model="showDetail" :main-id="mainId" />
   </div>
 </template>
 <script>
 import { getFileQuestion, delFileQuestion } from '@/api/file';
 import { parseTime } from '@/utils/index';
 import modify from './modify';
+import answerDetail from './answerDetail';
 export default {
-  components: { modify },
+  components: { modify, answerDetail },
   data() {
     return {
       show: false,
@@ -59,7 +62,8 @@ export default {
       tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
-      questionType: ['容器', '附件', '选择']
+      questionType: ['容器', '附件', '选择'],
+      showDetail: false
     };
   },
   computed: {
@@ -71,6 +75,10 @@ export default {
     this.getFileQuestion();
   },
   methods: {
+    answerDetail(id) {
+      this.showDetail = true;
+      this.mainId = id;
+    },
     addNew() {
       this.show = true;
       this.addSign = true;

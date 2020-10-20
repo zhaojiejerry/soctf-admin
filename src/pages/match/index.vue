@@ -103,7 +103,8 @@
     <description v-model="showDescription" :game-id="gameId" />
     <achievement v-model="showAchievement" :type="type" :game-id="gameId" />
     <live v-model="showLive" :type="type" :game-id="gameId" />
-    <operations v-model="showOperations" :type="type" :game-id="gameId" />
+    <DevOps v-model="showOperations" :type="type" :game-id="gameId" :game-statu="gameStatu" />
+    <!-- <operations v-model="showOperations" :type="type" :game-id="gameId" /> -->
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getGameInfoListForPage" />
     <paperInfo v-model="showPaperInfo" :game-id="gameId" />
     <matchDetail v-model="showDetail" :game-id="gameId" :game-statu="gameStatu" />
@@ -123,10 +124,11 @@ import { parseTime } from '@/utils/index';
 import modify from './modify';
 import description from './description';
 import achievement from './achievement';
-import operations from './operations';
+// import operations from './operations';
 import paperInfo from './paperInfo';
 import live from './live';
 import matchDetail from './detail';
+import DevOps from './DevOps';
 export default {
   components: {
     createPaper,
@@ -134,9 +136,10 @@ export default {
     description,
     achievement,
     live,
-    operations,
+    // operations,
     paperInfo,
-    matchDetail
+    matchDetail,
+    DevOps
   },
   data() {
     return {
@@ -214,6 +217,7 @@ export default {
       this.showOperations = true;
       this.gameId = row.gameId;
       this.type = row.gameType;
+      this.gameStatu = row.gameStatus;
     },
     releaseScore(id) {
       this.$confirm('是否要发布成绩?', '提示', {

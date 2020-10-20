@@ -30,7 +30,7 @@
               <template slot-scope="scope">
                 <el-button v-if="buttons.indexOf('15')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.choiceId)">编辑</el-button>
                 <el-button v-if="buttons.indexOf('14')!=-1" size="small" type="text" @click="handleDelete(scope.row.choiceId)">删除</el-button>
-                <el-button size="small" type="text" @click="answerDetail(scope.row.choiceId)">作答详情</el-button>
+                <el-button size="small" type="text" @click="answerDetail(scope.row.bankId)">作答详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -76,12 +76,8 @@ export default {
   },
   methods: {
     answerDetail(id) {
-			this.showDetail = true;
-			this.mainId = id;
-      // this.$router.push({
-      //   name: 'answerDetail',
-      //   query: { id: id }
-      // });
+      this.showDetail = true;
+      this.mainId = id;
     },
     addNew() {
       this.show = true;

@@ -18,7 +18,7 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="ruleForm.type==1" label="赛事">
-          <el-select v-model="ruleForm.gameId" class="itemwidth" placeholder="请选择">
+          <el-select v-model="ruleForm.gameId" class="itemwidth" placeholder="请选择" clearable>
             <el-option v-for="(item,index) in gameList" :key="index" :label="item.gameName" :value="item.gameId">
               {{ item.gameName }}
               <span style="float: right;">{{ gameStatus[item.gameStatus-1] }}</span>
@@ -26,7 +26,7 @@
           </el-select>
         </el-form-item>
         <el-form-item v-else label="赛事" prop="gameId">
-          <el-select v-model="ruleForm.gameId" class="itemwidth" placeholder="请选择">
+          <el-select v-model="ruleForm.gameId" class="itemwidth" placeholder="请选择" clearable>
             <el-option v-for="(item,index) in gameList" :key="index" :label="item.gameName" :value="item.gameId">
               {{ item.gameName }}
               <span style="float: right;">{{ gameStatus[item.gameStatus-1] }}</span>
@@ -61,23 +61,23 @@ export default {
     mainId: {
       type: String,
       default: ''
-		},
-		gameList: {
+    },
+    gameList: {
       type: Array,
       default: () => {
-				return []
-			}
-		}
+        return [];
+      }
+    }
   },
   data() {
     return {
-			gameStatus: ['未开始', '进行中', '已结束'],
+      gameStatus: ['未开始', '进行中', '已结束'],
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         orgId: [
           { required: true, message: '请选择关联机构', trigger: 'change' }
-				],
-				gameId: [
+        ],
+        gameId: [
           { required: true, message: '请选择关联赛事', trigger: 'change' }
         ]
       },

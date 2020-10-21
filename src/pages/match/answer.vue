@@ -1,13 +1,16 @@
 <template>
   <div>
-    <el-dialog :visible.sync="value" width="60%" title="比赛运维" @closed="back">
-      <div style="min-height:300px">
-        <el-form label-width="100px">
+    <el-dialog :visible.sync="value" width="60%" title="题目详情" @closed="back">
+      <div>
+        <el-form label-width="100px" class="myform">
+          <el-form-item label="难易程度">
+            <el-rate :value="parseInt(questionObj.difficultyLevel)" :max="3" disabled />
+          </el-form-item>
           <el-form-item label="题目名称">
             {{ questionObj.name }}
           </el-form-item>
           <el-form-item label="题目描述">
-            <div class="subject" style="white-space: pre-line; vertical-align: text-top;" v-text="questionObj.questionDescribe" />
+            <div class="subject" style="white-space: pre-line;max-height: 300px;overflow: auto;" v-text="questionObj.questionDescribe" />
           </el-form-item>
           <el-form-item v-if="questionType =='1'&&containers.containerUrl" label="题目地址">
             <a class="subject" :href="containers.containerUrl" target="_blank">{{ containers.containerUrl }}</a>
@@ -31,8 +34,11 @@
             </div>
           </el-form-item>
         </el-form>
+        <div v-if="questionType!='3'&&Status == 1" style="margin: 30px auto; width: 70%;">
+          <el-input v-model="containers.flag" type="textarea" :rows="2" placeholder="flag..." />
+        </div>
       </div>
-      <div>
+      <div style="text-align: center;margin-top: 30px;">
         <el-button v-if="questionType==1&& Status==0" :loading="loading" type="primary" @click="open">开启环境</el-button>
         <el-button v-if="questionType==1&& Status==1" :loading="loading" type="primary" @click="destruction">销毁环境</el-button>
         <el-button v-if="questionType==1&& Status==2" :loading="loading" type="primary" @click="destruction">重启环境</el-button>
@@ -89,8 +95,8 @@ export default {
       default: '1'
     },
     questionType: {
-      type: String,
-      default: '1'
+      type: Number,
+      default: 1
     },
     userId: {
       type: String,
@@ -108,12 +114,13 @@ export default {
       checked: [],
       containers: {},
       Status: 0,
-      loading: false
+			loading: false
     };
   },
   watch: {
     value(val) {
       if (val) {
+				console.log(this.questionType)
         switch (parseInt(this.questionType)) {
           case 1: {
             this.getDockerQuestionAndStatus();
@@ -132,49 +139,66 @@ export default {
     }
   },
   methods: {
+		// 销毁
     destruction() {
+			this.loading = true
       switch (parseInt(this.gameType)) {
         case 1: {
+					this.indComRenounce()
           break;
         }
         case 2: {
+					this.teamComRenounce()
           break;
         }
       }
-    },
+		},
+		// 开启
     open() {
+			this.loading = true
       switch (parseInt(this.gameType)) {
         case 1: {
+					this.indComNewContainer()
           break;
         }
         case 2: {
+					this.teamComNewContainer()
           break;
         }
       }
-    },
+		},
+		// 开始
     start() {
+			this.loading = true
       switch (parseInt(this.gameType)) {
         case 1: {
+					this.indComNewFile()
           break;
         }
         case 2: {
+					this.teamComNewFile()
           break;
         }
       }
-    },
+		},
+		// 放弃
     giveup() {
+			this.loading = true
       switch (parseInt(this.gameType)) {
         case 1: {
+					this.fileIndComRenounce()
           break;
         }
         case 2: {
+					this.fileTeamComRenounce()
           break;
         }
       }
     },
     back() {
       this.$emit('input', false);
-    },
+		},
+		// 选择题详情
     getOneChoiceQuestion() {
       var that = this;
       getOneChoiceQuestion({
@@ -182,20 +206,52 @@ export default {
       }).then((res) => {
         that.questionObj = res.data;
       });
-    },
+		},
+		// 提交
     onSubmit() {
-      switch (parseInt(this.questionType)) {
+			switch (parseInt(this.gameType)) {
         case 1: {
+					this.onSubmitPsn()
           break;
         }
         case 2: {
-          break;
-        }
-        case 3: {
+					this.onSubmitTeam()
           break;
         }
       }
-    },
+		},
+		onSubmitTeam() {
+			switch (parseInt(this.questionType)) {
+				case 1: {
+					this.teamComSubmitAnswers()
+					break;
+				}
+				case 2: {
+					this.teamSubmitAnswers()
+					break;
+				}
+				case 3: {
+					this.submitAnswersForTeam()
+					break;
+				}
+			}
+		},
+		onSubmitPsn() {
+			switch (parseInt(this.questionType)) {
+				case 1: {
+					this.indComSubmitAnswers()
+					break;
+				}
+				case 2: {
+					this.fileIndComSubmitAnswers()
+					break;
+				}
+				case 3: {
+					this.submitAnswersForGame()
+					break;
+				}
+			}
+		},
     // 团队容器销毁
     teamComRenounce() {
       var that = this;
@@ -209,12 +265,14 @@ export default {
         userFlag: '',
         userId: that.userId
       }).then((res) => {
+				this.loading = false
         if (res.success) {
-          that.Status = 2;
           that.$message({
             type: 'success',
             message: '环境已被销毁'
-          });
+					});
+					that.$emit('getPaperInfoForGame')
+					that.getDockerQuestionAndStatus()
         } else {
           this.$message({
             type: 'warning',
@@ -223,7 +281,7 @@ export default {
         }
       });
     },
-    // 团队附件销毁
+    // 团队附件放弃答题
     fileTeamComRenounce() {
       var that = this;
       fileTeamComRenounce({
@@ -236,12 +294,14 @@ export default {
         userFlag: '',
         userId: that.userId
       }).then((res) => {
+				this.loading = false
         if (res.success) {
-          that.Status = 2;
           that.$message({
             type: 'success',
             message: '已放弃做题'
-          });
+					});
+					that.$emit('getPaperInfoForGame')
+					that.getFileQuestionAndStatus();
         } else {
           this.$message({
             type: 'warning',
@@ -260,9 +320,12 @@ export default {
         teamId: this.teamId,
         userId: this.userId
       }).then((res) => {
+				this.loading = false
         if (res.success) {
           that.containers = res.data;
-          that.Status = 1;
+					that.Status = 1;
+					that.getFileQuestionAndStatus()
+					that.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -281,9 +344,12 @@ export default {
         teamId: this.teamId,
         userId: this.userId
       }).then((res) => {
+				this.loading = false
         if (res.success) {
           that.containers = res.data;
-          that.Status = 1;
+					that.Status = 1;
+					that.getDockerQuestionAndStatus()
+					that.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -302,16 +368,16 @@ export default {
         gameId: this.gameId,
         mold: 3,
         teamId: this.teamId,
-        userFlag: this.userFlag,
+        userFlag: this.containers.flag,
         userId: this.userId
       }).then((res) => {
         if (res.success) {
-          that.Status = 2;
           that.getDockerQuestionAndStatus();
           that.$message({
             type: 'success',
             message: '恭喜回答正确'
-          });
+					});
+					that.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -330,7 +396,7 @@ export default {
         gameId: this.gameId,
         mold: 3,
         teamId: this.teamId,
-        userFlag: this.userFlag,
+        userFlag: this.containers.flag,
         userId: this.userId
       }).then((res) => {
         if (res.success) {
@@ -338,7 +404,8 @@ export default {
             type: 'success',
             message: '恭喜回答正确'
           });
-          that.getFileQuestionAndStatus();
+					that.getFileQuestionAndStatus();
+					that.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -357,11 +424,12 @@ export default {
         gameId: this.gameId,
         mold: 2,
         teamId: '',
-        userFlag: this.userFlag,
+        userFlag: this.containers.flag,
         userId: this.userId
       }).then((res) => {
         if (res.success) {
-          that.getFileQuestionAndStatus();
+					that.getFileQuestionAndStatus();
+					that.$emit('getPaperInfoForGame')
           that.$message({
             type: 'success',
             message: '恭喜回答正确'
@@ -384,11 +452,12 @@ export default {
         gameId: this.gameId,
         mold: 2,
         teamId: '',
-        userFlag: this.userFlag,
+        userFlag: this.containers.flag,
         userId: this.userId
       }).then((res) => {
         if (res.success) {
-          that.getDockerQuestionAndStatus();
+					that.getDockerQuestionAndStatus();
+					that.$emit('getPaperInfoForGame')
           that.$message({
             type: 'success',
             message: '恭喜回答正确'
@@ -407,8 +476,8 @@ export default {
       getDockerQuestionAndStatus({
         challengeId: this.challengeId,
         gameId: this.gameId,
-        mold: parseInt(this.type) + 1,
-        teamId: this.type == 1 ? '' : this.teamId,
+        mold: parseInt(this.gameType) + 1,
+        teamId: this.gameType == 1 ? '' : this.teamId,
         userId: this.userId
       }).then((res) => {
         that.questionObj = res.data.question;
@@ -424,8 +493,8 @@ export default {
       getFileQuestionAndStatus({
         challengeId: this.challengeId,
         gameId: this.gameId,
-        mold: 2,
-        teamId: '',
+        mold: parseInt(this.gameType) + 1,
+        teamId: this.gameType == 1 ? '' : this.teamId,
         userId: this.userId
       }).then((res) => {
         that.questionObj = res.data.question;
@@ -445,9 +514,12 @@ export default {
         teamId: '',
         userId: this.userId
       }).then((res) => {
+				this.loading = false
         if (res.success) {
           that.containers = res.data;
-          that.Status = 1;
+					that.Status = 1;
+					that.getFileQuestionAndStatus()
+					that.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -466,9 +538,12 @@ export default {
         teamId: '',
         userId: this.userId
       }).then((res) => {
+				this.loading = false
         if (res.success) {
           that.containers = res.data;
-          that.Status = 1;
+					that.Status = 1;
+					that.getDockerQuestionAndStatus()
+					that.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -490,12 +565,14 @@ export default {
         userFlag: '',
         userId: that.userId
       }).then((res) => {
+				this.loading = false
         if (res.success) {
-          that.Status = 2;
           this.$message({
             type: 'success',
             message: '环境已被销毁'
-          });
+					});
+					that.getDockerQuestionAndStatus()
+					that.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -517,12 +594,14 @@ export default {
         userFlag: '',
         userId: that.userId
       }).then((res) => {
+				this.loading = false
         if (res.success) {
-          that.Status = 2;
           this.$message({
             type: 'success',
             message: '已放弃做题'
-          });
+					});
+					that.getFileQuestionAndStatus()
+					that.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -560,11 +639,11 @@ export default {
         userId: this.userId
       }).then((res) => {
         if (res.success) {
-          this.getPaperInfoForGame();
           this.$message({
             type: 'success',
             message: '恭喜回答正确'
-          });
+					});
+					this.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -603,11 +682,11 @@ export default {
         userId: this.userId
       }).then((res) => {
         if (res.success) {
-          this.getPaperInfoForGame();
           this.$message({
             type: 'success',
             message: '恭喜回答正确'
-          });
+					});
+					this.$emit('getPaperInfoForGame')
         } else {
           this.$message({
             type: 'warning',
@@ -619,3 +698,11 @@ export default {
   }
 };
 </script>
+<style>
+.myform .el-form-item{
+	margin-bottom: 0px !important;
+}
+.myform .el-form-item__label{
+  font-weight: bold;
+}
+</style>

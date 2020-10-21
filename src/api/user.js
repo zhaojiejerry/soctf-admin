@@ -150,9 +150,9 @@ export function getPersonalSkillRadarChart(data) {
 // 排行榜
 export function getRankingList(data) {
     return axios({
-        url: '/career/getRankingList',
-        method: 'get',
-        params: data
+        url: '/career/getRankingListForPage',
+        method: 'post',
+        data
     })
 }
 

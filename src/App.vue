@@ -33,4 +33,5 @@ export default {
   max-width: 375px;
   width: 375px;
 }
+
 </style>

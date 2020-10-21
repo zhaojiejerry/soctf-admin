@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog :visible.sync="value" width="70%" title="比赛运维" @closed="back">
-      <el-table v-if="type != '1'" ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="item.sysUsers" class="list-table" tooltip-effect="dark">
+      <el-table v-if="type != '1'" ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="joiners" class="list-table" tooltip-effect="dark">
         <el-table-column prop="teamName" align="center" label="团队名称" />
         <el-table-column prop="phone" align="center" label="电话号码" />
         <el-table-column prop="email" align="center" label="邮箱" />
@@ -46,7 +46,6 @@
         <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
         <el-table-column label="分值" align="center" prop="value" show-overflow-tooltip />
         <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
-        <!-- <el-table-column label="答题时间/秒" align="center" prop="time" /> -->
         <el-table-column label="题型" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             {{ scope.row.solved?'已攻克':'未攻克' }}
@@ -62,14 +61,11 @@
         <el-button @click="showAnswer=false">关闭</el-button>
       </div>
     </el-dialog>
-    <answerPage v-model="showPage" :game-type="type" :game-id="gameId" :question-type="questionType" :challenge-id="challengeId" :user-id="userId" :team-id="teamId" />
+    <answerPage v-model="showPage" :game-type="type" :game-id="gameId" :question-type="questionType" :challenge-id="challengeId" :user-id="userId" :team-id="teamId" @getPaperInfoForGame="getPaperInfoForGame" />
   </div>
 </template>
 <script>
 import { getGameInfoDetail, getPaperInfoForGame } from '@/api/match';
-import { getDockerQuestionAndStatus } from '@/api/docker';
-import { getFileQuestionAndStatus } from '@/api/file';
-import { getOneChoiceQuestion } from '@/api/choice';
 import { parseTime } from '@/utils/index';
 import answerPage from './answer';
 export default {
@@ -105,7 +101,7 @@ export default {
       questionList: [],
       userId: '',
       teamId: '',
-      questionType: '',
+      questionType: 1,
       questionTypes: ['容器', '附件', '选择'],
       challengeId: ''
     };
@@ -120,41 +116,8 @@ export default {
   methods: {
     assist(row) {
       this.challengeId = row.id;
-      this.questionType = row.questionType;
-    },
-    getDockerQuestionAndStatus(id) {
-      // var that = this;
-      getDockerQuestionAndStatus({
-        challengeId: id,
-        gameId: this.gameId,
-        mold: parseInt(this.type) + 1,
-        teamId: this.type == 1 ? '' : this.teamId,
-        userId: this.userId
-      }).then((res) => {
-        // if (res.success) {
-        // }
-      });
-    },
-    getFileQuestionAndStatus(id) {
-      // var that = this;
-      getFileQuestionAndStatus({
-        challengeId: id,
-        gameId: this.gameId,
-        mold: parseInt(this.type) + 1,
-        teamId: this.type == 1 ? '' : this.teamId,
-        userId: this.userId
-      }).then((res) => {
-        // if (res.success) {
-        // }
-      });
-    },
-    getOneChoiceQuestion(id) {
-      getOneChoiceQuestion({
-        choiceId: id
-      }).then((res) => {
-        // if (res.success) {
-        // }
-      });
+			this.questionType = row.questionType;
+			this.showPage = true
     },
     getPaperInfoForGame() {
       var that = this;
@@ -170,7 +133,7 @@ export default {
       });
     },
     seeDetail(row) {
-      this.userId = row.userId;
+      this.userId = row.usrId;
       this.showAnswer = true;
       this.getPaperInfoForGame();
     },

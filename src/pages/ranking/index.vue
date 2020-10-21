@@ -9,10 +9,10 @@
           <el-table-column align="center" label="排行">
             <template slot-scope="scope">
               <div class="order">
-                <img v-if="scope.row.rowNum == 1" src="@/assets/images/medal1.png" alt="">
-                <img v-else-if="scope.row.rowNum == 2" src="@/assets/images/medal2.png" alt="">
-                <img v-else-if="scope.row.rowNum == 3" src="@/assets/images/medal3.png" alt="">
-                <span v-else>{{ scope.row.rowNum }}</span>
+                <img v-if="(scope.$index+1)*currentPage == 1" src="@/assets/images/medal1.png" alt="">
+                <img v-else-if="(scope.$index+1)*currentPage == 2" src="@/assets/images/medal2.png" alt="">
+                <img v-else-if="(scope.$index+1)*currentPage == 3" src="@/assets/images/medal3.png" alt="">
+                <span v-else>{{ (scope.$index+1)*currentPage }}</span>
               </div>
             </template>
           </el-table-column>
@@ -33,6 +33,11 @@
           </el-table-column>
         </el-table>
       </div>
+      <div class="pager-container mt30">
+        <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="tableTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+          <el-button size="small" plain class="pagination-button">确定</el-button>
+        </el-pagination>
+      </div>
     </el-card>
   </div>
 </template>
@@ -41,7 +46,10 @@ import { getRankingList, hideUserScore } from '@/api/user'
 export default {
   data() {
     return {
-      rankingList: []
+			rankingList: [],
+			tableTotal: 0,
+      pageSize: 10,
+      currentPage: 1
     }
 	},
 	computed: {
@@ -53,11 +61,13 @@ export default {
     this.getRankingList()
   },
   methods: {
-				hideUserScore(row) {
+		get(a) {
+return JSON.stringify(a)
+		},
+		hideUserScore(row) {
 			this.$confirm('是否要' + (row.enable == 1 ? '隐藏' : '显示') + '用户竞赛成绩?', '提示', {
         type: 'warning'
-      })
-        .then(() => {
+      }).then(() => {
           hideUserScore({
             id: row.id
           }).then((res) => {
@@ -74,17 +84,31 @@ export default {
               })
             }
           })
-        })
-        .catch(() => {
+        }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消操作'
           })
         })
+		},
+		handleSizeChange(val) {
+      this.pageSize = val
+      this.getRankingList()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getRankingList()
     },
     getRankingList() {
-      getRankingList().then((res) => {
-        this.rankingList = res.data
+      getRankingList({
+				'currentPage': this.currentPage,
+				'extraParam': {
+						enable: 1
+				},
+				'pageSize': this.pageSize
+			}).then((res) => {
+				this.rankingList = res.data
+				this.tableTotal = res.count
       })
     }
   }
@@ -119,4 +143,12 @@ export default {
 		width: 30px;
 		height: 30px;
 	}
+</style>
+<style  scoped>
+.mt30 {
+  margin-top: 35px;
+}
+.pager-container {
+  text-align: center;
+}
 </style>

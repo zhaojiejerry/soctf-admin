@@ -29,13 +29,13 @@
         <el-button @click="back">关闭</el-button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="showAnswer" width="70%" :show-close="false" title="答题记录">
+    <el-dialog :visible.sync="showAnswer" width="80%" :show-close="false" title="答题记录">
       <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="questionList" class="list-table" tooltip-effect="dark">
         <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
         <el-table-column prop="questionDescribe" align="center" label="文本描述" show-overflow-tooltip />
         <el-table-column label="题型" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
-            {{ questionType[scope.row.questionType-1] }}
+            {{ questionTypes[scope.row.questionType-1] }}
           </template>
         </el-table-column>
         <el-table-column label="难易程度" align="center" width="100">
@@ -46,28 +46,36 @@
         <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
         <el-table-column label="分值" align="center" prop="value" show-overflow-tooltip />
         <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
-        <el-table-column label="答题时间/秒" align="center" prop="time" />
-        <!-- <el-table-column fixed="right" align="center" label="操作">
+        <!-- <el-table-column label="答题时间/秒" align="center" prop="time" /> -->
+        <el-table-column label="题型" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
-            <el-button v-if="buttons.indexOf('73')!=-1" size="small" type="text" @click="deleteGame(scope.row.id)">删除</el-button>
+            {{ scope.row.solved?'已攻克':'未攻克' }}
           </template>
-        </el-table-column> -->
+        </el-table-column>
+        <el-table-column fixed="right" align="center" label="操作">
+          <template slot-scope="scope">
+            <el-button v-if="!scope.row.solved" size="small" type="text" @click="assist(scope.row)">协助攻克</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
         <el-button @click="showAnswer=false">关闭</el-button>
       </div>
     </el-dialog>
+    <answerPage v-model="showPage" :game-type="type" :game-id="gameId" :question-type="questionType" :challenge-id="challengeId" :user-id="userId" :team-id="teamId" />
   </div>
 </template>
 <script>
-import {
-  getUserInfosByGame,
-  getGameInfoDetail,
-  getPaperInfoForGame
-} from '@/api/match';
+import { getGameInfoDetail, getPaperInfoForGame } from '@/api/match';
+import { getDockerQuestionAndStatus } from '@/api/docker';
+import { getFileQuestionAndStatus } from '@/api/file';
+import { getOneChoiceQuestion } from '@/api/choice';
 import { parseTime } from '@/utils/index';
+import answerPage from './answer';
 export default {
-  components: {},
+  components: {
+    answerPage
+  },
   props: {
     value: {
       type: Boolean,
@@ -88,32 +96,71 @@ export default {
   },
   data() {
     return {
+      showPage: false,
       dialogTableVisible: false,
       ruleForm: {},
       teamInfos: [],
       joiners: [],
       showAnswer: false,
       questionList: [],
-      joinerId: ''
+      userId: '',
+      teamId: '',
+      questionType: '',
+      questionTypes: ['容器', '附件', '选择'],
+      challengeId: ''
     };
   },
   watch: {
     value(val) {
       if (val) {
-        if (this.gameStatu != '3') {
-          this.getGameInfoDetail();
-        } else {
-          this.getUserInfosByGame();
-        }
+        this.getGameInfoDetail();
       }
     }
   },
   methods: {
+    assist(row) {
+      this.challengeId = row.id;
+      this.questionType = row.questionType;
+    },
+    getDockerQuestionAndStatus(id) {
+      // var that = this;
+      getDockerQuestionAndStatus({
+        challengeId: id,
+        gameId: this.gameId,
+        mold: parseInt(this.type) + 1,
+        teamId: this.type == 1 ? '' : this.teamId,
+        userId: this.userId
+      }).then((res) => {
+        // if (res.success) {
+        // }
+      });
+    },
+    getFileQuestionAndStatus(id) {
+      // var that = this;
+      getFileQuestionAndStatus({
+        challengeId: id,
+        gameId: this.gameId,
+        mold: parseInt(this.type) + 1,
+        teamId: this.type == 1 ? '' : this.teamId,
+        userId: this.userId
+      }).then((res) => {
+        // if (res.success) {
+        // }
+      });
+    },
+    getOneChoiceQuestion(id) {
+      getOneChoiceQuestion({
+        choiceId: id
+      }).then((res) => {
+        // if (res.success) {
+        // }
+      });
+    },
     getPaperInfoForGame() {
       var that = this;
       getPaperInfoForGame({
         gameId: this.gameId,
-        joinerId: this.joinerId,
+        joinerId: this.type == 1 ? this.userId : this.teamId,
         level: '',
         type: ''
       }).then((res) => {
@@ -123,8 +170,9 @@ export default {
       });
     },
     seeDetail(row) {
-      this.joinerId = row;
+      this.userId = row.userId;
       this.showAnswer = true;
+      this.getPaperInfoForGame();
     },
     back() {
       this.$emit('input', false);
@@ -137,21 +185,7 @@ export default {
         gameId: this.gameId
       }).then((res) => {
         if (res.success) {
-          this.ruleForm = res.data;
-        }
-      });
-    },
-    getUserInfosByGame() {
-      getUserInfosByGame({
-        gameId: this.gameId
-      }).then((res) => {
-        if (res.success) {
-          this.ruleForm = res.data.gameInfo;
-          if (this.ruleForm.gameType == '1') {
-            this.joiners = res.data.users;
-          } else {
-            this.teamInfos = res.data.teamInfos;
-          }
+          this.joiners = res.data.joiners;
         }
       });
     }

@@ -10,12 +10,12 @@
         </div>
         <el-form ref="ruleForm" inline>
           <el-form-item label="赛事状态" prop="gameStatus">
-            <el-select v-model="extraParam.gameStatus" clearable placeholder="请选择赛事状态">
+            <el-select v-model="extraParam.gameStatus" clearable placeholder="请选择赛事状态" @change="handleCurrentChange(1)">
               <el-option v-for="(item, index) in gameStatus" :key="index" :label="item" :value="index+1" />
             </el-select>
           </el-form-item>
           <el-form-item label="比赛类型" prop="gameType">
-            <el-select v-model="extraParam.gameType" clearable placeholder="请选择比赛类型">
+            <el-select v-model="extraParam.gameType" clearable placeholder="请选择比赛类型" @change="handleCurrentChange(1)">
               <el-option label="个人" value="1" />
               <el-option label="团队" value="2" />
             </el-select>
@@ -377,9 +377,15 @@ export default {
         });
     },
     getGameInfoListForPage() {
+      var extraParam = {};
+      for (var key in this.extraParam) {
+        if (this.extraParam[key] != '') {
+          extraParam[key] = this.extraParam[key];
+        }
+      }
       getGameInfoListForPage({
         currentPage: this.currentPage,
-        extraParam: this.extraParam,
+        extraParam: extraParam,
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {

@@ -62,3 +62,21 @@ export function getChoiceStatistics(data) {
         params: data
     })
 }
+
+// 竞赛 - 个人提交答案（ 用户端）
+export function submitAnswersForGame(data) {
+    return axios({
+        url: '/submitAnswersForGame',
+        method: 'post',
+        data
+    })
+}
+
+// 竞赛 - 团队提交答案（ 用户端）
+export function submitAnswersForTeam(data) {
+    return axios({
+        url: '/submitAnswersForTeam',
+        method: 'post',
+        data
+    })
+}

@@ -2,8 +2,8 @@
   <div>
     <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
       <el-table-column type="selection" align="center" width="55" />
-      <el-table-column prop="name" align="center" label="题目名称" />
-      <el-table-column prop="choiceDescription" align="center" label="文本描述" />
+      <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
+      <el-table-column prop="choiceDescription" align="center" label="文本描述" show-overflow-tooltip />
       <el-table-column label="题型" align="center" show-overflow-tooltip>
         <template slot-scope="scope">
           {{ choiceType[scope.row.choiceType-1] }}

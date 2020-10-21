@@ -13,10 +13,10 @@
         <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
           <el-table-column v-if="mold!='1'" prop="gamename" align="center" label="赛事名称" show-overflow-tooltip />
           <el-table-column prop="username" align="center" label="用户名" show-overflow-tooltip />
-          <el-table-column prop="useranswer" align="center" label="用户答案" show-overflow-tooltip />
+          <el-table-column prop="rightFlag" align="center" label="用户答案" show-overflow-tooltip />
           <el-table-column prop="correct" align="center" label="是否正确">
             <template slot-scope="{row}">
-              {{ row.correct==0?'不正确':'正确' }}
+              {{ row.result==0?'不正确':'正确' }}
             </template>
           </el-table-column>
           <el-table-column prop="answertime" align="center" label="提交时间" show-overflow-tooltip>
@@ -36,11 +36,14 @@
 </template>
 <script>
 import echarts from 'echarts'; // 引入echarts
-import { getChoiceRstDetail, getChoiceStatistics } from '@/api/choice';
+import { getRstDetail, getStatistics } from '@/api/file';
 import { parseTime } from '@/utils/index';
 export default {
   props: {
-    value: Boolean,
+    value: {
+      type: Boolean,
+      default: false
+    },
     mainId: {
       type: String,
       default: ''
@@ -60,8 +63,8 @@ export default {
       if (val) {
         this.mold = '1';
         this.$nextTick(() => {
-          this.getChoiceRstDetail();
-          this.getChoiceStatistics();
+          this.getRstDetail();
+          this.getStatistics();
         });
       }
     }
@@ -71,11 +74,11 @@ export default {
       return parseTime(time);
     },
     handleClick(tab, event) {
-      this.getChoiceRstDetail();
-      this.getChoiceStatistics();
+      this.getRstDetail();
+      this.getStatistics();
     },
-    getChoiceRstDetail() {
-      getChoiceRstDetail({
+    getRstDetail() {
+      getRstDetail({
         currentPage: this.currentPage,
         extraParam: {
           mold: this.mold,
@@ -89,8 +92,8 @@ export default {
         }
       });
     },
-    getChoiceStatistics() {
-      getChoiceStatistics({
+    getStatistics() {
+      getStatistics({
         mold: this.mold,
         questionId: this.mainId
       }).then((res) => {
@@ -104,11 +107,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val;
-      this.getChoiceRstDetail();
+      this.getRstDetail();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.getChoiceRstDetail();
+      this.getRstDetail();
     },
     getEcharts(data) {
       var myChart = echarts.init(document.getElementById('mypie'));

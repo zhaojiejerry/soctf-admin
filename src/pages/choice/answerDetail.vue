@@ -53,7 +53,10 @@ import { parseTime } from '@/utils/index';
 import { getGameInfoListForPage } from '@/api/match';
 export default {
   props: {
-    value: Boolean,
+    value: {
+      type: Boolean,
+      default: false
+    },
     mainId: {
       type: String,
       default: ''

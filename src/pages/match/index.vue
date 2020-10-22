@@ -75,6 +75,9 @@
                       <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('38')!=-1" size="small" type="text" @click="operationsGame(scope.row)">运维管理</el-button>
                     </el-dropdown-item>
                     <el-dropdown-item>
+                      <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('38')!=-1" size="small" type="text" @click="reviseGame(scope.row)">修改成绩</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
                       <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('40')!=-1" size="small" type="text" @click="seeDescription(scope.row.gameId)">比赛说明</el-button>
                     </el-dropdown-item>
                     <el-dropdown-item>
@@ -104,7 +107,7 @@
     <achievement v-model="showAchievement" :type="type" :game-id="gameId" />
     <live v-model="showLive" :type="type" :game-id="gameId" />
     <DevOps v-model="showOperations" :type="type" :game-id="gameId" :game-statu="gameStatu" />
-    <!-- <operations v-model="showOperations" :type="type" :game-id="gameId" /> -->
+    <operations v-model="showRevise" :type="type" :game-id="gameId" />
     <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getGameInfoListForPage" />
     <paperInfo v-model="showPaperInfo" :game-id="gameId" />
     <matchDetail v-model="showDetail" :game-id="gameId" :game-statu="gameStatu" />
@@ -124,7 +127,7 @@ import { parseTime } from '@/utils/index';
 import modify from './modify';
 import description from './description';
 import achievement from './achievement';
-// import operations from './operations';
+import operations from './operations';
 import paperInfo from './paperInfo';
 import live from './live';
 import matchDetail from './detail';
@@ -136,13 +139,14 @@ export default {
     description,
     achievement,
     live,
-    // operations,
+    operations,
     paperInfo,
     matchDetail,
     DevOps
   },
   data() {
     return {
+			showRevise: false,
       showDetail: false,
       show: false,
       addSign: false,
@@ -176,7 +180,7 @@ export default {
   methods: {
     parseTime(time) {
       return parseTime(time);
-    },
+		},
     seeDetail(row) {
       this.showDetail = true;
       this.gameId = row.gameId;
@@ -218,7 +222,12 @@ export default {
       this.gameId = row.gameId;
       this.type = row.gameType;
       this.gameStatu = row.gameStatus;
-    },
+		},
+		reviseGame(row) {
+			this.showRevise = true;
+      this.gameId = row.gameId;
+      this.type = row.gameType;
+		},
     releaseScore(id) {
       this.$confirm('是否要发布成绩?', '提示', {
         confirmButtonText: '确定',

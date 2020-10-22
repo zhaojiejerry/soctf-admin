@@ -80,3 +80,12 @@ export function submitAnswersForTeam(data) {
         data
     })
 }
+
+// 选择题展示（ 用户端）
+export function getChoiceOneForUser(data) {
+    return axios({
+        url: '/getChoiceOneForUser',
+        method: 'get',
+        params: data
+    })
+}

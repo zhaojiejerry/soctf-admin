@@ -46,7 +46,7 @@
         <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
         <el-table-column label="分值" align="center" prop="value" show-overflow-tooltip />
         <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
-        <el-table-column label="题型" align="center" show-overflow-tooltip>
+        <el-table-column label="是否已攻克" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             {{ scope.row.solved?'已攻克':'未攻克' }}
           </template>
@@ -65,7 +65,7 @@
   </div>
 </template>
 <script>
-import { getGameInfoDetail, getPaperInfoForGame } from '@/api/match';
+import { getGameInfoDetail, getPaperInfoForGame, getUserInfosByGame } from '@/api/match';
 import { parseTime } from '@/utils/index';
 import answerPage from './answer';
 export default {
@@ -109,15 +109,25 @@ export default {
   watch: {
     value(val) {
       if (val) {
-        this.getGameInfoDetail();
+				this.getGameInfoDetail();
+				// this.getUserInfosByGame();
       }
     }
   },
   methods: {
+		getUserInfosByGame() {
+      getUserInfosByGame({
+        gameId: this.gameId
+      }).then((res) => {
+        if (res.success) {
+          this.ruleForm = res.data.gameInfo;
+        }
+      });
+    },
     assist(row) {
       this.challengeId = row.id;
-			this.questionType = row.questionType;
-			this.showPage = true
+      this.questionType = row.questionType;
+      this.showPage = true;
     },
     getPaperInfoForGame() {
       var that = this;
@@ -134,6 +144,7 @@ export default {
     },
     seeDetail(row) {
       this.userId = row.usrId;
+      this.teamId = this.type == 1 ? '' : row.teamId;
       this.showAnswer = true;
       this.getPaperInfoForGame();
     },

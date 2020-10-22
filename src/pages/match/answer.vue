@@ -20,7 +20,7 @@
           </el-form-item>
           <el-form-item v-if="questionType=='3'" label="题目类型">
             <span class="subject">{{ questionObj.choiceType==1?'单选':'多选' }}</span>
-            <div style="margin-top: 25px;">{{ questionObj.choiceDescription }}</div>
+            <div>{{ questionObj.choiceDescription }}</div>
             <!-- 选择题类型（1-单选，2-多选） -->
             <div v-if="questionObj.choiceType==1">
               <el-radio-group v-model="radio" class="radio">
@@ -46,7 +46,7 @@
         <el-button v-if="questionType==2&& Status==1" :loading="loading" type="primary" @click="giveup">放弃答题</el-button>
         <el-button v-if="questionType==2&& Status==2" :loading="loading" type="primary" @click="start">重新做题</el-button>
         <el-button v-if="questionType!=3&&Status == 1" type="primary" @click="onSubmit">提交答案</el-button>
-        <el-button v-if="questionType==3&&!questionObj.choiceScore" type="primary" @click="onSubmit">提交答案</el-button>
+        <el-button v-if="questionType==3&&!questionObj.correctAnswer" type="primary" @click="onSubmit">提交答案</el-button>
       </div>
     </el-dialog>
   </div>
@@ -74,7 +74,7 @@ import {
 import {
   submitAnswersForTeam,
   submitAnswersForGame,
-  getOneChoiceQuestion
+  getChoiceOneForUser
 } from '@/api/choice';
 export default {
   props: {
@@ -131,7 +131,7 @@ export default {
             break;
           }
           case 3: {
-            this.getOneChoiceQuestion();
+            this.getChoiceOneForUser();
             break;
           }
         }
@@ -199,9 +199,9 @@ export default {
       this.$emit('input', false);
 		},
 		// 选择题详情
-    getOneChoiceQuestion() {
+    getChoiceOneForUser() {
       var that = this;
-      getOneChoiceQuestion({
+      getChoiceOneForUser({
         choiceId: this.challengeId
       }).then((res) => {
         that.questionObj = res.data;
@@ -209,16 +209,27 @@ export default {
 		},
 		// 提交
     onSubmit() {
-			switch (parseInt(this.gameType)) {
-        case 1: {
-					this.onSubmitPsn()
-          break;
-        }
-        case 2: {
-					this.onSubmitTeam()
-          break;
-        }
-      }
+			this.$confirm('确定要提交答案?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          switch (parseInt(this.gameType)) {
+						case 1: {
+							this.onSubmitPsn()
+							break;
+						}
+						case 2: {
+							this.onSubmitTeam()
+							break;
+						}
+					}
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
 		},
 		onSubmitTeam() {
 			switch (parseInt(this.questionType)) {
@@ -644,6 +655,7 @@ export default {
             message: '恭喜回答正确'
 					});
 					this.$emit('getPaperInfoForGame')
+					this.getChoiceOneForUser();
         } else {
           this.$message({
             type: 'warning',
@@ -687,6 +699,7 @@ export default {
             message: '恭喜回答正确'
 					});
 					this.$emit('getPaperInfoForGame')
+					this.getChoiceOneForUser();
         } else {
           this.$message({
             type: 'warning',

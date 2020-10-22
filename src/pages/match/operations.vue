@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :visible.sync="value" :show-close="false" title="比赛排名">
+    <el-dialog :visible.sync="value" width="70%" title="比赛排名" @closed="close">
       <div id="details-content">
         <el-scrollbar style="height:100%">
           <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="rankingList" class="list-table" tooltip-effect="dark">
@@ -12,8 +12,8 @@
             </el-table-column>
             <el-table-column v-if="type=='2'" prop="team_name" align="center" label="战队" />
             <el-table-column v-else prop="userName" align="center" label="姓名" />
+            <el-table-column prop="answer" align="center" label="解题数量" />
             <el-table-column prop="score" align="center" label="成绩" />
-            <el-table-column prop="mold" align="center" label="解题数量" />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
                 <el-button size="small" type="text" @click="viewList(scope.row.id)">查看答题列表</el-button>
@@ -27,7 +27,7 @@
         <el-button @click="close">关闭</el-button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="showList" :show-close="false" title="答题列表">
+    <el-dialog :visible.sync="showList" title="答题记录" @closed="showList=false">
       <div id="details-content">
         <el-scrollbar style="height:100%">
           <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="scoreViewList" class="list-table" tooltip-effect="dark">
@@ -35,17 +35,18 @@
             <el-table-column prop="challengeName" align="center" label="题目" />
             <el-table-column prop="resultScore" align="center" label="成绩">
               <template slot-scope="{row}">
-                <el-input v-if="row.edit" v-model="row.resultScore" size="small" style=" width: calc(100% - 40px);" placeholder="请输入" />
-                <span v-if="!row.edit" style="line-height: 32px;">{{ row.resultScore }}</span>
+                <el-input v-model="row.resultScore" size="small" placeholder="请输入" />
+                <!-- <span v-if="!row.edit" style="line-height: 32px;">{{ row.resultScore }}</span>
                 <span v-if="!row.edit&&buttons.indexOf('39')!=-1" class="el-icon-edit-outline icon" @click="row.edit=true" />
                 <span v-if="row.edit" class="el-icon-close icon" @click="getScoreViewList" />
-                <span v-if="row.edit" class="el-icon-check icon" @click="modifyContestFinalScore(row)" />
+                <span v-if="row.edit" class="el-icon-check icon" @click="modifyContestFinalScore(row)" /> -->
               </template>
             </el-table-column>
           </el-table>
         </el-scrollbar>
       </div>
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="modifyContestFinalScore">提交保存</el-button>
         <el-button @click="showList=false">关闭</el-button>
       </div>
     </el-dialog>
@@ -114,11 +115,6 @@ export default {
       getScoreViewList({
         scoreId: this.scoreId
       }).then((res) => {
-				if (res.data) {
-					res.data.forEach(element => {
-						element.edit = false
-					})
-				}
 				that.scoreViewList = res.data
 				that.showList = true
       })
@@ -152,24 +148,26 @@ export default {
           })
         })
     },
-    modifyContestFinalScore(row) {
+    modifyContestFinalScore() {
       var that = this
-			var arr = [{
-				id: row.id,
-				resultScore: row.resultScore,
-				scoreId: row.scoreId
-			}]
-				this.$confirm('是否要修改用户竞赛成绩?', '提示', {
-        type: 'warning'
-      })
-        .then(() => {
+			var arr = []
+			this.scoreViewList.forEach(row => {
+				arr.push({
+					id: row.id,
+					resultScore: row.resultScore,
+					scoreId: row.scoreId
+				})
+			});
+			this.$confirm('是否要修改用户竞赛成绩?', '提示', { type: 'warning'
+      }).then(() => {
       modifyContestFinalScore(arr).then((res) => {
+				that.getScoreViewList()
         if (res.success) {
 					this.$message({
 						type: 'success',
 						message: '修改成功'
 					})
-					that.getScoreViewList()
+					this.getRankingList()
 				} else {
 					this.$message({
 						type: 'warning',
@@ -190,7 +188,7 @@ export default {
 }
 #details-content {
   width: 100%;
-  height: 551px;
+  height: 450px;
 }
 .icon{
 	font-size: 17px;

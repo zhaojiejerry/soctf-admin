@@ -13,7 +13,7 @@
             <el-table-column v-if="type=='2'" prop="team_name" align="center" label="战队" />
             <el-table-column v-else prop="userName" align="center" label="姓名" />
             <el-table-column prop="score" align="center" label="成绩" />
-            <el-table-column prop="mold" align="center" label="解题数量" />
+            <el-table-column prop="answer" align="center" label="解题数量" />
           </el-table>
         </el-scrollbar>
       </div>

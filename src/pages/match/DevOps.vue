@@ -9,7 +9,7 @@
         <el-table-column prop="company" align="center" label="公司" />
         <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button size="small" type="text" @click="seeDetail(scope.row)">答题记录</el-button>
+            <el-button v-if="scope.row.teamId!=null&&scope.row.teamId!=''" size="small" type="text" @click="seeDetail(scope.row)">答题记录</el-button>
           </template>
         </el-table-column>
       </el-table>

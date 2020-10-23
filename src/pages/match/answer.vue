@@ -623,24 +623,11 @@ export default {
     },
     // 选择题个人提交答案
     submitAnswersForGame() {
-      var answerDetailVos = [];
-      if (this.questionObj.choiceType == 1) {
-        answerDetailVos = [
-          {
-            answer: this.radio,
-            choiceId: this.challengeId,
-            remark: ''
-          }
-        ];
-      } else {
-        this.checked.forEach((element) => {
-          answerDetailVos.push({
-            answer: element,
-            choiceId: this.challengeId,
-            remark: ''
-          });
-        });
-      }
+      var answerDetailVos = [{
+				answer: this.questionObj.choiceType == 1 ? this.radio : this.checked.join(','),
+				choiceId: this.challengeId,
+				remark: ''
+			}];
       submitAnswersForGame({
         answerDetailVos: answerDetailVos,
         gameId: this.gameId,
@@ -666,25 +653,11 @@ export default {
     },
     // 选择题团队提交答案
     submitAnswersForTeam() {
-      var answerDetailVos = [];
-      if (this.questionObj.choiceType == 1) {
-        answerDetailVos = [
-          {
-            answer: this.radio,
-            choiceId: this.challengeId,
-            remark: ''
-          }
-        ];
-      } else {
-        console.log(this.checked);
-        this.checked.forEach((element) => {
-          answerDetailVos.push({
-            answer: element,
-            choiceId: this.challengeId,
-            remark: ''
-          });
-        });
-      }
+      var answerDetailVos = [{
+				answer: this.questionObj.choiceType == 1 ? this.radio : this.checked.join(','),
+				choiceId: this.challengeId,
+				remark: ''
+			}];
       submitAnswersForTeam({
         answerDetailVos: answerDetailVos,
         gameId: this.gameId,

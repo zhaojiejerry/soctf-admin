@@ -195,7 +195,18 @@ export const constantRoutes = [{
                     title: '个人中心',
                     icon: 'iconfont icon-home'
                 }
-            }
+            },
+            {
+                path: '/operationsGame',
+                name: 'operationsGame',
+                component: () =>
+                    import ('@/pages/match/operationsGame'),
+                hidden: true,
+                meta: {
+                    title: '比赛运维管理',
+                    icon: 'iconfont icon-home'
+                }
+            },
         ]
     }
 ]

@@ -36,10 +36,6 @@
             <el-table-column prop="resultScore" align="center" label="成绩">
               <template slot-scope="{row}">
                 <el-input v-model="row.resultScore" size="small" placeholder="请输入" />
-                <!-- <span v-if="!row.edit" style="line-height: 32px;">{{ row.resultScore }}</span>
-                <span v-if="!row.edit&&buttons.indexOf('39')!=-1" class="el-icon-edit-outline icon" @click="row.edit=true" />
-                <span v-if="row.edit" class="el-icon-close icon" @click="getScoreViewList" />
-                <span v-if="row.edit" class="el-icon-check icon" @click="modifyContestFinalScore(row)" /> -->
               </template>
             </el-table-column>
           </el-table>
@@ -56,9 +52,9 @@
 import {
   getRankingList,
   getScoreViewList,
-	modifyContestFinalScore,
-	hideContestUserScore
-} from '@/api/match'
+  modifyContestFinalScore,
+  hideContestUserScore
+} from '@/api/match';
 export default {
   props: {
     value: {
@@ -77,52 +73,56 @@ export default {
   data() {
     return {
       rankingList: [],
-			scoreViewList: [],
-			showList: false,
-			scoreId: ''
-    }
-	},
-	computed: {
+      scoreViewList: [],
+      showList: false,
+      scoreId: ''
+    };
+  },
+  computed: {
     buttons() {
-      return this.$store.state.buttons
+      return this.$store.state.buttons;
     }
   },
   watch: {
     value(val) {
       if (val) {
-        this.getRankingList()
+        this.getRankingList();
       }
     }
   },
   methods: {
     close() {
-      this.$emit('input', false)
+      this.$emit('input', false);
     },
     getRankingList() {
-      var that = this
+      var that = this;
       getRankingList({
         gameId: this.gameId
       }).then((res) => {
-        that.rankingList = res.data
-      })
+        that.rankingList = res.data;
+      });
     },
     viewList(id) {
-			this.scoreId = id
-			this.getScoreViewList()
-		},
-		getScoreViewList() {
-			var that = this
+      this.scoreId = id;
+      this.getScoreViewList();
+    },
+    getScoreViewList() {
+      var that = this;
       getScoreViewList({
         scoreId: this.scoreId
       }).then((res) => {
-				that.scoreViewList = res.data
-				that.showList = true
-      })
-		},
-		hideContestUserScore(row) {
-			this.$confirm('是否要' + (row.enable == 1 ? '隐藏' : '显示') + '用户竞赛成绩?', '提示', {
-        type: 'warning'
-      })
+        that.scoreViewList = res.data;
+        that.showList = true;
+      });
+    },
+    hideContestUserScore(row) {
+      this.$confirm(
+        '是否要' + (row.enable == 1 ? '隐藏' : '显示') + '用户竞赛成绩?',
+        '提示',
+        {
+          type: 'warning'
+        }
+      )
         .then(() => {
           hideContestUserScore({
             scoreId: row.id
@@ -131,54 +131,55 @@ export default {
               this.$message({
                 type: 'success',
                 message: '操作成功'
-              })
-              this.getRankingList()
+              });
+              this.getRankingList();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消操作'
-          })
-        })
+          });
+        });
     },
     modifyContestFinalScore() {
-      var that = this
-			var arr = []
-			this.scoreViewList.forEach(row => {
-				arr.push({
-					id: row.id,
-					resultScore: row.resultScore,
-					scoreId: row.scoreId
-				})
-			});
-			this.$confirm('是否要修改用户竞赛成绩?', '提示', { type: 'warning'
+      var that = this;
+      var arr = [];
+      this.scoreViewList.forEach((row) => {
+        arr.push({
+          id: row.id,
+          resultScore: row.resultScore,
+          scoreId: row.scoreId
+        });
+      });
+      this.$confirm('是否要修改用户竞赛成绩?', '提示', {
+        type: 'warning'
       }).then(() => {
-      modifyContestFinalScore(arr).then((res) => {
-				that.getScoreViewList()
-        if (res.success) {
-					this.$message({
-						type: 'success',
-						message: '修改成功'
-					})
-					this.getRankingList()
-				} else {
-					this.$message({
-						type: 'warning',
-						message: res.message
-					})
-				}
-			})
-			})
+        modifyContestFinalScore(arr).then((res) => {
+          that.getScoreViewList();
+          if (res.success) {
+            this.$message({
+              type: 'success',
+              message: '修改成功'
+            });
+            this.getRankingList();
+          } else {
+            this.$message({
+              type: 'warning',
+              message: res.message
+            });
+          }
+        });
+      });
     }
   }
-}
+};
 </script>
 <style  scoped>
 .head {
@@ -190,9 +191,9 @@ export default {
   width: 100%;
   height: 450px;
 }
-.icon{
-	font-size: 17px;
-	float: right;
-	line-height: 32px;
+.icon {
+  font-size: 17px;
+  float: right;
+  line-height: 32px;
 }
 </style>

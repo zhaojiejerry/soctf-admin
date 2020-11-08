@@ -2,7 +2,7 @@
   <div>
     <el-dialog :visible.sync="value" width="70%" title="比赛运维" @closed="back">
       <el-table v-if="type != '1'" ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="joiners" class="list-table" tooltip-effect="dark">
-        <el-table-column prop="teamName" align="center" label="团队名称" />
+        <el-table-column prop="remark" align="center" label="团队名称" />
         <el-table-column prop="phone" align="center" label="电话号码" />
         <el-table-column prop="email" align="center" label="邮箱" />
         <el-table-column prop="school" align="center" label="学校" />

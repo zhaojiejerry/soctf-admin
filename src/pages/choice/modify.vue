@@ -11,7 +11,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选项">
-        <div v-for="(item,index) in ruleForm.optionVos" :key="index">
+        <div v-for="(item,index) in optionVos" :key="index">
           <el-input v-model="item.optionDescription" class="itemwidth" />
           <span v-if="index==0" class="el-icon-circle-plus-outline" style="font-size: 25px;vertical-align: middle;" @click="plus" />
           <span v-else class="el-icon-remove-outline" style="font-size: 25px;vertical-align: middle;" @click="remove(index)" />
@@ -19,7 +19,7 @@
       </el-form-item>
       <el-form-item label="正确答案" prop="correctAnswer">
         <el-select v-model="ruleForm.correctAnswer" :multiple="ruleForm.choiceType==2" class="itemwidth" placeholder="请选择标签">
-          <el-option v-for="(item,index) in ruleForm.optionVos" :key="index" :label="item.optionDescription" :value="item.optionCode" />
+          <el-option v-for="(item,index) in optionVos" :key="index" :label="item.optionDescription" :value="item.optionCode" />
         </el-select>
       </el-form-item>
       <el-form-item label="类别" prop="category">
@@ -143,7 +143,8 @@ export default {
 				}]
       },
       fileList: [],
-      subject: []
+			subject: [],
+			optionVos: []
     };
   },
   watch: {
@@ -152,6 +153,12 @@ export default {
         if (!this.addSign) {
           this.getOneChoiceQuestion();
         } else {
+					this.optionVos = [
+              {
+                optionCode: String.fromCharCode(64 + 1),
+                optionDescription: ''
+              }
+            ]
           this.ruleForm = {
             bankId: '',
             category: '',
@@ -166,12 +173,6 @@ export default {
             label: '',
 						name: '',
             optionArray: '',
-            optionVos: [
-              {
-                optionCode: String.fromCharCode(64 + 1),
-                optionDescription: ''
-              }
-            ],
             remark: '',
             solved: false
           };
@@ -189,16 +190,16 @@ export default {
       });
     },
     plus() {
-      this.ruleForm.optionVos.push({
+      this.optionVos.push({
         optionCode: String.fromCharCode(
-          64 + this.ruleForm.optionVos.length + 1
+          64 + this.optionVos.length + 1
         ),
         optionDescription: ''
       });
-      console.log(this.ruleForm.optionVos);
+      console.log(this.optionVos);
     },
     remove(index) {
-      this.ruleForm.optionVos.splice(index, 1);
+      this.optionVos.splice(index, 1);
     },
     getOneChoiceQuestion() {
       getOneChoiceQuestion({
@@ -207,12 +208,11 @@ export default {
         if (res.success) {
           this.ruleForm = res.data;
           this.ruleForm.label = res.data.label ? res.data.label.split('|') : [];
-          this.label = this.ruleForm.label;
-          this.ruleForm.correctAnswer =
-            res.data.choiceType == 2
-              ? res.data.correctAnswer.split(',')
-              : res.data.correctAnswer;
-          this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
+					this.label = this.ruleForm.label;
+					var correctAnswer = JSON.parse(res.data.correctAnswer)
+          this.ruleForm.correctAnswer = res.data.choiceType == 2 ? correctAnswer : correctAnswer[0];
+					this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
+					this.optionVos = res.data.optionVos
         }
       });
     },
@@ -222,6 +222,7 @@ export default {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+					var correctAnswer = this.ruleForm.choiceType == 2 ? this.ruleForm.correctAnswer : [this.ruleForm.correctAnswer]
           if (!this.addSign) {
             modifyChoiceQuestion({
               bankId: this.ruleForm.bankId,
@@ -231,16 +232,13 @@ export default {
               choiceScore: this.ruleForm.choiceScore,
               choiceTime: this.ruleForm.choiceTime,
               choiceType: this.ruleForm.choiceType,
-              correctAnswer:
-                this.ruleForm.choiceType == 2
-                  ? this.ruleForm.correctAnswer.join(',')
-                  : this.ruleForm.correctAnswer,
+              correctAnswer: JSON.stringify(correctAnswer),
               difficultyLevel: this.ruleForm.difficultyLevel,
               goldCoin: this.ruleForm.goldCoin,
               label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               optionArray: this.ruleForm.optionArray,
-              optionVos: this.ruleForm.optionVos,
+              optionVos: this.optionVos,
               remark: this.ruleForm.remark,
 							solved: this.ruleForm.solved
             }).then((res) => {
@@ -267,16 +265,13 @@ export default {
               choiceScore: this.ruleForm.choiceScore,
               choiceTime: this.ruleForm.choiceTime,
               choiceType: this.ruleForm.choiceType,
-              correctAnswer:
-                this.ruleForm.choiceType == 2
-                  ? this.ruleForm.correctAnswer.join(',')
-                  : this.ruleForm.correctAnswer,
+              correctAnswer: JSON.stringify(correctAnswer),
               difficultyLevel: this.ruleForm.difficultyLevel,
               goldCoin: this.ruleForm.goldCoin,
               label: this.ruleForm.label.join('|'),
               name: this.ruleForm.name,
               optionArray: this.ruleForm.optionArray,
-              optionVos: this.ruleForm.optionVos,
+              optionVos: this.optionVos,
               remark: this.ruleForm.remark,
 							solved: false
             }).then((res) => {

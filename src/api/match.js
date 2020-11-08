@@ -181,3 +181,48 @@ export function directSeeding(data) {
         params: data
     })
 }
+
+// 解题总榜
+export function getRankingListForPage(data) {
+    return axios({
+        url: '/game/getRankingListForPage',
+        method: 'post',
+        data
+    })
+}
+
+// 解题总榜表头
+export function getRankingListForTop(data) {
+    return axios({
+        url: '/game/getRankingListForTop',
+        method: 'get',
+        params: data
+    })
+}
+
+// 中断竞赛
+export function breakGame(data) {
+    return axios({
+        url: '/game/breakGame',
+        method: 'get',
+        params: data
+    })
+}
+
+// 获取作弊列表
+export function getCheat(data) {
+    return axios({
+        url: '/game/getCheat',
+        method: 'post',
+        data
+    })
+}
+
+// 用户提交记录
+export function getEndReportList(data) {
+    return axios({
+        url: '/game/getEndReportList',
+        method: 'get',
+        params: data
+    })
+}

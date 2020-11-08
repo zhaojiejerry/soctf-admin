@@ -1,12 +1,12 @@
 <template>
   <div>
     <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
-      <el-table-column type="selection" align="center" width="55" />
+      <el-table-column type="selection" :selectable="checkSelectable" align="center" width="55" />
       <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
-      <el-table-column prop="choiceDescription" align="center" label="文本描述" show-overflow-tooltip />
+      <el-table-column prop="questionDescribe" align="center" label="文本描述" show-overflow-tooltip />
       <el-table-column label="题型" align="center" show-overflow-tooltip>
         <template slot-scope="scope">
-          {{ choiceType[scope.row.choiceType-1] }}
+          {{ questionType[scope.row.questionType-1] }}
         </template>
       </el-table-column>
       <el-table-column label="难易程度" align="center" width="100">
@@ -15,9 +15,9 @@
         </template>
       </el-table-column>
       <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
-      <el-table-column label="分值" align="center" prop="choiceScore" show-overflow-tooltip />
+      <el-table-column label="分值" align="center" prop="value" show-overflow-tooltip />
       <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
-      <el-table-column label="答题时间/秒" align="center" prop="choiceTime" show-overflow-tooltip />
+      <el-table-column label="答题时间/秒" align="center" prop="time" show-overflow-tooltip />
     </el-table>
     <div class="pager-container mt30">
       <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="tableTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import { getChoiceListForAdmin } from '@/api/choice';
+import { getDockerQuestion } from '@/api/docker';
 export default {
   components: {},
   props: {
@@ -38,6 +38,12 @@ export default {
     gameId: {
       type: String,
       default: ''
+    },
+    questionList: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   data() {
@@ -47,14 +53,23 @@ export default {
       tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
-      choiceType: ['单选', '多选'],
-      questions: []
+      questions: [],
+      questionType: ['容器', '附件', '选择']
     };
   },
   mounted() {
-    this.getChoiceListForAdmin();
+    this.$nextTick(() => {
+      this.clearAll();
+    });
+    this.getDockerQuestion();
   },
   methods: {
+    checkSelectable(row) {
+      var item = this.questionList.find((i) => {
+        return i.id == row.id;
+      });
+      return item == undefined;
+    },
     clearAll() {
       this.$refs.multipleTable.clearSelection();
       this.questions = [];
@@ -63,7 +78,7 @@ export default {
       console.log(selection, row);
       if (!selection.includes(row)) {
         const index = this.questions.findIndex((item) => {
-          return item.bankId === row.bankId;
+          return item.id === row.id;
         });
         this.questions.splice(index, 1);
       } else {
@@ -74,7 +89,7 @@ export default {
       if (selection.length > 0) {
         this.tableList.forEach((v) => {
           const index = this.questions.findIndex((i) => {
-            return i.bankId === v.bankId;
+            return i.id === v.id;
           });
           if (index === -1) {
             this.questions.push(v);
@@ -83,41 +98,45 @@ export default {
       } else {
         this.questions.forEach((item, index) => {
           this.tableList.forEach((ms) => {
-            if (item.bankId == ms.bankId) {
+            if (item.id == ms.id) {
               this.questions = this.questions.filter(
-                (item) => item.bankId != ms.bankId
+                (item) => item.id != ms.id
               );
             }
           });
         });
       }
     },
-    getChoiceListForAdmin() {
-      getChoiceListForAdmin({
-        currentPage: this.currentPage,
-        extraParam: {},
-        pageSize: this.pageSize
+    getDockerQuestion() {
+      getDockerQuestion({
+        category: '',
+        difficultyLevel: '',
+        labs: '',
+        name: '',
+        pageNo: this.currentPage,
+        pageSize: this.pageSize,
+        userId: ''
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data;
+          this.tableList = res.data.records;
           this.questions.forEach((a) => {
             this.tableList.forEach((b) => {
-              if (a.bankId === b.bankId) {
+              if (a.id === b.id) {
                 this.$refs.multipleTable.toggleRowSelection(b, true);
               }
             });
           });
-          this.tableTotal = res.count;
+          this.tableTotal = res.data.total;
         }
       });
     },
     handleSizeChange(val) {
       this.pageSize = val;
-      this.getChoiceListForAdmin();
+      this.getDockerQuestion();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.getChoiceListForAdmin();
+      this.getDockerQuestion();
     }
   }
 };

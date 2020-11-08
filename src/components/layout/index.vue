@@ -68,8 +68,8 @@ export default {
     },
     $route: {
       handler(val, oldVal) {
-        console.log(val);
-        this.$store.commit('SET_BTN', val.meta.btn);
+        // console.log(val);
+        this.$store.commit('SET_BTN', val.meta.btn ? val.meta.btn : []);
       },
       deep: true
     }
@@ -80,8 +80,11 @@ export default {
     }
   },
   mounted() {
-    this.$store.commit('SET_BTN', this.$route.meta.btn);
-    console.log(this.$route);
+    this.$store.commit(
+      'SET_BTN',
+      this.$route.meta.btn ? this.$route.meta.btn : []
+    );
+    // console.log(this.$route);
     this.getOneUserInfo();
   },
   methods: {
@@ -129,5 +132,8 @@ export default {
 }
 .wx-layout {
   height: 100vh;
+}
+.content-container {
+  height: 100%;
 }
 </style>

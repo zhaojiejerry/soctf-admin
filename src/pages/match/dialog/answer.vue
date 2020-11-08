@@ -46,7 +46,7 @@
         <el-button v-if="questionType==2&& Status==1" :loading="loading" type="primary" @click="giveup">放弃答题</el-button>
         <el-button v-if="questionType==2&& Status==2" :loading="loading" type="primary" @click="start">重新做题</el-button>
         <el-button v-if="questionType!=3&&Status == 1" type="primary" @click="onSubmit">提交答案</el-button>
-        <el-button v-if="questionType==3&&!questionObj.correctAnswer" type="primary" @click="onSubmit">提交答案</el-button>
+        <el-button v-if="questionType==3&&!questionObj.solved" type="primary" @click="onSubmit">提交答案</el-button>
       </div>
     </el-dialog>
   </div>
@@ -202,7 +202,9 @@ export default {
     getChoiceOneForUser() {
       var that = this;
       getChoiceOneForUser({
-        choiceId: this.challengeId
+				choiceId: this.challengeId,
+				mode: parseInt(this.gameType) + 1,
+				userId: that.userId
       }).then((res) => {
         that.questionObj = res.data;
       });
@@ -623,9 +625,10 @@ export default {
     },
     // 选择题个人提交答案
     submitAnswersForGame() {
+      var answer = this.questionObj.choiceType == 1 ? [this.radio] : this.checked
       var answerDetailVos = [{
-				answer: this.questionObj.choiceType == 1 ? this.radio : this.checked.join(','),
-				choiceId: this.challengeId,
+				answer: JSON.stringify(answer),
+				choiceId: this.questionObj.choiceId,
 				remark: ''
 			}];
       submitAnswersForGame({
@@ -653,9 +656,10 @@ export default {
     },
     // 选择题团队提交答案
     submitAnswersForTeam() {
+			var answer = this.questionObj.choiceType == 1 ? [this.radio] : this.checked
       var answerDetailVos = [{
-				answer: this.questionObj.choiceType == 1 ? this.radio : this.checked.join(','),
-				choiceId: this.challengeId,
+				answer: JSON.stringify(answer),
+				choiceId: this.questionObj.choiceId,
 				remark: ''
 			}];
       submitAnswersForTeam({
@@ -690,5 +694,8 @@ export default {
 }
 .myform .el-form-item__label{
   font-weight: bold;
+}
+.myform .el-rate{
+	line-height: 50px;
 }
 </style>

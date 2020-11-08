@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
-      <el-table-column type="selection" align="center" width="55" />
+      <el-table-column type="selection" align="center" :selectable="checkSelectable" width="55" />
       <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
       <el-table-column prop="questionDescribe" align="center" label="文本描述" show-overflow-tooltip />
       <el-table-column label="题型" align="center" show-overflow-tooltip>
@@ -38,6 +38,12 @@ export default {
     gameId: {
       type: String,
       default: ''
+    },
+    questionList: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   data() {
@@ -52,9 +58,18 @@ export default {
     };
   },
   mounted() {
+    this.$nextTick(() => {
+      this.clearAll();
+    });
     this.getFileQuestion();
   },
   methods: {
+    checkSelectable(row) {
+      var item = this.questionList.find((i) => {
+        return i.id == row.id;
+      });
+      return item == undefined;
+    },
     clearAll() {
       this.$refs.multipleTable.clearSelection();
       this.questions = [];

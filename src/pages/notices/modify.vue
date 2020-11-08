@@ -12,13 +12,13 @@
           <el-switch v-model="ruleForm.enable" :width="50" :active-value="1" :inactive-value="0" />
         </el-form-item>
         <el-form-item label="类型" prop="title">
-          <el-select v-model="ruleForm.type" class="itemwidth" placeholder="请选择类型" clearable>
+          <el-select v-model="ruleForm.type" :disabled="show" class="itemwidth" placeholder="请选择类型" clearable>
             <el-option label="系统公告" :value="1" />
-            <el-option label="赛事公告" :value="2" />
+            <el-option label="赛事公告" :value="5" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="ruleForm.type==1" label="赛事">
-          <el-select v-model="ruleForm.gameId" class="itemwidth" placeholder="请选择" clearable>
+          <el-select v-model="ruleForm.gameId" :disabled="show" class="itemwidth" placeholder="请选择" clearable>
             <el-option v-for="(item,index) in gameList" :key="index" :label="item.gameName" :value="item.gameId">
               {{ item.gameName }}
               <span style="float: right;">{{ gameStatus[item.gameStatus-1] }}</span>
@@ -33,7 +33,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <editor :content="ruleForm.body" @change="change" />
+        <editor ref="editor" v-model="ruleForm.body" />
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -44,7 +44,7 @@
 </template>
 <script>
 import { updNotice, addNotice, getNoticeDetails } from '@/api/notice';
-import editor from '@/components/editor';
+import editor from '@/components/Tinymce';
 export default {
   components: {
     editor
@@ -67,6 +67,14 @@ export default {
       default: () => {
         return [];
       }
+    },
+    gameId: {
+      type: String,
+      default: ''
+    },
+    show: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -104,12 +112,12 @@ export default {
             body: '',
             createAt: '',
             del: 0,
-            enable: 0,
-            gameId: '',
+            enable: 1,
+            gameId: this.show ? this.gameId : '',
             id: 0,
             orderNode: 0,
             title: '',
-            type: 1
+            type: this.show ? 5 : 1
           };
         }
       }
@@ -163,11 +171,9 @@ export default {
           } else {
             addNotice({
               body: this.ruleForm.body,
-              // createAt: new Date(),
               del: 0,
               enable: this.ruleForm.enable,
               gameId: this.ruleForm.gameId,
-              id: 0,
               orderNode: this.ruleForm.orderNode,
               title: this.ruleForm.title,
               type: this.ruleForm.type

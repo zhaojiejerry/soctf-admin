@@ -13,7 +13,7 @@
             <el-form-item label="公告类型" prop="userType">
               <el-select v-model="type" clearable @change="handleCurrentChange(1)">
                 <el-option label="系统公告" value="1" />
-                <el-option label="赛事公告" value="2" />
+                <el-option label="赛事公告" value="5" />
               </el-select>
             </el-form-item>
             <el-form-item label="赛事" prop="gameId">
@@ -62,9 +62,9 @@
   </div>
 </template>
 <script>
-import { getNoticeListForAdmin, delNoticeById } from '@/api/notice'
-import { parseTime } from '@/utils/index'
-import modify from './modify'
+import { getNoticeListForAdmin, delNoticeById } from '@/api/notice';
+import { parseTime } from '@/utils/index';
+import modify from './modify';
 import { getGameInfoListForPage } from '@/api/match';
 export default {
   components: { modify },
@@ -76,24 +76,24 @@ export default {
       tableList: [],
       tableTotal: 0,
       pageSize: 10,
-			currentPage: 1,
-			type: '',
-			gameList: [],
-			gameId: '',
-			gameStatus: ['未开始', '进行中', '已结束']
-    }
-	},
-	computed: {
+      currentPage: 1,
+      type: '1',
+      gameList: [],
+      gameId: '',
+      gameStatus: ['未开始', '进行中', '已结束']
+    };
+  },
+  computed: {
     buttons() {
-      return this.$store.state.buttons
+      return this.$store.state.buttons;
     }
   },
   mounted() {
-    this.getNoticeListForAdmin()
+    this.getNoticeListForAdmin();
     this.getGameInfoListForPage();
-	},
+  },
   methods: {
-		getGameInfoListForPage() {
+    getGameInfoListForPage() {
       getGameInfoListForPage({
         currentPage: 0,
         extraParam: {},
@@ -105,17 +105,17 @@ export default {
       });
     },
     addNew() {
-      this.show = true
-      this.addSign = true
-      this.mainId = ''
+      this.show = true;
+      this.addSign = true;
+      this.mainId = '';
     },
     parseTime(time) {
-      return parseTime(time)
+      return parseTime(time);
     },
     handleEdit(id) {
-      this.show = true
-      this.mainId = id
-      this.addSign = false
+      this.show = true;
+      this.mainId = id;
+      this.addSign = false;
     },
     handleDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -131,23 +131,23 @@ export default {
               this.$message({
                 type: 'success',
                 message: '删除成功'
-              })
-              this.currentPage = 1
-              this.getNoticeListForAdmin()
+              });
+              this.currentPage = 1;
+              this.getNoticeListForAdmin();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          })
-        })
+          });
+        });
     },
     getNoticeListForAdmin() {
       getNoticeListForAdmin({
@@ -157,21 +157,21 @@ export default {
         type: this.type
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data.records
-          this.tableTotal = res.data.total
+          this.tableList = res.data.records;
+          this.tableTotal = res.data.total;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getNoticeListForAdmin()
+      this.pageSize = val;
+      this.getNoticeListForAdmin();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getNoticeListForAdmin()
+      this.currentPage = val;
+      this.getNoticeListForAdmin();
     }
   }
-}
+};
 </script>
 <style  scoped>
 .mt30 {

@@ -19,6 +19,14 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item v-if="ruleForm.fileType==2" label="赛事" prop="gameId">
+          <el-select v-model="ruleForm.gameId" class="itemwidth" placeholder="请选择" clearable>
+            <el-option v-for="(item,index) in gameList" :key="index" :label="item.gameName" :value="item.gameId">
+              {{ item.gameName }}
+              <span style="float: right;">{{ gameStatus[item.gameStatus-1] }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="文档描述" prop="mainBody">
           <el-input v-model="ruleForm.mainBody" type="textarea" class="itemwidth" />
         </el-form-item>
@@ -89,11 +97,8 @@
 </template>
 <script>
 import { getCookie } from '@/utils/auth';
-import {
-  modifyWriteUp,
-  addWriteUp,
-  getAllQuestion
-} from '@/api/question';
+import { modifyWriteUp, addWriteUp, getAllQuestion } from '@/api/question';
+import { getGameInfoListForPage } from '@/api/match';
 import { parseTime } from '@/utils/index';
 import { getjson } from '@/api/common';
 export default {
@@ -134,15 +139,17 @@ export default {
       questionType: ['容器', '附件', '选择'],
       name: '',
       category: '',
-      subject: []
+      subject: [],
+      gameList: [],
+      gameStatus: ['未开始', '进行中', '已结束']
     };
   },
   watch: {
     value(val) {
       if (val) {
-				this.label = this.ruleForm.label;
+        this.label = this.ruleForm.label;
         if (!this.addSign) {
-					this.question = this.ruleForm.questionName;
+          this.question = this.ruleForm.questionName;
           console.log(this.question);
           if (this.ruleForm.fileUrl) {
             this.fileList = [
@@ -154,9 +161,9 @@ export default {
           } else {
             this.fileList = [];
           }
-					console.log(this.label)
+          console.log(this.label);
         } else {
-					this.question = ''
+          this.question = '';
           this.fileList = [];
         }
       }
@@ -165,8 +172,20 @@ export default {
   mounted() {
     this.getAllQuestion();
     this.getjson();
+    this.getGameInfoListForPage();
   },
   methods: {
+    getGameInfoListForPage() {
+      getGameInfoListForPage({
+        currentPage: 0,
+        extraParam: {},
+        pageSize: 0
+      }).then((res) => {
+        if (res.success) {
+          this.gameList = res.data;
+        }
+      });
+    },
     getjson() {
       getjson('ctf.json').then((res) => {
         this.subject = res.subject;
@@ -243,9 +262,11 @@ export default {
               id: this.ruleForm.id,
               label: this.ruleForm.label.join('|'),
               mainBody: this.ruleForm.mainBody,
-              questionId: this.ruleForm.fileType == 1 ? this.ruleForm.questionId : '',
+              questionId:
+                this.ruleForm.fileType == 1 ? this.ruleForm.questionId : '',
               title: this.ruleForm.title,
-              type: this.ruleForm.type
+              type: this.ruleForm.type,
+              gameId: this.ruleForm.gameId
             }).then((res) => {
               if (res.success) {
                 this.$message({
@@ -271,9 +292,11 @@ export default {
               id: 0,
               label: this.ruleForm.label.join('|'),
               mainBody: this.ruleForm.mainBody,
-              questionId: this.ruleForm.fileType == 1 ? this.ruleForm.questionId : '',
+              questionId:
+                this.ruleForm.fileType == 1 ? this.ruleForm.questionId : '',
               title: this.ruleForm.title,
-              type: this.ruleForm.type
+              type: this.ruleForm.type,
+              gameId: this.ruleForm.gameId
             }).then((res) => {
               if (res.success) {
                 this.$message({

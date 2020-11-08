@@ -22,7 +22,7 @@
                 {{ fileType[scope.row.fileType-1] }}
               </template>
             </el-table-column>
-            <el-table-column label="答案描述" align="center" prop="answerDescription" show-overflow-tooltip />
+            <!-- <el-table-column label="答案描述" align="center" prop="answerDescription" show-overflow-tooltip /> -->
             <el-table-column label="分类" align="center" prop="type" show-overflow-tooltip />
             <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="scope">
@@ -43,9 +43,9 @@
   </div>
 </template>
 <script>
-import { getWriteUpForPage, deleteWriteUp } from '@/api/question'
-import { parseTime, copyObj } from '@/utils/index'
-import modify from './modify'
+import { getWriteUpForPage, deleteWriteUp } from '@/api/question';
+import { parseTime, copyObj } from '@/utils/index';
+import modify from './modify';
 export default {
   components: { modify },
   data() {
@@ -56,44 +56,45 @@ export default {
       tableTotal: 0,
       pageSize: 10,
       currentPage: 1,
-			fileType: ['WP', '比赛资料', '其他'],
-			ruleForm: {}
-    }
-	},
-	computed: {
+      fileType: ['WP', '比赛资料', '其他'],
+      ruleForm: {}
+    };
+  },
+  computed: {
     buttons() {
-      return this.$store.state.buttons
+      return this.$store.state.buttons;
     }
   },
   mounted() {
-    this.getWriteUpForPage()
+    this.getWriteUpForPage();
   },
   methods: {
     parseTime(time) {
-      return parseTime(time)
+      return parseTime(time);
     },
     addNew() {
-      this.show = true
-      this.addSign = true
-       this.ruleForm = {
-				answerDescription: '',
-				createAt: '',
-				createById: '',
-				fileType: '',
-				fileUrl: '',
-				id: 0,
-				label: [],
-				mainBody: '',
-				questionId: '',
-				title: '',
-				type: ''
-			};
+      this.show = true;
+      this.addSign = true;
+      this.ruleForm = {
+        answerDescription: '',
+        createAt: '',
+        createById: '',
+        fileType: '',
+        fileUrl: '',
+        id: 0,
+        label: [],
+        mainBody: '',
+        questionId: '',
+        title: '',
+        gameId: '',
+        type: ''
+      };
     },
     handleEdit(row) {
-      this.show = true
-			this.ruleForm = copyObj(row)
-			this.ruleForm.label = row.label ? row.label.split('|') : [];
-      this.addSign = false
+      this.show = true;
+      this.ruleForm = copyObj(row);
+      this.ruleForm.label = row.label ? row.label.split('|') : [];
+      this.addSign = false;
     },
     handleDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -109,23 +110,23 @@ export default {
               this.$message({
                 type: 'success',
                 message: '删除成功'
-              })
-              this.currentPage = 1
-              this.getWriteUpForPage()
+              });
+              this.currentPage = 1;
+              this.getWriteUpForPage();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          })
-        })
+          });
+        });
     },
     getWriteUpForPage() {
       getWriteUpForPage({
@@ -134,21 +135,21 @@ export default {
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data
-          this.tableTotal = res.count
+          this.tableList = res.data;
+          this.tableTotal = res.count;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getWriteUpForPage()
+      this.pageSize = val;
+      this.getWriteUpForPage();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getWriteUpForPage()
+      this.currentPage = val;
+      this.getWriteUpForPage();
     }
   }
-}
+};
 </script>
 <style  scoped>
 .mt30 {

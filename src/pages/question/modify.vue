@@ -187,7 +187,7 @@ export default {
       });
     },
     getjson() {
-      getjson('ctf.json').then((res) => {
+      getjson('/home/ctf.json').then((res) => {
         this.subject = res.subject;
       });
     },

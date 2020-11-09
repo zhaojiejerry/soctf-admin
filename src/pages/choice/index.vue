@@ -9,6 +9,18 @@
           </div>
         </div>
         <div class="user-child-list">
+          <!-- <el-form ref="extraParam" inline>
+            <el-form-item label="名称" prop="gameStatus">
+              <el-input v-model="extraParam.name" placeholder="请输入名称" />
+            </el-form-item>
+            <el-form-item label="题型" prop="gameType">
+              <el-select v-model="extraParam.choiceType" clearable placeholder="请选择比赛类型" @change="handleCurrentChange(1)">
+                <el-option label="单选" value="1" />
+                <el-option label="多选" value="2" />
+              </el-select>
+            </el-form-item>
+            <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
+          </el-form> -->
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
             <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
             <el-table-column prop="choiceDescription" align="center" label="文本描述" show-overflow-tooltip />
@@ -63,7 +75,8 @@ export default {
       pageSize: 10,
       currentPage: 1,
       choiceType: ['单选', '多选'],
-      showDetail: false
+      showDetail: false,
+      extraParam: {}
     };
   },
   computed: {
@@ -125,9 +138,15 @@ export default {
         });
     },
     getChoiceListForAdmin() {
+      var extraParam = {};
+      for (var key in this.extraParam) {
+        if (this.extraParam[key] != '') {
+          extraParam[key] = this.extraParam[key];
+        }
+      }
       getChoiceListForAdmin({
         currentPage: this.currentPage,
-        extraParam: {},
+        extraParam: extraParam,
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {

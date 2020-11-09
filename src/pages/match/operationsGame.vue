@@ -1,16 +1,16 @@
 <template>
   <div>
-    <el-card class="box-card">
+    <el-card class="box-card" style="position: relative;">
+      <div style="position: absolute;right: 20px;z-index: 999;">
+        <el-button v-if="ruleForm.gameStatus==1" size="small" type="primary" @click="startGame">发布比赛</el-button>
+        <el-button v-if="ruleForm.gameStatus!=3" size="small" type="primary" @click="sendGameToken">发送通知</el-button>
+        <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="endGame">结束比赛</el-button>
+        <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="reviseGame">修改成绩</el-button>
+        <el-button size="small" type="primary" @click="seeDescription">比赛说明</el-button>
+        <el-button v-if="ruleForm.confidential==0&&ruleForm.gameStatus==2" size="small" type="primary" @click="releaseScore">发布成绩</el-button>
+      </div>
       <el-tabs v-model="activeName">
         <el-tab-pane label="比赛信息" name="1">
-          <div style="margin-bottom: 10px;text-align: right;">
-            <el-button v-if="ruleForm.gameStatus==1" size="small" type="primary" @click="startGame">发布比赛</el-button>
-            <el-button v-if="ruleForm.gameStatus!=3" size="small" type="primary" @click="sendGameToken">发送通知</el-button>
-            <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="endGame">结束比赛</el-button>
-            <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="reviseGame">修改成绩</el-button>
-            <el-button size="small" type="primary" @click="seeDescription">比赛说明</el-button>
-            <el-button v-if="ruleForm.confidential==0&&ruleForm.gameStatus==2" size="small" type="primary" @click="releaseScore">发布成绩</el-button>
-          </div>
           <el-form ref="ruleForm" :model="ruleForm" label-width="150px" class="demo-ruleForm">
             <el-row :gutter="20">
               <el-col :span="8">
@@ -71,7 +71,7 @@
             <el-table-column prop="email" align="center" label="邮箱" />
             <el-table-column prop="school" align="center" label="学校" />
             <el-table-column prop="company" align="center" label="公司" />
-            <el-table-column fixed="right" align="center" label="操作" width="200">
+            <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="{row}">
                 <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
                 <el-dropdown>
@@ -97,7 +97,7 @@
             <el-table-column prop="email" align="center" label="邮箱" />
             <el-table-column prop="school" align="center" label="学校" />
             <el-table-column prop="company" align="center" label="公司" />
-            <el-table-column fixed="right" align="center" label="操作" width="200">
+            <el-table-column fixed="right" align="center" label="操作">
               <template slot-scope="{row}">
                 <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
                 <el-button size="small" type="text" @click="getEndReport(row.usrId)">提交记录</el-button>
@@ -107,10 +107,10 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="题目管理" name="3">
-          <subjectPage />
+          <subjectPage :game-status="ruleForm.gameStatus" />
         </el-tab-pane>
         <el-tab-pane label="赛事公告" name="4">
-          <noticePage />
+          <noticePage :game-status="ruleForm.gameStatus" />
         </el-tab-pane>
         <el-tab-pane label="比赛结果" name="5">
           <resultPage />

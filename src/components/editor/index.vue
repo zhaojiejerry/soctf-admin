@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card style="height: 610px;">
-      <quill-editor ref="myQuillEditor" v-model="content" style="height: 500px;" :options="editorOption" @change="onEditorChange($event)">
+      <quill-editor ref="myQuillEditor" :value="value" style="height: 500px;" :options="editorOption" @change="onEditorChange($event)">
         <!-- 自定义toolar -->
         <div id="toolbar" slot="toolbar">
           <!-- Add a bold button -->
@@ -55,18 +55,18 @@
 </template>
 
 <script>
-import { Quill, quillEditor } from 'vue-quill-editor'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
+import { Quill, quillEditor } from 'vue-quill-editor';
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
 
 // 引入font.css
-import './font.css'
+import './font.css';
 
 // 自定义字体大小
-const Size = Quill.import('attributors/style/size')
-Size.whitelist = ['10px', '12px', '14px', '16px', '18px', '20px']
-Quill.register(Size, true)
+const Size = Quill.import('attributors/style/size');
+Size.whitelist = ['10px', '12px', '14px', '16px', '18px', '20px'];
+Quill.register(Size, true);
 
 // 自定义字体类型
 var fonts = [
@@ -80,10 +80,10 @@ var fonts = [
   'sans-serif',
   '宋体',
   '黑体'
-]
-var Font = Quill.import('formats/font')
-Font.whitelist = fonts
-Quill.register(Font, true)
+];
+var Font = Quill.import('formats/font');
+Font.whitelist = fonts;
+Quill.register(Font, true);
 
 export default {
   name: 'FuncFormsEdit',
@@ -91,7 +91,7 @@ export default {
     quillEditor
   },
   props: {
-    content: {
+    value: {
       type: String,
       default: ''
     }
@@ -107,14 +107,14 @@ export default {
           }
         }
       }
-    }
+    };
   },
   methods: {
     onEditorChange({ quill, html, text }) {
-      this.$emit('change', html)
+      this.$emit('change', html);
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

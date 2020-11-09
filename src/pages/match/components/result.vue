@@ -14,20 +14,24 @@
         </template>
       </el-table-column>
       <el-table-column prop="answer" align="center" label="解题数" />
+      <el-table-column prop="first" align="center" label="一血数量" />
+      <el-table-column prop="difference" align="center" label="与前一名分差" />
       <el-table-column prop="score" align="center" label="总分" />
-      <el-table-column v-for="(item ,index) in handList" :key="index" align="center" :label="item.name">
-        <el-table-column v-for="(i,j) in item.children" :key="j" align="center" :label="i.titleNumber.toString()">
-          <template slot-scope="{row}">
-            <div class="order">
-              <img v-if="row.details[i.titleNumber-1] == 1" src="@/assets/images/medal1.png" alt="">
-              <img v-else-if="row.details[i.titleNumber-1] == 2" src="@/assets/images/medal2.png" alt="">
-              <img v-else-if="row.details[i.titleNumber-1] == 3" src="@/assets/images/medal3.png" alt="">
-              <span v-else-if="row.details[i.titleNumber-1] != 'N'" class="el-icon-check" style="font-size: 25px;color: #2a842a;" />
-              <span v-else>{{ row.details[i.titleNumber-1] }}</span>
-            </div>
-          </template>
+      <template v-for="(item ,index) in handList">
+        <el-table-column :key="index" align="center" :label="item[0].category">
+          <el-table-column v-for="(i,j) in item" :key="j" align="center" width="100" :label="i.name" show-overflow-tooltip>
+            <template slot-scope="{row}">
+              <div class="order">
+                <!-- {{ getIndex(i.id) }} -->
+                <img v-if="row.details[getIndex(i.id)] == 1" src="@/assets/images/medal1.png" alt="">
+                <img v-else-if="row.details[getIndex(i.id)] == 2" src="@/assets/images/medal2.png" alt="">
+                <img v-else-if="row.details[getIndex(i.id)] == 3" src="@/assets/images/medal3.png" alt="">
+                <span v-else-if="row.details[getIndex(i.id)] != 'N'" class="el-icon-check" style="font-size: 25px;color: #2a842a;" />
+              </div>
+            </template>
+          </el-table-column>
         </el-table-column>
-      </el-table-column>
+      </template>
     </el-table>
     <div class="pager-container mt30">
       <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="tableTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">
@@ -48,7 +52,9 @@ export default {
       gameId: '',
       handList: [],
       rankingList: [],
-      gameType: 1
+      gameType: 1,
+      questionIds: '',
+      questionId: []
     };
   },
   watch: {
@@ -58,7 +64,6 @@ export default {
           this.gameId = this.$route.query.gameId;
           this.gameType = this.$route.query.gameType;
           this.getRankingListForTop();
-          this.getRankingListForPage();
         }
       },
       deep: true
@@ -68,27 +73,39 @@ export default {
     this.gameId = this.$route.query.gameId;
     this.gameType = this.$route.query.gameType;
     this.getRankingListForTop();
-    this.getRankingListForPage();
   },
   methods: {
+    getIndex(id) {
+      return this.questionId.indexOf(id);
+    },
     getRankingListForTop() {
       var that = this;
       getRankingListForTop({
         gameId: this.gameId
       }).then((res) => {
-        var list = [];
-        for (let index = 0; index < this.questionType.length; index++) {
-          var item = {
-            name: this.questionType[index],
-            children: []
-          };
-          res.data.forEach((element) => {
-            if (index + 1 == element.questionType) {
-              item.children.push(element);
-            }
-          });
-          list.push(item);
-        }
+        var list = res.data;
+        this.questionIds = res.message;
+        this.questionId = JSON.parse(res.message);
+        that.getRankingListForPage();
+        // for (let index = 0; index < array.length; index++) {
+        // 	 //   var item = {
+        // //     name: this.questionType[index],
+        // //     children: []
+        // //   };
+
+        // }
+        // for (let index = 0; index < this.questionType.length; index++) {
+        //   var item = {
+        //     name: this.questionType[index],
+        //     children: []
+        //   };
+        //   res.data.forEach((element) => {
+        //     if (index + 1 == element.questionType) {
+        //       item.children.push(element);
+        //     }
+        //   });
+        //   list.push(item);
+        // }
         that.handList = list;
         // console.log(list);
       });
@@ -99,7 +116,8 @@ export default {
         currentPage: this.currentPage,
         extraParam: {
           enable: 1,
-          gameId: this.gameId
+          gameId: this.gameId,
+          questionIds: this.questionIds
         },
         pageSize: this.pageSize
       }).then((res) => {

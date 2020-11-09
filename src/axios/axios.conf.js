@@ -59,22 +59,22 @@ const downloadZipUrl = response => {
 // 响应拦截器
 Axios.interceptors.response.use(response => {
     // 导出ZIP
-    if (response.headers && response.headers['content-type'].indexOf('application/octet-stream') != -1) {
-        console.log(response.data)
-        downloadZipUrl(response)
-        response.data = {
-            code: 0,
-            message: 'success'
-        }
-    }
+    // if (response.headers && response.headers['content-type'].indexOf('application/octet-stream') != -1) {
+    //     console.log(response.data)
+    //     downloadZipUrl(response)
+    //     response.data = {
+    //         code: 0,
+    //         message: 'success'
+    //     }
+    // }
     // 导出excel
-    if (response.headers && (response.headers['content-type'].indexOf('application/x-msdownload') != -1 || response.headers['content-type'].indexOf('application/vnd.ms-excel') != -1)) {
-        downloadUrl(response.request.responseURL)
-        response.data = {
-            code: 0,
-            message: 'success'
-        }
-    }
+    // if (response.headers && (response.headers['content-type'].indexOf('application/x-msdownload') != -1 || response.headers['content-type'].indexOf('application/vnd.ms-excel') != -1)) {
+    //     downloadUrl(response.request.responseURL)
+    //     response.data = {
+    //         code: 0,
+    //         message: 'success'
+    //     }
+    // }
     const res = response.data
     if (res.code == 401) {
         Message.closeAll()

@@ -5,7 +5,6 @@
         <el-scrollbar ref="myscrollbar" style="height:100%">
           <pdf v-if="fileType == 'pdf'" :src="urlArr" />
           <VueMarkdown v-else :source="gameList" />
-          <!-- <div v-else style="white-space: pre-wrap;text-align: left;" v-html="gameList" /> -->
         </el-scrollbar>
       </div>
       <p v-if="fileType == 'pdf'" class="arrow" style="color:#cfc092;margin: 10px;text-align: right;">
@@ -76,18 +75,21 @@ export default {
     },
     getGameOssFile() {
       var that = this;
+      console.log(123);
       getGameOssFile({
         gameId: this.gameId,
         type: 1
       }).then((res) => {
-        if (res.data) {
+        if (res.success) {
           var urlArr = res.message.split('/');
           urlArr.splice(0, 3);
           var fileArr = urlArr[urlArr.length - 1].split('.');
           that.fileType = fileArr[fileArr.length - 1];
           that.urlArr = '/jsonApi/' + urlArr.join('/');
+          console.log(urlArr);
           getjson('/' + urlArr.join('/')).then((res) => {
             that.gameList = res;
+            console.log(that.gameList);
           });
         }
       });

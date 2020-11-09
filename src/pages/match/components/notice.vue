@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 10px;text-align: right;">
-      <el-button type="primary" size="medium" @click="addNew">新增</el-button>
+      <el-button v-if="gameStatus!=3" type="primary" size="medium" @click="addNew">新增</el-button>
     </div>
     <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
       <el-table-column prop="title" align="center" label="标题" />
@@ -17,11 +17,11 @@
       </el-table-column>
       <el-table-column align="center" label="是否显示" width="100">
         <template slot-scope="scope">
-          <el-switch :value="scope.row.enable" :width="50" :active-value="1" :inactive-value="0" disabled />
+          <el-switch :value="scope.row.enable" :disabled="gameStatus!=3" :width="50" :active-value="1" :inactive-value="0" @change="changeEnable(scope.row)" />
         </template>
       </el-table-column>
       <el-table-column prop="createAt" align="center" label="创建时间" />
-      <el-table-column fixed="right" align="center" label="操作">
+      <el-table-column v-if="gameStatus!=3" fixed="right" align="center" label="操作">
         <template slot-scope="scope">
           <el-button size="small" type="text" @click.native.prevent="handleEdit(scope.row.id)">编辑</el-button>
           <el-button size="small" type="text" @click="handleDelete(scope.row.id)">删除</el-button>
@@ -37,13 +37,19 @@
   </div>
 </template>
 <script>
-import { getNoticeListForAdmin, delNoticeById } from '@/api/notice';
+import { getNoticeListForAdmin, delNoticeById, updNotice } from '@/api/notice';
 import { getGameInfoListForPage } from '@/api/match';
 import { parseTime } from '@/utils/index';
 import modify from '@/pages/notices/modify';
 export default {
   components: {
     modify
+  },
+  props: {
+    gameStatus: {
+      type: String,
+      default: '1'
+    }
   },
   data() {
     return {
@@ -76,6 +82,27 @@ export default {
     this.getGameInfoListForPage();
   },
   methods: {
+    changeEnable(row) {
+      console.log(row);
+      updNotice({
+        enable: row.enable == 0 ? 1 : 0,
+        gameId: row.gameId,
+        id: row.id
+      }).then((res) => {
+        if (res.success) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          });
+          this.getNoticeListForAdmin();
+        } else {
+          this.$message({
+            type: 'warning',
+            message: res.message
+          });
+        }
+      });
+    },
     getGameInfoListForPage() {
       getGameInfoListForPage({
         currentPage: 0,

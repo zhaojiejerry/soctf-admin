@@ -105,22 +105,24 @@ export default {
             message: '请输入答题时间',
             type: 'number',
             trigger: 'blur'
-					}
+          }
         ],
-				goldCoin: [
-				{
-					required: true,
-					message: '请输入金币',
-					type: 'number',
-					trigger: 'blur'
-				}],
-				value: [
-				{
-					required: true,
-					message: '请输入分值',
-					type: 'number',
-					trigger: 'blur'
-				}]
+        goldCoin: [
+          {
+            required: true,
+            message: '请输入金币',
+            type: 'number',
+            trigger: 'blur'
+          }
+        ],
+        value: [
+          {
+            required: true,
+            message: '请输入分值',
+            type: 'number',
+            trigger: 'blur'
+          }
+        ]
       },
       label: [],
       subject: [],
@@ -174,7 +176,7 @@ export default {
       this.ruleForm.Url = '';
     },
     getjson() {
-      getjson('ctf.json').then((res) => {
+      getjson('/home/ctf.json').then((res) => {
         this.subject = res.subject;
       });
     },

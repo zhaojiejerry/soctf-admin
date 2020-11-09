@@ -96,7 +96,7 @@ export default {
         difficultyLevel: 0,
         goldCoin: 1,
         label: '',
-				name: '',
+        name: '',
         optionArray: '',
         optionVos: [
           {
@@ -126,25 +126,27 @@ export default {
             type: 'number',
             trigger: 'blur'
           }
-				],
-				goldCoin: [
-				{
-					required: true,
-					message: '请输入金币',
-					type: 'number',
-					trigger: 'blur'
-				}],
-				choiceScore: [
-				{
-					required: true,
-					message: '请输入分值',
-					type: 'number',
-					trigger: 'blur'
-				}]
+        ],
+        goldCoin: [
+          {
+            required: true,
+            message: '请输入金币',
+            type: 'number',
+            trigger: 'blur'
+          }
+        ],
+        choiceScore: [
+          {
+            required: true,
+            message: '请输入分值',
+            type: 'number',
+            trigger: 'blur'
+          }
+        ]
       },
       fileList: [],
-			subject: [],
-			optionVos: []
+      subject: [],
+      optionVos: []
     };
   },
   watch: {
@@ -153,12 +155,12 @@ export default {
         if (!this.addSign) {
           this.getOneChoiceQuestion();
         } else {
-					this.optionVos = [
-              {
-                optionCode: String.fromCharCode(64 + 1),
-                optionDescription: ''
-              }
-            ]
+          this.optionVos = [
+            {
+              optionCode: String.fromCharCode(64 + 1),
+              optionDescription: ''
+            }
+          ];
           this.ruleForm = {
             bankId: '',
             category: '',
@@ -171,7 +173,7 @@ export default {
             difficultyLevel: 0,
             goldCoin: 1,
             label: '',
-						name: '',
+            name: '',
             optionArray: '',
             remark: '',
             solved: false
@@ -185,15 +187,13 @@ export default {
   },
   methods: {
     getjson() {
-      getjson('ctf.json').then((res) => {
+      getjson('/home/ctf.json').then((res) => {
         this.subject = res.subject;
       });
     },
     plus() {
       this.optionVos.push({
-        optionCode: String.fromCharCode(
-          64 + this.optionVos.length + 1
-        ),
+        optionCode: String.fromCharCode(64 + this.optionVos.length + 1),
         optionDescription: ''
       });
       console.log(this.optionVos);
@@ -208,11 +208,12 @@ export default {
         if (res.success) {
           this.ruleForm = res.data;
           this.ruleForm.label = res.data.label ? res.data.label.split('|') : [];
-					this.label = this.ruleForm.label;
-					var correctAnswer = JSON.parse(res.data.correctAnswer)
-          this.ruleForm.correctAnswer = res.data.choiceType == 2 ? correctAnswer : correctAnswer[0];
-					this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
-					this.optionVos = res.data.optionVos
+          this.label = this.ruleForm.label;
+          var correctAnswer = JSON.parse(res.data.correctAnswer);
+          this.ruleForm.correctAnswer =
+            res.data.choiceType == 2 ? correctAnswer : correctAnswer[0];
+          this.ruleForm.difficultyLevel = parseInt(res.data.difficultyLevel);
+          this.optionVos = res.data.optionVos;
         }
       });
     },
@@ -222,7 +223,10 @@ export default {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-					var correctAnswer = this.ruleForm.choiceType == 2 ? this.ruleForm.correctAnswer : [this.ruleForm.correctAnswer]
+          var correctAnswer =
+            this.ruleForm.choiceType == 2
+              ? this.ruleForm.correctAnswer
+              : [this.ruleForm.correctAnswer];
           if (!this.addSign) {
             modifyChoiceQuestion({
               bankId: this.ruleForm.bankId,
@@ -240,7 +244,7 @@ export default {
               optionArray: this.ruleForm.optionArray,
               optionVos: this.optionVos,
               remark: this.ruleForm.remark,
-							solved: this.ruleForm.solved
+              solved: this.ruleForm.solved
             }).then((res) => {
               if (res.success) {
                 this.$message({
@@ -273,7 +277,7 @@ export default {
               optionArray: this.ruleForm.optionArray,
               optionVos: this.optionVos,
               remark: this.ruleForm.remark,
-							solved: false
+              solved: false
             }).then((res) => {
               if (res.success) {
                 this.$message({

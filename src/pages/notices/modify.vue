@@ -33,7 +33,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <editor ref="editor" v-model="ruleForm.body" />
+        <editor ref="editor" v-model="ruleForm.body" @change="change" />
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -44,7 +44,7 @@
 </template>
 <script>
 import { updNotice, addNotice, getNoticeDetails } from '@/api/notice';
-import editor from '@/components/Tinymce';
+import editor from '@/components/editor';
 export default {
   components: {
     editor

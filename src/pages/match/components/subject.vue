@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="margin-bottom: 10px;text-align: right;">
+    <div v-if="gameStatus!=3" style="margin-bottom: 10px;text-align: right;">
       <el-button type="primary" size="medium" @click="handleCreatePaper">新增</el-button>
     </div>
     <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="questionList" class="list-table" tooltip-effect="dark">
@@ -20,7 +20,7 @@
       <el-table-column label="分值" align="center" prop="value" show-overflow-tooltip />
       <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
       <el-table-column label="答题时间/秒" align="center" prop="time" />
-      <el-table-column fixed="right" align="center" label="操作">
+      <el-table-column v-if="gameStatus!=3" fixed="right" align="center" label="操作">
         <template slot-scope="scope">
           <el-button size="small" type="text" @click="deleteGame(scope.row.id)">删除</el-button>
         </template>
@@ -35,6 +35,12 @@ import createPaper from '../dialog/createPaper';
 export default {
   components: {
     createPaper
+  },
+  props: {
+    gameStatus: {
+      type: String,
+      default: '1'
+    }
   },
   data() {
     return {

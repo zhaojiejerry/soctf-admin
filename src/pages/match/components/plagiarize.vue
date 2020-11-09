@@ -14,6 +14,8 @@
           <el-switch :value="row.result>0" :width="50" :active-value="true" :inactive-value="false" disabled />
         </template>
       </el-table-column>
+      <el-table-column prop="right_flag" align="center" label="正确答案" />
+      <el-table-column prop="user_flag" align="center" label="提交内容" />
       <el-table-column prop="result" align="center" label="分值" />
     </el-table>
     <div class="pager-container mt30">

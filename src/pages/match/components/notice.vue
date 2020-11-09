@@ -58,11 +58,19 @@ export default {
       gameList: []
     };
   },
-  mounted() {
-    this.gameId = this.$route.query.gameId;
-    this.getNoticeListForAdmin();
-    this.getGameInfoListForPage();
+  watch: {
+    $route: {
+      handler(val, oldVal) {
+        if (val.name == 'operationsGame') {
+          this.gameId = this.$route.query.gameId;
+          this.getNoticeListForAdmin();
+          this.getGameInfoListForPage();
+        }
+      },
+      deep: true
+    }
   },
+  mounted() {},
   methods: {
     getGameInfoListForPage() {
       getGameInfoListForPage({

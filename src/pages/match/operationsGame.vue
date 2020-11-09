@@ -66,14 +66,27 @@
         <el-tab-pane label="人员管理" name="2">
           <el-table v-if="ruleForm.gameType != '1'" ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="joiners" class="list-table" tooltip-effect="dark">
             <el-table-column prop="remark" align="center" label="团队名称" />
+            <el-table-column prop="username" align="center" label="用户名" />
             <el-table-column prop="phone" align="center" label="电话号码" />
             <el-table-column prop="email" align="center" label="邮箱" />
             <el-table-column prop="school" align="center" label="学校" />
             <el-table-column prop="company" align="center" label="公司" />
             <el-table-column fixed="right" align="center" label="操作" width="200">
               <template slot-scope="{row}">
-                <el-button v-if="scope.row.teamId!=null&&scope.row.teamId!=''" size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
-                <el-button size="small" type="text" @click="getEndReportList(row)">提交记录</el-button>
+                <el-button v-if="row.teamId!=null&&row.teamId!=''" size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
+                <el-dropdown>
+                  <span class="el-dropdown-link">
+                    <el-button style="margin: 0 5px;" size="small" type="text">提交记录</el-button>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>
+                      <el-button size="small" type="text" @click="getEndReportList(row.usrId)">个人</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button size="small" type="text" @click="getEndReportList(row.teamId)">团队</el-button>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
                 <el-button size="small" type="text" @click="breakGame(row)">禁赛</el-button>
               </template>
             </el-table-column>
@@ -87,7 +100,7 @@
             <el-table-column fixed="right" align="center" label="操作" width="200">
               <template slot-scope="{row}">
                 <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
-                <el-button size="small" type="text" @click="getEndReportList(row)">提交记录</el-button>
+                <el-button size="small" type="text" @click="getEndReportList(row.usrId)">提交记录</el-button>
                 <el-button size="small" type="text" @click="breakGame(row)">禁赛</el-button>
               </template>
             </el-table-column>
@@ -213,10 +226,17 @@ export default {
       type: 0
     };
   },
-  mounted() {
-    this.activeName = '1';
-    this.gameId = this.$route.query.gameId;
-    this.getGameInfoDetail();
+  watch: {
+    $route: {
+      handler(val, oldVal) {
+        if (val.name == 'operationsGame') {
+          this.activeName = '1';
+          this.gameId = this.$route.query.gameId;
+          this.getGameInfoDetail();
+        }
+      },
+      deep: true
+    }
   },
   methods: {
     reviseGame() {
@@ -348,12 +368,11 @@ export default {
           });
         });
     },
-    getEndReportList(row) {
+    getEndReportList(joinerId) {
       var that = this;
-      console.log(row);
       getEndReportList({
         gameId: this.gameId,
-        joinerId: this.ruleForm.gameType == 1 ? row.usrId : row.teamId
+        joinerId: joinerId
       }).then((res) => {
         if (res.success) {
           that.recordList = res.data;

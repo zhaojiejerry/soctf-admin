@@ -44,10 +44,18 @@ export default {
       questionType: ['容器题', '附件题', '选择题']
     };
   },
-  mounted() {
-    this.gameId = this.$route.query.gameId;
-    this.getPaperInfoForGame();
+  watch: {
+    $route: {
+      handler(val, oldVal) {
+        if (val.name == 'operationsGame') {
+          this.gameId = this.$route.query.gameId;
+          this.getPaperInfoForGame();
+        }
+      },
+      deep: true
+    }
   },
+  mounted() {},
   methods: {
     handleCreatePaper() {
       this.dialogTableVisible = true;

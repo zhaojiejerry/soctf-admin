@@ -51,12 +51,20 @@ export default {
       gameType: 1
     };
   },
-  mounted() {
-    this.gameId = this.$route.query.gameId;
-    this.gameType = this.$route.query.gameType;
-    this.getRankingListForTop();
-    this.getRankingListForPage();
+  watch: {
+    $route: {
+      handler(val, oldVal) {
+        if (val.name == 'operationsGame') {
+          this.gameId = this.$route.query.gameId;
+          this.gameType = this.$route.query.gameType;
+          this.getRankingListForTop();
+          this.getRankingListForPage();
+        }
+      },
+      deep: true
+    }
   },
+  mounted() {},
   methods: {
     getRankingListForTop() {
       var that = this;
@@ -77,7 +85,7 @@ export default {
           list.push(item);
         }
         that.handList = list;
-        console.log(list);
+        // console.log(list);
       });
     },
     getRankingListForPage() {

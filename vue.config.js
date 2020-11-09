@@ -29,7 +29,7 @@ module.exports = {
                 }
             },
             '/jsonApi': {
-                target: 'https://soctf.oss-cn-hangzhou.aliyuncs.com/',
+                target: 'https://soctf.oss-cn-hangzhou.aliyuncs.com/home/',
                 changOrigin: true,
                 pathRewrite: {
                     '^/jsonApi': '/'

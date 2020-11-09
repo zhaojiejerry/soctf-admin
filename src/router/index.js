@@ -206,7 +206,7 @@ export const constantRoutes = [{
                     title: '比赛运维管理',
                     icon: 'iconfont icon-home'
                 }
-            },
+            }
         ]
     }
 ]

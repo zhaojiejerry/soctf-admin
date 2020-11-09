@@ -37,11 +37,19 @@ export default {
       gameType: 1
     };
   },
-  mounted() {
-    this.gameId = this.$route.query.gameId;
-    this.gameType = this.$route.query.gameType;
-    this.getCheat();
+  watch: {
+    $route: {
+      handler(val, oldVal) {
+        if (val.name == 'operationsGame') {
+          this.gameId = this.$route.query.gameId;
+          this.gameType = this.$route.query.gameType;
+          this.getCheat();
+        }
+      },
+      deep: true
+    }
   },
+  mounted() {},
   methods: {
     parseTime(time) {
       return parseTime(time);
@@ -55,7 +63,7 @@ export default {
         },
         pageSize: this.cheatSize
       }).then((res) => {
-        console.log(res);
+        // console.log(res);
         that.cheatList = res.data;
         that.tableTotal = res.count;
       });

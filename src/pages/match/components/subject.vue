@@ -55,7 +55,10 @@ export default {
       deep: true
     }
   },
-  mounted() {},
+  mounted() {
+    this.gameId = this.$route.query.gameId;
+    this.getPaperInfoForGame();
+  },
   methods: {
     handleCreatePaper() {
       this.dialogTableVisible = true;

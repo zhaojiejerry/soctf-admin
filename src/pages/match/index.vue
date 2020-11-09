@@ -16,8 +16,8 @@
           </el-form-item>
           <el-form-item label="比赛类型" prop="gameType">
             <el-select v-model="extraParam.gameType" clearable placeholder="请选择比赛类型" @change="handleCurrentChange(1)">
-              <el-option label="个人" value="1" />
-              <el-option label="团队" value="2" />
+              <el-option label="个人" :value="1" />
+              <el-option label="团队" :value="2" />
             </el-select>
           </el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
@@ -50,10 +50,10 @@
               <template slot-scope="scope">
                 <el-button v-if="scope.row.gameStatus!=3&&buttons.indexOf('33')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.gameId)">编辑</el-button>
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('32')!=-1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
-                <el-button v-if="scope.row.gameStatus==3" size="small" type="text" @click="seeDetail(scope.row)">查看详情</el-button>
-                <el-button v-if="buttons.indexOf('38')!=-1&&scope.row.gameStatus!=3" size="small" type="text" @click="seeOperations(scope.row)">运维管理</el-button>
+                <!-- <el-button v-if="scope.row.gameStatus==3" size="small" type="text" @click="seeDetail(scope.row)">查看详情</el-button> -->
+                <el-button v-if="buttons.indexOf('38')!=-1" size="small" type="text" @click="seeOperations(scope.row)">运维管理</el-button>
                 <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('30')!=-1" size="small" type="text" @click="seeLive(scope.row.gameId)">观看比赛</el-button>
-                <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button>
+                <!-- <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -108,7 +108,6 @@ export default {
       gameStatus: ['未开始', '进行中', '已结束'],
       gameType: ['个人', '团队'],
       extraParam: {},
-
       showAchievement: false,
       type: '1',
       showLive: false,

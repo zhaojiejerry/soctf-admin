@@ -70,7 +70,11 @@ export default {
       deep: true
     }
   },
-  mounted() {},
+  mounted() {
+    this.gameId = this.$route.query.gameId;
+    this.getNoticeListForAdmin();
+    this.getGameInfoListForPage();
+  },
   methods: {
     getGameInfoListForPage() {
       getGameInfoListForPage({

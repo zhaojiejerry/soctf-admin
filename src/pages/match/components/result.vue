@@ -64,7 +64,12 @@ export default {
       deep: true
     }
   },
-  mounted() {},
+  mounted() {
+    this.gameId = this.$route.query.gameId;
+    this.gameType = this.$route.query.gameType;
+    this.getRankingListForTop();
+    this.getRankingListForPage();
+  },
   methods: {
     getRankingListForTop() {
       var that = this;

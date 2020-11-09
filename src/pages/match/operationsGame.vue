@@ -5,7 +5,7 @@
         <el-tab-pane label="比赛信息" name="1">
           <div style="margin-bottom: 10px;text-align: right;">
             <el-button v-if="ruleForm.gameStatus==1" size="small" type="primary" @click="startGame">发布比赛</el-button>
-            <el-button size="small" type="primary" @click="sendGameToken">发送通知</el-button>
+            <el-button v-if="ruleForm.gameStatus!=3" size="small" type="primary" @click="sendGameToken">发送通知</el-button>
             <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="endGame">结束比赛</el-button>
             <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="reviseGame">修改成绩</el-button>
             <el-button size="small" type="primary" @click="seeDescription">比赛说明</el-button>
@@ -65,7 +65,7 @@
         </el-tab-pane>
         <el-tab-pane label="人员管理" name="2">
           <el-table v-if="ruleForm.gameType != '1'" ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="joiners" class="list-table" tooltip-effect="dark">
-            <el-table-column prop="remark" align="center" label="团队名称" />
+            <el-table-column prop="teamname" align="center" label="团队名称" />
             <el-table-column prop="username" align="center" label="用户名" />
             <el-table-column prop="phone" align="center" label="电话号码" />
             <el-table-column prop="email" align="center" label="邮箱" />
@@ -73,17 +73,17 @@
             <el-table-column prop="company" align="center" label="公司" />
             <el-table-column fixed="right" align="center" label="操作" width="200">
               <template slot-scope="{row}">
-                <el-button v-if="row.teamId!=null&&row.teamId!=''" size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
+                <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
                 <el-dropdown>
                   <span class="el-dropdown-link">
                     <el-button style="margin: 0 5px;" size="small" type="text">提交记录</el-button>
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>
-                      <el-button size="small" type="text" @click="getEndReportList(row.usrId)">个人</el-button>
+                      <el-button size="small" type="text" @click="getEndReport(row.usrId)">个人</el-button>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-button size="small" type="text" @click="getEndReportList(row.teamId)">团队</el-button>
+                      <el-button size="small" type="text" @click="getEndReport(row.teamId)">团队</el-button>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
@@ -100,7 +100,7 @@
             <el-table-column fixed="right" align="center" label="操作" width="200">
               <template slot-scope="{row}">
                 <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
-                <el-button size="small" type="text" @click="getEndReportList(row.usrId)">提交记录</el-button>
+                <el-button size="small" type="text" @click="getEndReport(row.usrId)">提交记录</el-button>
                 <el-button size="small" type="text" @click="breakGame(row)">禁赛</el-button>
               </template>
             </el-table-column>
@@ -156,6 +156,11 @@
     <operations v-model="showRevise" :type="ruleForm.gameType" :game-id="gameId" />
     <description v-model="showDescription" :game-id="gameId" />
     <el-dialog :visible.sync="showRecord" width="80%" :show-close="false" title="提交记录">
+      <el-select v-model="isRight" style="margin-bottom: 15px;" clearable placeholder="是否正确" @change="getEndReportList">
+        <el-option label="错误" value="0" />
+        <el-option label="正确" value="1" />
+        <!-- <el-option label="全部" value="2" /> -->
+      </el-select>
       <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="recordList" class="list-table" tooltip-effect="dark">
         <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
         <el-table-column align="center" label="提交时间">
@@ -177,14 +182,15 @@
 </template>
 <script>
 import {
-  getGameInfoDetail,
+  // getGameInfoDetail,
   getPaperInfoForGame,
   breakGame,
   getEndReportList,
   endGame,
   startGame,
   rankingInDB,
-  sendGameToken
+  sendGameToken,
+  getUserInfosByGame
 } from '@/api/match';
 import { parseTime } from '@/utils/index';
 import subjectPage from './components/subject';
@@ -223,12 +229,15 @@ export default {
       teamId: '',
       challengeId: '',
       paperList: [],
-      type: 0
+      type: 0,
+      isRight: '',
+      joinerId: ''
     };
   },
   watch: {
     $route: {
       handler(val, oldVal) {
+        console.log(val);
         if (val.name == 'operationsGame') {
           this.activeName = '1';
           this.gameId = this.$route.query.gameId;
@@ -238,7 +247,54 @@ export default {
       deep: true
     }
   },
+  mounted() {
+    this.activeName = '1';
+    this.gameId = this.$route.query.gameId;
+    this.getGameInfoDetail();
+  },
   methods: {
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      console.log(row, column, rowIndex, columnIndex);
+      // if (columnIndex === 0) {
+      //   return {
+      //     rowspan: row.sysUsers.length,
+      //     colspan: 1
+      //   };
+      // }
+      // if (columnIndex === 0) {
+      //   if (rowIndex % 2 === 0) {
+      //   } else {
+      //     return {
+      //       rowspan: 0,
+      //       colspan: 0
+      //     };
+      //   }
+      // }
+    },
+    getGameInfoDetail() {
+      getUserInfosByGame({
+        gameId: this.gameId
+      }).then((res) => {
+        if (res.success) {
+          this.ruleForm = res.data.gameInfo;
+          if (this.ruleForm.gameType == '1') {
+            this.joiners = res.data.users ? res.data.users : [];
+          } else {
+            this.joiners = [];
+            var teamInfos = res.data.teamInfos ? res.data.teamInfos : [];
+            var arr = [];
+            teamInfos.forEach((team) => {
+              team.sysUsers.forEach((user) => {
+                user.teamname = team.teamName;
+                user.teamId = team.teamId;
+                arr.push(user);
+              });
+            });
+            this.joiners = arr;
+          }
+        }
+      });
+    },
     reviseGame() {
       this.showRevise = true;
     },
@@ -368,15 +424,21 @@ export default {
           });
         });
     },
-    getEndReportList(joinerId) {
+    getEndReport(joinerId) {
+      this.joinerId = joinerId;
+      this.showRecord = true;
+      this.isRight = '';
+      this.getEndReportList();
+    },
+    getEndReportList() {
       var that = this;
       getEndReportList({
         gameId: this.gameId,
-        joinerId: joinerId
+        joinerId: this.joinerId,
+        isRight: this.isRight
       }).then((res) => {
         if (res.success) {
           that.recordList = res.data;
-          that.showRecord = true;
         }
       });
     },
@@ -428,17 +490,17 @@ export default {
           that.paperList = res.data.questionBanks;
         }
       });
-    },
-    getGameInfoDetail() {
-      getGameInfoDetail({
-        gameId: this.gameId
-      }).then((res) => {
-        if (res.success) {
-          this.ruleForm = res.data;
-          this.joiners = res.data.joiners;
-        }
-      });
     }
+    // getGameInfoDetail() {
+    //   getGameInfoDetail({
+    //     gameId: this.gameId
+    //   }).then((res) => {
+    //     if (res.success) {
+    //       this.ruleForm = res.data;
+    //       this.joiners = res.data.joiners;
+    //     }
+    //   });
+    // }
   }
 };
 </script>

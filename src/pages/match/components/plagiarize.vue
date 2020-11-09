@@ -49,7 +49,11 @@ export default {
       deep: true
     }
   },
-  mounted() {},
+  mounted() {
+    this.gameId = this.$route.query.gameId;
+    this.gameType = this.$route.query.gameType;
+    this.getCheat();
+  },
   methods: {
     parseTime(time) {
       return parseTime(time);

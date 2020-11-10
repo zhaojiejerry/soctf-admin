@@ -107,16 +107,16 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="题目管理" name="3">
-          <subjectPage :game-status="ruleForm.gameStatus" />
+          <subjectPage :game-status="ruleForm.gameStatus" :active-name="activeName" />
         </el-tab-pane>
         <el-tab-pane label="赛事公告" name="4">
-          <noticePage :game-status="ruleForm.gameStatus" />
+          <noticePage :game-status="ruleForm.gameStatus" :active-name="activeName" />
         </el-tab-pane>
-        <el-tab-pane label="比赛结果" name="5">
-          <resultPage />
+        <el-tab-pane v-if="ruleForm.gameStatus!=1" label="比赛结果" name="5">
+          <resultPage :active-name="activeName" />
         </el-tab-pane>
-        <el-tab-pane label="抄袭记录" name="6">
-          <plagiarizePage />
+        <el-tab-pane v-if="ruleForm.gameStatus!=1" label="抄袭记录" name="6">
+          <plagiarizePage :active-name="activeName" />
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -142,9 +142,9 @@
             {{ scope.row.solved?'已攻克':'未攻克' }}
           </template>
         </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作">
+        <el-table-column v-if="ruleForm.gameStatus==2" fixed="right" align="center" label="操作">
           <template slot-scope="scope">
-            <el-button v-if="!scope.row.solved" size="small" type="text" @click="assist">协助攻克</el-button>
+            <el-button v-if="!scope.row.solved" size="small" type="text" @click="assist(scope.row)">协助攻克</el-button>
           </template>
         </el-table-column>
       </el-table>

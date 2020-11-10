@@ -40,6 +40,10 @@ export default {
     gameStatus: {
       type: String,
       default: '1'
+    },
+    activeName: {
+      type: String,
+      default: '1'
     }
   },
   data() {
@@ -51,14 +55,20 @@ export default {
     };
   },
   watch: {
-    $route: {
-      handler(val, oldVal) {
-        if (val.name == 'operationsGame') {
-          this.gameId = this.$route.query.gameId;
-          this.getPaperInfoForGame();
-        }
-      },
-      deep: true
+    // $route: {
+    //   handler(val, oldVal) {
+    //     if (val.name == 'operationsGame') {
+    //       this.gameId = this.$route.query.gameId;
+    //       this.getPaperInfoForGame();
+    //     }
+    //   },
+    //   deep: true
+    // },
+    activeName(val) {
+      if (val == '3') {
+        this.gameId = this.$route.query.gameId;
+        this.getPaperInfoForGame();
+      }
     }
   },
   mounted() {

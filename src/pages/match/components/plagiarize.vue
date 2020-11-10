@@ -29,6 +29,12 @@
 import { getCheat } from '@/api/match';
 import { parseTime } from '@/utils/index';
 export default {
+  props: {
+    activeName: {
+      type: String,
+      default: '1'
+    }
+  },
   data() {
     return {
       gameId: '',
@@ -40,15 +46,22 @@ export default {
     };
   },
   watch: {
-    $route: {
-      handler(val, oldVal) {
-        if (val.name == 'operationsGame') {
-          this.gameId = this.$route.query.gameId;
-          this.gameType = this.$route.query.gameType;
-          this.getCheat();
-        }
-      },
-      deep: true
+    // $route: {
+    //   handler(val, oldVal) {
+    //     if (val.name == 'operationsGame') {
+    //       this.gameId = this.$route.query.gameId;
+    //       this.gameType = this.$route.query.gameType;
+    //       this.getCheat();
+    //     }
+    //   },
+    //   deep: true
+    // }
+    activeName(val) {
+      if (val == '6') {
+        this.gameId = this.$route.query.gameId;
+        this.gameType = this.$route.query.gameType;
+        this.getCheat();
+      }
     }
   },
   mounted() {

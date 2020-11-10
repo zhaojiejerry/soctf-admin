@@ -43,6 +43,12 @@
 <script>
 import { getRankingListForPage, getRankingListForTop } from '@/api/match';
 export default {
+  props: {
+    activeName: {
+      type: String,
+      default: '1'
+    }
+  },
   data() {
     return {
       questionType: ['容器题', '附件题', '选择题'],
@@ -58,15 +64,22 @@ export default {
     };
   },
   watch: {
-    $route: {
-      handler(val, oldVal) {
-        if (val.name == 'operationsGame') {
-          this.gameId = this.$route.query.gameId;
-          this.gameType = this.$route.query.gameType;
-          this.getRankingListForTop();
-        }
-      },
-      deep: true
+    // $route: {
+    //   handler(val, oldVal) {
+    //     if (val.name == 'operationsGame') {
+    //       this.gameId = this.$route.query.gameId;
+    //       this.gameType = this.$route.query.gameType;
+    //       this.getRankingListForTop();
+    //     }
+    //   },
+    //   deep: true
+    // },
+    activeName(val) {
+      if (val == '5') {
+        this.gameId = this.$route.query.gameId;
+        this.gameType = this.$route.query.gameType;
+        this.getRankingListForTop();
+      }
     }
   },
   mounted() {

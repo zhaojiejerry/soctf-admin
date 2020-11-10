@@ -11,6 +11,9 @@
             <el-option label="团队" value="2" />
           </el-select>
         </el-form-item>
+        <el-form-item label="是否公布成绩" prop="confidential">
+          <el-switch v-model="ruleForm.confidential" :width="50" :active-value="1" :inactive-value="0" />
+        </el-form-item>
         <el-form-item label="参赛者">
           <div class="itemwidth el-input" @click="getpsn">
             <div class="box">
@@ -134,7 +137,8 @@ export default {
         organizer: '',
         remark: '',
         scoreRemark: '',
-        startTime: ''
+        startTime: '',
+        confidential: 0
       },
       rules: {
         gameName: [
@@ -151,9 +155,9 @@ export default {
       pageSize: 10,
       currentPage: 1,
       extraParam: {
-				userType: '1',
-				usrStatus: '1'
-			},
+        userType: '1',
+        usrStatus: '1'
+      },
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() <= Date.now() - 8.64e7; // 选当前时间之后的时间
@@ -165,7 +169,7 @@ export default {
     value(val) {
       if (val) {
         if (!this.addSign) {
-					this.getGameInfoDetail();
+          this.getGameInfoDetail();
         } else {
           this.joiners = [];
           this.remark = [];
@@ -187,32 +191,33 @@ export default {
             organizer: '',
             remark: '',
             scoreRemark: '',
-            startTime: ''
+            startTime: '',
+            confidential: 0
           };
         }
       }
     }
   },
   mounted() {
-		this.$nextTick(() => {
-			// this.$refs.multipleTable.clearSelection();
-			this.getUserInfoList();
-		})
+    this.$nextTick(() => {
+      // this.$refs.multipleTable.clearSelection();
+      this.getUserInfoList();
+    });
   },
   methods: {
     getpsn() {
-			this.dialogTableVisible = true;
-			this.$nextTick(() => {
-				this.$refs.multipleTable.clearSelection();
-				this.joiners.forEach((a) => {
-					this.tableData.forEach((b) => {
-						if (a.usrId == b.usrId) {
-							console.log(b)
-							this.$refs.multipleTable.toggleRowSelection(b, true);
-						}
-					});
-				});
-			})
+      this.dialogTableVisible = true;
+      this.$nextTick(() => {
+        this.$refs.multipleTable.clearSelection();
+        this.joiners.forEach((a) => {
+          this.tableData.forEach((b) => {
+            if (a.usrId == b.usrId) {
+              console.log(b);
+              this.$refs.multipleTable.toggleRowSelection(b, true);
+            }
+          });
+        });
+      });
     },
     handleClose(item, index) {
       this.joiners.splice(index, 1);
@@ -264,12 +269,12 @@ export default {
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-					this.tableData = res.data;
-					console.log(this.joiners)
+          this.tableData = res.data;
+          console.log(this.joiners);
           this.joiners.forEach((a) => {
             this.tableData.forEach((b) => {
               if (a.usrId == b.usrId) {
-								console.log(b)
+                console.log(b);
                 this.$refs.multipleTable.toggleRowSelection(b, true);
               }
             });
@@ -317,7 +322,7 @@ export default {
     },
     handleAvatarSuccess(res, file) {
       if (res.success) {
-        this.ruleForm.mainPic = URL.createObjectURL(file.raw);
+        this.ruleForm.mainPic = res.message;
       } else {
         this.ruleForm.mainPic = '';
         this.$message.error(res.message);
@@ -325,7 +330,7 @@ export default {
     },
     handleiconSuccess(res, file) {
       if (res.success) {
-        this.ruleForm.iconUrl = URL.createObjectURL(file.raw);
+        this.ruleForm.iconUrl = res.message;
       } else {
         this.ruleForm.iconUrl = '';
         this.$message.error(res.message);
@@ -410,7 +415,8 @@ export default {
                   organizer: this.ruleForm.organizer,
                   remark: this.ruleForm.remark,
                   scoreRemark: this.ruleForm.scoreRemark,
-                  startTime: this.ruleForm.date[0]
+                  startTime: this.ruleForm.date[0],
+                  confidential: this.ruleForm.confidential
                 }).then((res) => {
                   if (res.success) {
                     this.$message({
@@ -445,7 +451,8 @@ export default {
               organizer: this.ruleForm.organizer,
               remark: this.ruleForm.remark,
               scoreRemark: this.ruleForm.scoreRemark,
-              startTime: this.ruleForm.date[0]
+              startTime: this.ruleForm.date[0],
+              confidential: this.ruleForm.confidential
             }).then((res) => {
               if (res.success) {
                 this.$message({

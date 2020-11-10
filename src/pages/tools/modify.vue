@@ -111,7 +111,7 @@ export default {
   methods: {
     handleAvatarSuccess(res, file) {
       if (res.success) {
-        this.mainPic = URL.createObjectURL(file.raw);
+        this.mainPic = res.message;
       } else {
         this.mainPic = '';
         this.$message.error(res.message);

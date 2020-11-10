@@ -88,9 +88,11 @@ export default {
     }
   },
   mounted() {
-    this.gameId = this.$route.query.gameId;
-    this.getNoticeListForAdmin();
-    this.getGameInfoListForPage();
+    if (this.activeName == '4') {
+      this.gameId = this.$route.query.gameId;
+      this.getNoticeListForAdmin();
+      this.getGameInfoListForPage();
+    }
   },
   methods: {
     changeEnable(row) {

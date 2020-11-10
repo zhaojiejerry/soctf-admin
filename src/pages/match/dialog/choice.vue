@@ -1,5 +1,23 @@
 <template>
   <div>
+    <el-form ref="extraParam" inline>
+      <el-form-item label="名称" prop="questionName">
+        <el-input v-model="extraParam.questionName" clearable placeholder="请输入题目名称" />
+      </el-form-item>
+      <el-form-item label="类别" prop="category">
+        <el-select v-model="extraParam.category" clearable placeholder="请选择类别">
+          <el-option v-for="(item,index) in subject" :key="index" :label="item.name" :value="item.name" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="难易程度" prop="difficultyLevel">
+        <el-select v-model="extraParam.difficultyLevel" clearable placeholder="请选择难易程度">
+          <el-option label="简单" value="1" />
+          <el-option label="一般" value="2" />
+          <el-option label="困难" value="3" />
+        </el-select>
+      </el-form-item>
+      <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
+    </el-form>
     <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
       <el-table-column type="selection" :selectable="checkSelectable" align="center" width="55" />
       <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
@@ -44,6 +62,12 @@ export default {
       default: () => {
         return [];
       }
+    },
+    subject: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   data() {
@@ -54,7 +78,12 @@ export default {
       pageSize: 10,
       currentPage: 1,
       choiceType: ['单选', '多选'],
-      questions: []
+      questions: [],
+      extraParam: {
+        questionName: '',
+        category: '',
+        difficultyLevel: ''
+      }
     };
   },
   mounted() {

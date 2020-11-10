@@ -12,7 +12,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否公布成绩" prop="confidential">
-          <el-switch v-model="ruleForm.confidential" :width="50" :active-value="1" :inactive-value="0" />
+          <el-switch v-model="ruleForm.confidential" :width="50" :active-value="0" :inactive-value="1" />
         </el-form-item>
         <el-form-item label="参赛者">
           <div class="itemwidth el-input" @click="getpsn">

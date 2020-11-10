@@ -1,15 +1,15 @@
 <template>
   <div>
     <el-dialog :visible.sync="value" width="70%" :show-close="false" title="生成试卷">
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activeName" style="margin-top: -20px;" @tab-click="handleClick">
         <el-tab-pane label="容器题" name="first">
-          <docker ref="docker" :question-list="questionList" />
+          <docker ref="docker" :subject="subject" :question-list="questionList" />
         </el-tab-pane>
         <el-tab-pane label="附件题" name="second">
-          <file ref="file" :question-list="questionList" />
+          <file ref="file" :subject="subject" :question-list="questionList" />
         </el-tab-pane>
         <el-tab-pane label="选择题" name="third">
-          <choice ref="choice" :question-list="questionList" />
+          <choice ref="choice" :subject="subject" :question-list="questionList" />
         </el-tab-pane>
       </el-tabs>
       <div slot="footer" class="dialog-footer">
@@ -24,6 +24,7 @@ import { createPaperInfo } from '@/api/match';
 import choice from './choice';
 import docker from './docker';
 import file from './file';
+import { getjson } from '@/api/common';
 export default {
   components: { choice, docker, file },
   props: {
@@ -45,7 +46,8 @@ export default {
   data() {
     return {
       activeName: 'first',
-      questions: []
+      questions: [],
+      subject: []
     };
   },
   watch: {
@@ -60,8 +62,15 @@ export default {
       }
     }
   },
-  mounted() {},
+  mounted() {
+    this.getjson();
+  },
   methods: {
+    getjson() {
+      getjson('/home/ctf.json').then((res) => {
+        this.subject = res.subject;
+      });
+    },
     handleClick(tab, event) {
       // console.log(tab, event)
     },

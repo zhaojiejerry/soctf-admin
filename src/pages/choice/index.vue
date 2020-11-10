@@ -9,18 +9,24 @@
           </div>
         </div>
         <div class="user-child-list">
-          <!-- <el-form ref="extraParam" inline>
-            <el-form-item label="名称" prop="gameStatus">
-              <el-input v-model="extraParam.name" placeholder="请输入名称" />
+          <el-form ref="extraParam" inline>
+            <el-form-item label="名称" prop="name">
+              <el-input v-model="extraParam.questionName" clearable placeholder="请输入题目名称" />
             </el-form-item>
-            <el-form-item label="题型" prop="gameType">
-              <el-select v-model="extraParam.choiceType" clearable placeholder="请选择比赛类型" @change="handleCurrentChange(1)">
-                <el-option label="单选" value="1" />
-                <el-option label="多选" value="2" />
+            <el-form-item label="类别" prop="category">
+              <el-select v-model="extraParam.category" clearable placeholder="请选择类别">
+                <el-option v-for="(item,index) in subject" :key="index" :label="item.name" :value="item.name" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="难易程度" prop="difficultyLevel">
+              <el-select v-model="extraParam.difficultyLevel" clearable placeholder="请选择难易程度">
+                <el-option label="简单" value="1" />
+                <el-option label="一般" value="2" />
+                <el-option label="困难" value="3" />
               </el-select>
             </el-form-item>
             <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
-          </el-form> -->
+          </el-form>
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
             <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
             <el-table-column prop="choiceDescription" align="center" label="文本描述" show-overflow-tooltip />
@@ -54,7 +60,7 @@
         </div>
       </el-card>
     </div>
-    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getChoiceListForAdmin" />
+    <modify v-model="show" :add-sign="addSign" :main-id="mainId" :subject="subject" @getList="getChoiceListForAdmin" />
     <answerDetail v-model="showDetail" :main-id="mainId" />
   </div>
 </template>
@@ -63,6 +69,7 @@ import { getChoiceListForAdmin, deleteChoiceQuestion } from '@/api/choice';
 import { parseTime } from '@/utils/index';
 import modify from './modify';
 import answerDetail from './answerDetail';
+import { getjson } from '@/api/common';
 export default {
   components: { modify, answerDetail },
   data() {
@@ -76,7 +83,8 @@ export default {
       currentPage: 1,
       choiceType: ['单选', '多选'],
       showDetail: false,
-      extraParam: {}
+      extraParam: {},
+      subject: []
     };
   },
   computed: {
@@ -86,8 +94,14 @@ export default {
   },
   mounted() {
     this.getChoiceListForAdmin();
+    this.getjson();
   },
   methods: {
+    getjson() {
+      getjson('/home/ctf.json').then((res) => {
+        this.subject = res.subject;
+      });
+    },
     answerDetail(id) {
       this.showDetail = true;
       this.mainId = id;

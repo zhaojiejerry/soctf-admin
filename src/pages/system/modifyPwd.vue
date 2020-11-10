@@ -25,16 +25,6 @@
               <div slot="prefix">
                 <span class="el-icon-mobile-phone icon" />
               </div>
-              <div slot="suffix" class="sentPhoto" @click="sendCode">
-                {{ codeValue }}
-              </div>
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="smsCode">
-            <el-input v-model="ruleForm.smsCode" class="input-item" placeholder="请输入短信验证码">
-              <div slot="prefix" style="text-decoration: underline;">
-                123
-              </div>
             </el-input>
           </el-form-item>
           <el-form-item prop="verifyCode">
@@ -44,6 +34,16 @@
               </div>
               <div slot="suffix">
                 <img :src="chartCode" style=" height: 37px;width: 87px; margin-top: 3px;" alt="" @click="getChartCode">
+              </div>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="smsCode">
+            <el-input v-model="ruleForm.smsCode" class="input-item" placeholder="请输入短信验证码">
+              <div slot="prefix" style="text-decoration: underline;">
+                123
+              </div>
+              <div slot="suffix" class="sentPhoto" @click="sendCode">
+                {{ codeValue }}
               </div>
             </el-input>
           </el-form-item>
@@ -155,13 +155,22 @@ export default {
         });
         return;
       }
+      if (!this.ruleForm.verifyCode) {
+        this.$message({
+          showClose: true,
+          message: '请输入验证码',
+          type: 'error'
+        });
+        return;
+      }
       if (this.codeValue != '发送验证码') {
         return;
       }
       this.codeValue = '正在发送...';
       getMobileCode({
         bizTyp: 'modifyPwd',
-        phoneNumber: this.ruleForm.phoneNumber
+        phoneNumber: this.ruleForm.phoneNumber,
+        verifyCode: this.ruleForm.verifyCode
       }).then((res) => {
         if (res.success) {
           that.codeInter = setInterval(() => {

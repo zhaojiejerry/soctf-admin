@@ -9,6 +9,24 @@
           </div>
         </div>
         <div class="user-child-list">
+          <el-form ref="extraParam" inline>
+            <el-form-item label="名称" prop="name">
+              <el-input v-model="extraParam.name" clearable placeholder="请输入题目名称" />
+            </el-form-item>
+            <el-form-item label="类别" prop="category">
+              <el-select v-model="extraParam.category" clearable placeholder="请选择类别">
+                <el-option v-for="(item,index) in subject" :key="index" :label="item.name" :value="item.name" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="难易程度" prop="difficultyLevel">
+              <el-select v-model="extraParam.difficultyLevel" clearable placeholder="请选择难易程度">
+                <el-option label="简单" value="1" />
+                <el-option label="一般" value="2" />
+                <el-option label="困难" value="3" />
+              </el-select>
+            </el-form-item>
+            <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
+          </el-form>
           <el-table ref="subAccountListTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
             <el-table-column prop="name" align="center" label="题目名称" show-overflow-tooltip />
             <el-table-column prop="questionDescribe" align="center" label="文本描述" show-overflow-tooltip />
@@ -42,7 +60,7 @@
         </div>
       </el-card>
     </div>
-    <modify v-model="show" :add-sign="addSign" :main-id="mainId" @getList="getFileQuestion" />
+    <modify v-model="show" :add-sign="addSign" :main-id="mainId" :subject="subject" @getList="getFileQuestion" />
     <answerDetail v-model="showDetail" :main-id="mainId" />
   </div>
 </template>
@@ -51,6 +69,7 @@ import { getFileQuestion, delFileQuestion } from '@/api/file';
 import { parseTime } from '@/utils/index';
 import modify from './modify';
 import answerDetail from './answerDetail';
+import { getjson } from '@/api/common';
 export default {
   components: { modify, answerDetail },
   data() {
@@ -63,7 +82,13 @@ export default {
       pageSize: 10,
       currentPage: 1,
       questionType: ['容器', '附件', '选择'],
-      showDetail: false
+      showDetail: false,
+      extraParam: {
+        name: '',
+        category: '',
+        difficultyLevel: ''
+      },
+      subject: []
     };
   },
   computed: {
@@ -73,8 +98,14 @@ export default {
   },
   mounted() {
     this.getFileQuestion();
+    this.getjson();
   },
   methods: {
+    getjson() {
+      getjson('/home/ctf.json').then((res) => {
+        this.subject = res.subject;
+      });
+    },
     answerDetail(id) {
       this.showDetail = true;
       this.mainId = id;
@@ -126,10 +157,10 @@ export default {
     },
     getFileQuestion() {
       getFileQuestion({
-        category: '',
-        difficultyLevel: '',
+        category: this.extraParam.category,
+        difficultyLevel: this.extraParam.difficultyLevel,
         labs: '',
-        name: '',
+        name: this.extraParam.name,
         pageNo: this.currentPage,
         pageSize: this.pageSize,
         userId: ''

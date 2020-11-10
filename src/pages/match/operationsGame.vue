@@ -7,7 +7,7 @@
         <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="endGame">结束比赛</el-button>
         <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="reviseGame">修改成绩</el-button>
         <el-button size="small" type="primary" @click="seeDescription">比赛说明</el-button>
-        <el-button v-if="ruleForm.confidential==0&&ruleForm.gameStatus==2" size="small" type="primary" @click="releaseScore">发布成绩</el-button>
+        <el-button v-if="ruleForm.confidential==1&&ruleForm.gameStatus==2" size="small" type="primary" @click="releaseScore">发布成绩</el-button>
       </div>
       <el-tabs v-model="activeName">
         <el-tab-pane label="比赛信息" name="1">

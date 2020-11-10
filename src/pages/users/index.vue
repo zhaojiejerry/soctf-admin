@@ -58,9 +58,22 @@
               <template slot-scope="scope">
                 <el-button v-if="buttons.indexOf('24')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
                 <el-button v-if="buttons.indexOf('23')!=-1" size="small" type="text" @click="handleDelete(scope.row.usrId)">删除</el-button>
-                <el-button v-if="buttons.indexOf('70')!=-1&&scope.row.userTyp==2" size="small" type="text" @click="handleRole(scope.row)">关联角色</el-button>
-                <el-button v-if="buttons.indexOf('71')!=-1" size="small" type="text" @click="handleDetails(scope.row)">用户详情</el-button>
-                <el-button v-if="buttons.indexOf('26')!=-1" size="small" type="text" @click="handleReward(scope.row)">奖励</el-button>
+                <el-dropdown>
+                  <span class="el-dropdown-link">
+                    <el-button style="margin-left:7px" size="small" type="text">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>
+                      <el-button v-if="buttons.indexOf('70')!=-1&&scope.row.userTyp==2" size="small" type="text" @click="handleRole(scope.row)">关联角色</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="buttons.indexOf('71')!=-1" size="small" type="text" @click="handleDetails(scope.row)">用户详情</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-button v-if="buttons.indexOf('26')!=-1" size="small" type="text" @click="handleReward(scope.row)">奖励</el-button>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
               </template>
             </el-table-column>
           </el-table>
@@ -104,12 +117,17 @@
   </div>
 </template>
 <script>
-import { getUserInfoList, deleteUser, linkUserRole, addScoreToUser } from '@/api/user'
-import { getRoleInfoList } from '@/api/role'
-import { parseTime } from '@/utils/index'
-import modify from './modify'
-import { copyObj } from '@/utils/index'
-import detailsPage from './details'
+import {
+  getUserInfoList,
+  deleteUser,
+  linkUserRole,
+  addScoreToUser
+} from '@/api/user';
+import { getRoleInfoList } from '@/api/role';
+import { parseTime } from '@/utils/index';
+import modify from './modify';
+import { copyObj } from '@/utils/index';
+import detailsPage from './details';
 export default {
   components: { modify, detailsPage },
   data() {
@@ -125,74 +143,74 @@ export default {
       roleInfoList: [],
       showRoleInfo: false,
       usrId: '',
-			multipleSelection: [],
-			showDetails: false,
-			extraParam: {},
-			gender: ['男', '女'],
-			showReward: false,
-			reward: {
-				'goldCoin': 0,
-				'score': 0
-			}
-    }
-	},
-	computed: {
+      multipleSelection: [],
+      showDetails: false,
+      extraParam: {},
+      gender: ['男', '女'],
+      showReward: false,
+      reward: {
+        goldCoin: 0,
+        score: 0
+      }
+    };
+  },
+  computed: {
     buttons() {
-      return this.$store.state.buttons
+      return this.$store.state.buttons;
     }
   },
   mounted() {
-    this.getUserInfoList()
-		this.getRoleInfoList()
+    this.getUserInfoList();
+    this.getRoleInfoList();
   },
   methods: {
-		handleReward(row) {
-			this.showReward = true
-			this.ruleForm = copyObj(row)
-			this.reward = {
-				'goldCoin': 0,
-				'score': 0
-			}
-		},
-		addScoreToUser() {
-			var data = {
-				'goldCoin': this.reward.goldCoin,
-				'score': this.reward.score,
-				'userId': this.ruleForm.usrId
-			}
-			addScoreToUser(data).then((res) => {
-				if (res.success) {
-					this.$message({
-						type: 'success',
-						message: '奖励成功'
-					})
-					this.showReward = false
-				} else {
-					this.$message({
-						type: 'warning',
-						message: res.message
-					})
-				}
-			})
-		},
-		handleDetails(row) {
-			this.showDetails = true
-			this.ruleForm = copyObj(row)
-			this.ruleForm.password = ''
-		},
+    handleReward(row) {
+      this.showReward = true;
+      this.ruleForm = copyObj(row);
+      this.reward = {
+        goldCoin: 0,
+        score: 0
+      };
+    },
+    addScoreToUser() {
+      var data = {
+        goldCoin: this.reward.goldCoin,
+        score: this.reward.score,
+        userId: this.ruleForm.usrId
+      };
+      addScoreToUser(data).then((res) => {
+        if (res.success) {
+          this.$message({
+            type: 'success',
+            message: '奖励成功'
+          });
+          this.showReward = false;
+        } else {
+          this.$message({
+            type: 'warning',
+            message: res.message
+          });
+        }
+      });
+    },
+    handleDetails(row) {
+      this.showDetails = true;
+      this.ruleForm = copyObj(row);
+      this.ruleForm.password = '';
+    },
     parseTime(time) {
-      return parseTime(time)
+      return parseTime(time);
     },
     getRoleInfoList() {
       getRoleInfoList().then((res) => {
         if (res.success) {
-          this.roleInfoList = res.data
+          this.roleInfoList = res.data;
         }
-      })
+      });
     },
     addNew() {
-      this.show = true
-      this.addSign = true
+      this.show = true;
+      this.addSign = true;
       this.ruleForm = {
         address: '',
         area: [],
@@ -223,38 +241,40 @@ export default {
         usrOrganization: '',
         usrStatus: '',
         usrSuper: ''
-      }
+      };
     },
     handleEdit(row) {
-      this.show = true
-			this.ruleForm = copyObj(row)
-			this.ruleForm.area = this.ruleForm.area ? this.ruleForm.area.split('/') : []
-      this.addSign = false
+      this.show = true;
+      this.ruleForm = copyObj(row);
+      this.ruleForm.area = this.ruleForm.area
+        ? this.ruleForm.area.split('/')
+        : [];
+      this.addSign = false;
     },
     handleSelectionChange(val) {
-      this.multipleSelection = val
+      this.multipleSelection = val;
     },
     handleRole(row) {
-      this.showRoleInfo = true
-      this.usrId = row.usrId
+      this.showRoleInfo = true;
+      this.usrId = row.usrId;
       this.$nextTick(() => {
-        this.$refs.multipleTable.clearSelection()
+        this.$refs.multipleTable.clearSelection();
         if (row.roleIds) {
           row.roleIds.forEach((a) => {
             this.roleInfoList.forEach((b) => {
               if (a == b.roleId) {
-                this.$refs.multipleTable.toggleRowSelection(b, true)
+                this.$refs.multipleTable.toggleRowSelection(b, true);
               }
-            })
-          })
+            });
+          });
         }
-      })
+      });
     },
     onSubmit() {
-      var roleIds = []
+      var roleIds = [];
       this.multipleSelection.forEach((element) => {
-        roleIds.push(element.roleId)
-      })
+        roleIds.push(element.roleId);
+      });
       linkUserRole({
         usrId: this.usrId,
         roleIds: roleIds
@@ -263,16 +283,16 @@ export default {
           this.$message({
             type: 'success',
             message: '角色关联成功'
-          })
-          this.showRoleInfo = false
-          this.getUserInfoList()
+          });
+          this.showRoleInfo = false;
+          this.getUserInfoList();
         } else {
           this.$message({
             type: 'warning',
             message: res.message
-          })
+          });
         }
-      })
+      });
     },
     handleDelete(id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -288,52 +308,52 @@ export default {
               this.$message({
                 type: 'success',
                 message: '删除成功'
-              })
-              this.currentPage = 1
-              this.getUserInfoList()
+              });
+              this.currentPage = 1;
+              this.getUserInfoList();
             } else {
               this.$message({
                 type: 'warning',
                 message: res.message
-              })
+              });
             }
-          })
+          });
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          })
-        })
+          });
+        });
     },
     getUserInfoList() {
-			var extraParam = {}
-			for (var key in this.extraParam) {
-				if (this.extraParam[key] != '') {
-					extraParam[key] = this.extraParam[key]
-				}
-			}
+      var extraParam = {};
+      for (var key in this.extraParam) {
+        if (this.extraParam[key] != '') {
+          extraParam[key] = this.extraParam[key];
+        }
+      }
       getUserInfoList({
         currentPage: this.currentPage,
         extraParam: extraParam,
         pageSize: this.pageSize
       }).then((res) => {
         if (res.success) {
-          this.tableList = res.data
-          this.tableTotal = res.count
+          this.tableList = res.data;
+          this.tableTotal = res.count;
         }
-      })
+      });
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getUserInfoList()
+      this.pageSize = val;
+      this.getUserInfoList();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getUserInfoList()
+      this.currentPage = val;
+      this.getUserInfoList();
     }
   }
-}
+};
 </script>
 <style  scoped>
 .mt30 {

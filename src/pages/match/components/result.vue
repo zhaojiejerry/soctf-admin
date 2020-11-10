@@ -1,5 +1,14 @@
 <template>
   <div>
+    <!-- <div style="float: right;">
+      <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">导出</el-button>
+    </div>
+    <el-form ref="extraParam" inline>
+      <el-form-item prop="gameStatus">
+        <el-input v-model="name" clearable placeholder="请输入用户名" />
+      </el-form-item>
+      <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
+    </el-form> -->
     <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="rankingList" class="list-table" tooltip-effect="dark">
       <el-table-column align="center" label="排行">
         <template slot-scope="scope">
@@ -60,7 +69,8 @@ export default {
       rankingList: [],
       gameType: 1,
       questionIds: '',
-      questionId: []
+      questionId: [],
+      name: ''
     };
   },
   watch: {
@@ -83,9 +93,11 @@ export default {
     }
   },
   mounted() {
-    this.gameId = this.$route.query.gameId;
-    this.gameType = this.$route.query.gameType;
-    this.getRankingListForTop();
+    if (this.activeName == '5') {
+      this.gameId = this.$route.query.gameId;
+      this.gameType = this.$route.query.gameType;
+      this.getRankingListForTop();
+    }
   },
   methods: {
     getIndex(id) {

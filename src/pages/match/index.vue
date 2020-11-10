@@ -9,6 +9,9 @@
           </div>
         </div>
         <el-form ref="ruleForm" inline>
+          <el-form-item label="赛事名称" prop="gameName">
+            <el-input v-model="extraParam.gameName" clearable placeholder="请输入赛事名称" />
+          </el-form-item>
           <el-form-item label="赛事状态" prop="gameStatus">
             <el-select v-model="extraParam.gameStatus" clearable placeholder="请选择赛事状态" @change="handleCurrentChange(1)">
               <el-option v-for="(item, index) in gameStatus" :key="index" :label="item" :value="index+1" />

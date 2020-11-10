@@ -65,7 +65,6 @@ import {
   addChoiceQuestion,
   getOneChoiceQuestion
 } from '@/api/choice';
-import { getjson } from '@/api/common';
 export default {
   components: {},
   props: {
@@ -80,6 +79,12 @@ export default {
     mainId: {
       type: String,
       default: ''
+    },
+    subject: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   data() {
@@ -145,7 +150,6 @@ export default {
         ]
       },
       fileList: [],
-      subject: [],
       optionVos: []
     };
   },
@@ -182,15 +186,7 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getjson();
-  },
   methods: {
-    getjson() {
-      getjson('/home/ctf.json').then((res) => {
-        this.subject = res.subject;
-      });
-    },
     plus() {
       this.optionVos.push({
         optionCode: String.fromCharCode(64 + this.optionVos.length + 1),

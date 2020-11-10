@@ -59,7 +59,6 @@ import {
   addFileQuestion,
   getFileQuestionById
 } from '@/api/file';
-import { getjson } from '@/api/common';
 export default {
   components: {},
   props: {
@@ -74,6 +73,12 @@ export default {
     mainId: {
       type: String,
       default: ''
+    },
+    subject: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   data() {
@@ -125,7 +130,6 @@ export default {
         ]
       },
       label: [],
-      subject: [],
       fileList: []
     };
   },
@@ -155,9 +159,7 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getjson();
-  },
+  mounted() {},
   methods: {
     handleUrl(response, file, fileList) {
       console.log(response, file, fileList);
@@ -174,11 +176,6 @@ export default {
       console.log(file, fileList);
       this.fileList = [];
       this.ruleForm.Url = '';
-    },
-    getjson() {
-      getjson('/home/ctf.json').then((res) => {
-        this.subject = res.subject;
-      });
     },
     getFileQuestionById() {
       getFileQuestionById({

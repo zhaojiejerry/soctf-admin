@@ -56,7 +56,6 @@ import {
   addDockerQuestion,
   getDockerQuestionById
 } from '@/api/docker';
-import { getjson } from '@/api/common';
 export default {
   components: {},
   props: {
@@ -71,6 +70,12 @@ export default {
     mainId: {
       type: String,
       default: ''
+    },
+    subject: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   data() {
@@ -127,8 +132,7 @@ export default {
           }
         ]
       },
-      fileList: [],
-      subject: []
+      fileList: []
     };
   },
   watch: {
@@ -158,15 +162,8 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getjson();
-  },
+  mounted() {},
   methods: {
-    getjson() {
-      getjson('/home/ctf.json').then((res) => {
-        this.subject = res.subject;
-      });
-    },
     getDockerQuestionById() {
       getDockerQuestionById({
         id: this.mainId

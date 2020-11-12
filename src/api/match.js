@@ -226,3 +226,13 @@ export function getEndReportList(data) {
         params: data
     })
 }
+
+// 排行榜导出
+export function exportRankingList(data) {
+    return axios({
+        url: '/game/exportRankingList',
+        method: 'get',
+        responseType: 'blob',
+        params: data
+    })
+}

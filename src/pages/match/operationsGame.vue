@@ -3,13 +3,13 @@
     <el-card class="box-card" style="position: relative;">
       <div style="position: absolute;right: 20px;z-index: 999;">
         <el-button v-if="ruleForm.gameStatus==1" size="small" type="primary" @click="startGame">发布比赛</el-button>
-        <el-button v-if="ruleForm.gameStatus!=3" size="small" type="primary" @click="sendGameToken">发送通知</el-button>
+        <!-- <el-button v-if="ruleForm.gameStatus!=3" size="small" type="primary" @click="sendGameToken">发送通知</el-button> -->
         <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="endGame">结束比赛</el-button>
         <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="reviseGame">修改成绩</el-button>
         <el-button size="small" type="primary" @click="seeDescription">比赛说明</el-button>
         <el-button v-if="ruleForm.confidential==1&&ruleForm.gameStatus==2" size="small" type="primary" @click="releaseScore">发布成绩</el-button>
       </div>
-      <el-tabs v-model="activeName">
+      <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="比赛信息" name="1">
           <el-form ref="ruleForm" :model="ruleForm" label-width="150px" class="demo-ruleForm">
             <el-row :gutter="20">
@@ -21,6 +21,11 @@
               <el-col :span="8">
                 <el-form-item label="比赛类型:" prop="gameType">
                   {{ ruleForm.gameType == "1" ? "个人" : "团队" }}
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="赛事密钥:" prop="gameKey">
+                  {{ ruleForm.gameKey }}
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -71,7 +76,7 @@
             <el-table-column prop="email" align="center" label="邮箱" />
             <el-table-column prop="school" align="center" label="学校" />
             <el-table-column prop="company" align="center" label="公司" />
-            <el-table-column fixed="right" align="center" label="操作">
+            <el-table-column v-if="ruleForm.gameStatus==2" align="center" label="操作">
               <template slot-scope="{row}">
                 <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
                 <el-dropdown>
@@ -97,7 +102,7 @@
             <el-table-column prop="email" align="center" label="邮箱" />
             <el-table-column prop="school" align="center" label="学校" />
             <el-table-column prop="company" align="center" label="公司" />
-            <el-table-column fixed="right" align="center" label="操作">
+            <el-table-column v-if="ruleForm.gameStatus==2" align="center" label="操作">
               <template slot-scope="{row}">
                 <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
                 <el-button size="small" type="text" @click="getEndReport(row.usrId)">提交记录</el-button>
@@ -113,7 +118,7 @@
           <noticePage :game-status="ruleForm.gameStatus" :active-name="activeName" />
         </el-tab-pane>
         <el-tab-pane v-if="ruleForm.gameStatus!=1" label="比赛结果" name="5">
-          <resultPage :active-name="activeName" />
+          <resultPage :active-name="activeName" :game-status="ruleForm.gameStatus" :name="ruleForm.gameName" />
         </el-tab-pane>
         <el-tab-pane v-if="ruleForm.gameStatus!=1" label="抄袭记录" name="6">
           <plagiarizePage :active-name="activeName" />
@@ -253,23 +258,11 @@ export default {
     this.getGameInfoDetail();
   },
   methods: {
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      console.log(row, column, rowIndex, columnIndex);
-      // if (columnIndex === 0) {
-      //   return {
-      //     rowspan: row.sysUsers.length,
-      //     colspan: 1
-      //   };
-      // }
-      // if (columnIndex === 0) {
-      //   if (rowIndex % 2 === 0) {
-      //   } else {
-      //     return {
-      //       rowspan: 0,
-      //       colspan: 0
-      //     };
-      //   }
-      // }
+    handleClick(tab, event) {
+      console.log(tab, event);
+      if (this.activeName == '2') {
+        this.getGameInfoDetail();
+      }
     },
     getGameInfoDetail() {
       getUserInfosByGame({
@@ -510,5 +503,10 @@ export default {
 }
 .pager-container {
   text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 </style>

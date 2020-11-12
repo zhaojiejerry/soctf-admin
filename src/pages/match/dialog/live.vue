@@ -45,14 +45,14 @@
                         <span v-else>{{ scope.row.rowNum }}</span>
                       </div>
                       <div class="headimg">
-                        <img :src="scope.row.portrait==null?'@/assets/images/avater.png':scope.row.portrait" alt="">
+                        <img :src="type==1?(scope.row.portrait==null?'@/assets/images/avater.png':scope.row.portrait):scope.row.team_portrait" alt="">
                       </div>
-                      <span class="name">{{ scope.row.userName }}</span>
+                      <span class="name">{{ type==1?scope.row.userName:scope.row.team_name }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column align="right" show-overflow-tooltip>
                     <template slot-scope="scope">
-                      <span>{{ parseTime(scope.row.upd_time) }}</span>
+                      <span>{{ scope.row.score }}</span>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -101,9 +101,9 @@ export default {
         this.getIndexNotice();
         this.getRankingList();
         this.directSeeding();
-        this.noticeTimer = setInterval(this.getIndexNotice, 5000);
+        this.noticeTimer = setInterval(this.getIndexNotice, 15000);
         this.rankTimer = setInterval(this.getRankingList, 60000);
-        this.seedTimer = setInterval(this.directSeeding, 1000 * 60 * 30);
+        this.seedTimer = setInterval(this.directSeeding, 30000);
       }
     }
   },
@@ -134,7 +134,6 @@ export default {
         series.push({
           name: element.name,
           type: 'line',
-          stack: '分数',
           data: element.data
         });
       });
@@ -175,7 +174,7 @@ export default {
       getIndexNotice({
         gameId: this.gameId,
         pageNo: 1,
-        pageSize: 15,
+        pageSize: 999,
         type: '2'
       }).then((res) => {
         that.noticeList = res.data.records;

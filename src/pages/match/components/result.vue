@@ -1,14 +1,8 @@
 <template>
   <div>
-    <!-- <div style="float: right;">
-      <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">导出</el-button>
+    <div v-if="gameStatus==3" style="float: right;margin-bottom: 15px;">
+      <el-button type="primary" size="small" icon="el-icon-download" :loading="loading" @click="exportRankingList">导出</el-button>
     </div>
-    <el-form ref="extraParam" inline>
-      <el-form-item prop="gameStatus">
-        <el-input v-model="name" clearable placeholder="请输入用户名" />
-      </el-form-item>
-      <el-button type="primary" icon="el-icon-search" @click="handleCurrentChange(1)">查询</el-button>
-    </el-form> -->
     <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="rankingList" class="list-table" tooltip-effect="dark">
       <el-table-column align="center" label="排行">
         <template slot-scope="scope">
@@ -31,7 +25,6 @@
           <el-table-column v-for="(i,j) in item" :key="j" align="center" width="100" :label="i.name" show-overflow-tooltip>
             <template slot-scope="{row}">
               <div class="order">
-                <!-- {{ getIndex(i.id) }} -->
                 <img v-if="row.details[getIndex(i.id)] == 1" src="@/assets/images/medal1.png" alt="">
                 <img v-else-if="row.details[getIndex(i.id)] == 2" src="@/assets/images/medal2.png" alt="">
                 <img v-else-if="row.details[getIndex(i.id)] == 3" src="@/assets/images/medal3.png" alt="">
@@ -50,10 +43,24 @@
   </div>
 </template>
 <script>
-import { getRankingListForPage, getRankingListForTop } from '@/api/match';
+import {
+  getRankingListForPage,
+  getRankingListForTop,
+  exportRankingList
+} from '@/api/match';
+import { parseTime } from '@/utils/index';
+var fileDownload = require('js-file-download');
 export default {
   props: {
     activeName: {
+      type: String,
+      default: '1'
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    gameStatus: {
       type: String,
       default: '1'
     }
@@ -70,20 +77,10 @@ export default {
       gameType: 1,
       questionIds: '',
       questionId: [],
-      name: ''
+      loading: false
     };
   },
   watch: {
-    // $route: {
-    //   handler(val, oldVal) {
-    //     if (val.name == 'operationsGame') {
-    //       this.gameId = this.$route.query.gameId;
-    //       this.gameType = this.$route.query.gameType;
-    //       this.getRankingListForTop();
-    //     }
-    //   },
-    //   deep: true
-    // },
     activeName(val) {
       if (val == '5') {
         this.gameId = this.$route.query.gameId;
@@ -100,6 +97,23 @@ export default {
     }
   },
   methods: {
+    exportRankingList() {
+      this.loading = true;
+      exportRankingList({
+        gameId: this.gameId
+      }).then((res) => {
+        this.loading = false;
+        console.log(res);
+        fileDownload(
+          res,
+          this.name +
+            '成绩表' +
+            '-' +
+            parseTime(new Date(), '{y}-{m}-{d}') +
+            '.xlsx'
+        );
+      });
+    },
     getIndex(id) {
       return this.questionId.indexOf(id);
     },
@@ -108,31 +122,13 @@ export default {
       getRankingListForTop({
         gameId: this.gameId
       }).then((res) => {
-        var list = res.data;
-        this.questionIds = res.message;
-        this.questionId = JSON.parse(res.message);
-        that.getRankingListForPage();
-        // for (let index = 0; index < array.length; index++) {
-        // 	 //   var item = {
-        // //     name: this.questionType[index],
-        // //     children: []
-        // //   };
-
-        // }
-        // for (let index = 0; index < this.questionType.length; index++) {
-        //   var item = {
-        //     name: this.questionType[index],
-        //     children: []
-        //   };
-        //   res.data.forEach((element) => {
-        //     if (index + 1 == element.questionType) {
-        //       item.children.push(element);
-        //     }
-        //   });
-        //   list.push(item);
-        // }
-        that.handList = list;
-        // console.log(list);
+        if (res.success) {
+          var list = res.data;
+          this.questionIds = res.message;
+          this.questionId = JSON.parse(res.message);
+          that.getRankingListForPage();
+          that.handList = list;
+        }
       });
     },
     getRankingListForPage() {

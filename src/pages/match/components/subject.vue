@@ -19,7 +19,7 @@
       <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
       <el-table-column label="分值" align="center" prop="value" show-overflow-tooltip />
       <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
-      <el-table-column label="答题时间/秒" align="center" prop="time" />
+      <el-table-column label="答题时间/分" align="center" prop="time" />
       <el-table-column v-if="gameStatus!=3" fixed="right" align="center" label="操作">
         <template slot-scope="scope">
           <el-button size="small" type="text" @click="deleteGame(scope.row.id)">删除</el-button>

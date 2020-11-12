@@ -35,7 +35,7 @@
       <el-table-column label="类别" align="center" prop="category" show-overflow-tooltip />
       <el-table-column label="分值" align="center" prop="choiceScore" show-overflow-tooltip />
       <el-table-column label="金币" align="center" prop="goldCoin" show-overflow-tooltip />
-      <el-table-column label="答题时间/秒" align="center" prop="choiceTime" show-overflow-tooltip />
+      <el-table-column label="答题时间/分" align="center" prop="choiceTime" show-overflow-tooltip />
     </el-table>
     <div class="pager-container mt30">
       <el-pagination :current-page.sync="currentPage" :page-size="pageSize" :total="tableTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="handleSizeChange" @current-change="handleCurrentChange">

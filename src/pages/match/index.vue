@@ -55,7 +55,7 @@
                 <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('32')!=-1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
                 <!-- <el-button v-if="scope.row.gameStatus==3" size="small" type="text" @click="seeDetail(scope.row)">查看详情</el-button> -->
                 <el-button v-if="buttons.indexOf('38')!=-1" size="small" type="text" @click="seeOperations(scope.row)">运维管理</el-button>
-                <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('30')!=-1" size="small" type="text" @click="seeLive(scope.row.gameId)">观看比赛</el-button>
+                <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('30')!=-1" size="small" type="text" @click="seeLive(scope.row)">观看比赛</el-button>
                 <!-- <el-button v-if="scope.row.gameStatus==3&&buttons.indexOf('34')!=-1" size="small" type="text" @click="seeScore(scope.row)">比赛成绩</el-button> -->
               </template>
             </el-table-column>
@@ -160,9 +160,10 @@ export default {
       this.mainId = id;
       this.addSign = false;
     },
-    seeLive(id) {
+    seeLive(row) {
       this.showLive = true;
-      this.gameId = id;
+      this.gameId = row.gameId;
+      this.type = row.gameType;
     },
     seeScore(row) {
       this.showAchievement = true;

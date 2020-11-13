@@ -76,7 +76,7 @@
             <el-table-column prop="email" align="center" label="邮箱" />
             <el-table-column prop="school" align="center" label="学校" />
             <el-table-column prop="company" align="center" label="公司" />
-            <el-table-column v-if="ruleForm.gameStatus==2" align="center" label="操作">
+            <el-table-column align="center" label="操作">
               <template slot-scope="{row}">
                 <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
                 <el-dropdown>
@@ -92,7 +92,7 @@
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
-                <el-button size="small" type="text" @click="breakGame(row)">禁赛</el-button>
+                <el-button v-if="ruleForm.gameStatus==2" size="small" type="text" @click="breakGame(row)">禁赛</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -102,11 +102,11 @@
             <el-table-column prop="email" align="center" label="邮箱" />
             <el-table-column prop="school" align="center" label="学校" />
             <el-table-column prop="company" align="center" label="公司" />
-            <el-table-column v-if="ruleForm.gameStatus==2" align="center" label="操作">
+            <el-table-column align="center" label="操作">
               <template slot-scope="{row}">
                 <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
                 <el-button size="small" type="text" @click="getEndReport(row.usrId)">提交记录</el-button>
-                <el-button size="small" type="text" @click="breakGame(row)">禁赛</el-button>
+                <el-button v-if="ruleForm.gameStatus==2" size="small" type="text" @click="breakGame(row)">禁赛</el-button>
               </template>
             </el-table-column>
           </el-table>

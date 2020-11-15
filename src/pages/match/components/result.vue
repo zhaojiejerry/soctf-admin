@@ -11,7 +11,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="title" align="center" :label="gameType==1?'战队名':'用户名'">
+      <el-table-column prop="title" align="center" :label="gameType==1?'用户名':'战队名'">
         <template slot-scope="{row}">
           <span>{{ gameType==1?row.userName:row.team_name }}</span>
         </template>

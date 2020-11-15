@@ -208,7 +208,6 @@ export default {
           });
         });
     },
-
     getGameInfoListForPage() {
       var extraParam = {};
       for (var key in this.extraParam) {

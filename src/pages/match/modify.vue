@@ -11,6 +11,9 @@
             <el-option label="团队" value="2" />
           </el-select>
         </el-form-item>
+        <el-form-item v-if="ruleForm.gameType==2" label="团队人数上限" prop="limitPerson">
+          <el-input v-model.number="ruleForm.limitPerson" :disabled="!addSign" class="itemwidth" />
+        </el-form-item>
         <el-form-item label="是否隐藏成绩" prop="confidential">
           <el-switch v-model="ruleForm.confidential" :width="50" :active-value="1" :inactive-value="0" />
         </el-form-item>
@@ -70,6 +73,9 @@
         <el-form-item label="用户名" prop="username">
           <el-input v-model="extraParam.username" placeholder="请输入" clearable />
         </el-form-item>
+        <el-form-item label="昵称" prop="realName">
+          <el-input v-model="extraParam.realName" placeholder="请输入" clearable />
+        </el-form-item>
         <el-form-item label="公司" prop="company">
           <el-input v-model="extraParam.company" placeholder="请输入" clearable />
         </el-form-item>
@@ -81,6 +87,7 @@
       <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableData" class="list-table" tooltip-effect="dark" @select="select" @select-all="selectAll">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="username" align="center" label="用户名" />
+        <el-table-column prop="realName" align="center" label="昵称" />
         <el-table-column prop="phone" align="center" label="电话号码" />
         <el-table-column prop="email" align="center" label="邮箱" />
         <el-table-column prop="school" align="center" label="学校" />
@@ -138,7 +145,8 @@ export default {
         remark: '',
         scoreRemark: '',
         startTime: '',
-        confidential: 0
+        confidential: 0,
+        limitPerson: 1
       },
       rules: {
         gameName: [
@@ -146,6 +154,14 @@ export default {
         ],
         gameType: [
           { required: true, message: '请选择比赛类型', trigger: 'change' }
+        ],
+        limitPerson: [
+          {
+            required: true,
+            message: '请输入人数上限',
+            type: 'number',
+            trigger: 'blur'
+          }
         ]
       },
       remark: [],
@@ -192,7 +208,8 @@ export default {
             remark: '',
             scoreRemark: '',
             startTime: '',
-            confidential: 0
+            confidential: 0,
+            limitPerson: 1
           };
         }
       }
@@ -425,6 +442,13 @@ export default {
               }
             });
           } else {
+						if (this.ruleForm.gameType == 2 && this.ruleForm.limitPerson <= 0) {
+							this.$message({
+								type: 'warning',
+								message: '团队上限人数不能小于0'
+							});
+							return
+						}
             addGameInfo({
               description: this.ruleForm.description,
               endTime: this.ruleForm.date[1],
@@ -442,7 +466,8 @@ export default {
               remark: this.ruleForm.remark,
               scoreRemark: this.ruleForm.scoreRemark,
               startTime: this.ruleForm.date[0],
-              confidential: this.ruleForm.confidential
+              confidential: this.ruleForm.confidential,
+              limitPerson: this.ruleForm.limitPerson
             }).then((res) => {
               if (res.success) {
                 this.$message({

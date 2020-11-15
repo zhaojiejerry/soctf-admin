@@ -222,8 +222,8 @@ export function getCheat(data) {
 export function getEndReportList(data) {
     return axios({
         url: '/game/getEndReportList',
-        method: 'get',
-        params: data
+        method: 'post',
+        data
     })
 }
 

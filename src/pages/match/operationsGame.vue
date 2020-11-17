@@ -95,19 +95,7 @@
               <template slot-scope="{row}">
                 <div>
                   <el-button size="small" type="text" @click="seeDetail(row)">答题管理</el-button>
-                  <el-dropdown>
-                    <span class="el-dropdown-link">
-                      <el-button style="margin: 0 5px;" size="small" type="text">提交记录</el-button>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>
-                        <el-button size="small" type="text" @click="getEndReport(row.usrId)">个人</el-button>
-                      </el-dropdown-item>
-                      <el-dropdown-item>
-                        <el-button size="small" type="text" @click="getEndReport(row.teamId)">团队</el-button>
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
+                  <el-button size="small" type="text" @click="getEndReport(row.usrId)">提交记录</el-button>
                   <el-button v-if="ruleForm.gameStatus==2" size="small" type="text" @click="breakGame(row)">禁赛</el-button>
                 </div>
               </template>
@@ -132,6 +120,40 @@
           </el-table>
           <div class="pager-container mt30">
             <el-pagination :current-page.sync="psnPage" :page-size="psnSize" :total="psnTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="psnSizeChange" @current-change="psnCurrentChange">
+              <el-button size="small" plain class="pagination-button">确定</el-button>
+            </el-pagination>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane v-if="ruleForm.gameType == 2" label="团队管理" name="7">
+          <el-form inline>
+            <el-form-item label="团队名称" prop="teamName">
+              <el-input v-model="teamName" clearable placeholder="请输入团队名称" />
+            </el-form-item>
+            <el-button type="primary" icon="el-icon-search" @click="getTeamInfoListForPage">查询</el-button>
+          </el-form>
+          <el-table ref="multipleTable" :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="teamList.slice((teamPage-1)*teamSize,teamPage*teamSize)" class="list-table" tooltip-effect="dark">
+            <el-table-column align="center" label="头像">
+              <template slot-scope="{row}">
+                <img class="headimg" :src="row.portrait" alt="">
+              </template>
+            </el-table-column>
+            <el-table-column prop="teamName" align="center" label="团队名称" />
+            <el-table-column prop="remark" align="center" label="口令" />
+            <el-table-column align="center" label="创建时间">
+              <template slot-scope="{row}">
+                {{ parseTime(row.buildTime) }}
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="操作">
+              <template slot-scope="{row}">
+                <div>
+                  <el-button size="small" type="text" @click="getEndReport(row.teamId)">提交记录</el-button>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="pager-container mt30">
+            <el-pagination :current-page.sync="teamPage" :page-size="teamSize" :total="teamTotal" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="teamSizeChange" @current-change="teamCurrentChange">
               <el-button size="small" plain class="pagination-button">确定</el-button>
             </el-pagination>
           </div>
@@ -225,7 +247,7 @@ import {
   startGame,
   rankingInDB,
   sendGameToken,
-  getUserInfosByGame
+	getUserInfosByGame
 } from '@/api/match';
 import { parseTime } from '@/utils/index';
 import subjectPage from './components/subject';
@@ -277,7 +299,12 @@ export default {
       extraParam: {
         teamName: '',
         userName: ''
-      }
+      },
+			teamList: [],
+			teamName: '',
+			teamTotal: 0,
+      teamSize: 10,
+      teamPage: 1
     };
   },
   watch: {
@@ -300,10 +327,30 @@ export default {
   },
   methods: {
     handleClick(tab, event) {
-      if (this.activeName == '2') {
+      if (this.activeName == '2' || this.activeName == '7') {
 				this.psnPage = 1
         this.getGameInfoDetail();
-      }
+      } else if (this.activeName == '7') {
+				this.getTeamInfoListForPage()
+			}
+		},
+		getTeamInfoListForPage() {
+			getUserInfosByGame({
+        gameId: this.gameId,
+        teamName: this.teamName,
+        userName: ''
+      }).then((res) => {
+        if (res.success) {
+					this.teamList = res.data.teamInfos ? res.data.teamInfos : [];
+					this.teamTotal = this.teamList.length
+        }
+      });
+		},
+		teamSizeChange(val) {
+			this.teamSize = val;
+    },
+    teamCurrentChange(val) {
+			this.teamPage = val;
     },
     getGameInfoDetail() {
       getUserInfosByGame({
@@ -572,5 +619,9 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+}
+.headimg {
+  width: 30px;
+  height: 30px;
 }
 </style>

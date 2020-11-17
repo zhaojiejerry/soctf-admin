@@ -236,3 +236,12 @@ export function exportRankingList(data) {
         params: data
     })
 }
+
+// 查看团队列表
+export function getTeamInfoListForPage(data) {
+    return axios({
+        url: '/team/getTeamInfoListForPage',
+        method: 'post',
+        data
+    })
+}

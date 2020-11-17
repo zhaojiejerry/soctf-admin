@@ -1,55 +1,64 @@
 <template>
   <div>
-    <el-dialog :visible.sync="value" :show-close="false" :title="addSign?'新增':'修改'">
+    <el-dialog :visible.sync="value" width="70%" :show-close="false" :title="addSign?'新增':'修改'">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm">
-        <el-form-item label="赛事名称" prop="gameName">
-          <el-input v-model="ruleForm.gameName" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="比赛类型" prop="gameType">
-          <el-select v-model="ruleForm.gameType" class="itemwidth" placeholder="请选择比赛类型">
-            <el-option label="个人" value="1" />
-            <el-option label="团队" value="2" />
-          </el-select>
-        </el-form-item>
-        <el-form-item v-if="ruleForm.gameType==2" label="团队人数上限" prop="limitPerson">
-          <el-input v-model.number="ruleForm.limitPerson" :disabled="!addSign" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="是否隐藏成绩" prop="confidential">
-          <el-switch v-model="ruleForm.confidential" :width="50" :active-value="1" :inactive-value="0" />
-        </el-form-item>
-        <el-form-item label="参赛者">
-          <div class="itemwidth el-input" @click="getpsn">
-            <div class="box">
-              <el-tag v-for="(item,index) in joiners" :key="index" type="info" closable @close="handleClose(item,index)">
-                {{ item.username }}
-              </el-tag>
-            </div>
-          </div>
-        </el-form-item>
-        <el-form-item label="比赛时间" prop="description">
-          <el-date-picker v-model="ruleForm.date" class="itemwidth" :picker-options="pickerOptions" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
-        </el-form-item>
-        <el-form-item label="比赛官网" prop="gameOfficeAddress">
-          <el-input v-model="ruleForm.gameOfficeAddress" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="赛事描述" prop="description">
-          <el-input v-model="ruleForm.description" type="textarea" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="比赛详细描述" prop="gameText">
-          <el-input v-model="ruleForm.gameText" type="textarea" class="itemwidth" />
-        </el-form-item>
-        <el-form-item label="比赛LOGO图片">
-          <el-upload :show-file-list="false" :on-success="handleiconSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/baseApi/oss">
-            <img v-if="ruleForm.iconUrl" :src="ruleForm.iconUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon" />
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="赛事主图">
-          <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/baseApi/oss">
-            <img v-if="ruleForm.mainPic" :src="ruleForm.mainPic" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon" />
-          </el-upload>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="赛事名称" prop="gameName">
+              <el-input v-model="ruleForm.gameName" class="itemwidth" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="比赛类型" prop="gameType">
+              <el-select v-model="ruleForm.gameType" class="itemwidth" placeholder="请选择比赛类型">
+                <el-option label="个人" value="1" />
+                <el-option label="团队" value="2" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="比赛时间" prop="description">
+              <el-date-picker v-model="ruleForm.date" class="itemwidth" :picker-options="pickerOptions" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="比赛官网" prop="gameOfficeAddress">
+              <el-input v-model="ruleForm.gameOfficeAddress" class="itemwidth" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="赛事描述" prop="description">
+              <el-input v-model="ruleForm.description" type="textarea" class="itemwidth" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="比赛详细描述" prop="gameText">
+              <el-input v-model="ruleForm.gameText" type="textarea" class="itemwidth" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="比赛LOGO图片">
+              <el-upload :show-file-list="false" :on-success="handleiconSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/baseApi/oss">
+                <img v-if="ruleForm.iconUrl" :src="ruleForm.iconUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
+              </el-upload>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="赛事主图">
+              <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" class="avatar-uploader" action="/baseApi/oss">
+                <img v-if="ruleForm.mainPic" :src="ruleForm.mainPic" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
+              </el-upload>
+            </el-form-item>
+          </el-col>
+          <el-form-item v-if="ruleForm.gameType==2" label="团队人数上限" prop="limitPerson">
+            <el-input v-model.number="ruleForm.limitPerson" :disabled="!addSign" class="itemwidth" />
+          </el-form-item>
+          <el-form-item label="是否隐藏成绩" prop="confidential">
+            <el-switch v-model="ruleForm.confidential" :width="50" :active-value="1" :inactive-value="0" />
+          </el-form-item>
+        </el-row>
         <el-form-item label="赛事说明">
           <el-upload :on-success="handleRemark" :file-list="remark" class="upload-demo" action="/baseApi/oss" @on-remove="handleRemove1">
             <el-button size="small" type="primary">点击上传</el-button>
@@ -62,6 +71,34 @@
             <div slot="tip" class="el-upload__tip">只能上传md/pdf文件</div>
           </el-upload>
         </el-form-item>
+        <el-form-item label="参赛者">
+          <el-button size="small" type="primary" @click="getpsn">添加参赛者</el-button>
+          <!-- <div class="itemwidth el-input" @click="getpsn">
+            <div class="box">
+              <el-tag v-for="(item,index) in joiners" :key="index" type="info" closable @close="handleClose(item,index)">
+                {{ item.username }}
+              </el-tag>
+            </div>
+          </div> -->
+        </el-form-item>
+        <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="joiners.slice((psnPage-1)*psnSize,psnPage*psnSize)" class="list-table" tooltip-effect="dark">
+          <el-table-column prop="username" align="center" label="用户名" />
+          <el-table-column prop="realName" align="center" label="昵称" />
+          <el-table-column prop="phone" align="center" label="电话号码" />
+          <el-table-column prop="email" align="center" label="邮箱" />
+          <el-table-column prop="school" align="center" label="学校" />
+          <el-table-column prop="company" align="center" label="公司" />
+          <el-table-column align="center" label="操作">
+            <template slot-scope="scope">
+              <el-button size="small" type="text" @click="handleClose(scope.row,scope.$index)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pager-container mt30">
+          <el-pagination :current-page.sync="psnPage" :page-size="psnSize" :total="joiners.length" background size="small" layout="total,prev, pager, next, sizes, jumper, slot" @size-change="psnSizeChange" @current-change="psnCurrentChange">
+            <el-button size="small" plain class="pagination-button">确定</el-button>
+          </el-pagination>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -147,7 +184,10 @@ export default {
         startTime: '',
         confidential: 0,
         limitPerson: 1
-      },
+			},
+			psnTotal: 0,
+      psnSize: 10,
+      psnPage: 1,
       rules: {
         gameName: [
           { required: true, message: '请输入赛事名称', trigger: 'blur' }
@@ -213,30 +253,35 @@ export default {
           };
         }
 			}
-			this.$nextTick(() => {
-				this.getUserInfoList();
-			});
+			this.psnSize = 10
+      this.psnPage = 1
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.getUserInfoList();
-    });
-  },
+  // mounted() {
+  //   this.$nextTick(() => {
+  //     this.getUserInfoList();
+  //   });
+  // },
   methods: {
     getpsn() {
       this.dialogTableVisible = true;
       this.$nextTick(() => {
         this.$refs.multipleTable.clearSelection();
-        this.joiners.forEach((a) => {
-          this.tableData.forEach((b) => {
-            if (a.usrId == b.usrId) {
-              console.log(b);
-              this.$refs.multipleTable.toggleRowSelection(b, true);
-            }
-          });
-        });
+				this.getUserInfoList();
+        // this.joiners.forEach((a) => {
+        //   this.tableData.forEach((b) => {
+        //     if (a.usrId == b.usrId) {
+        //       this.$refs.multipleTable.toggleRowSelection(b, true);
+        //     }
+        //   });
+        // });
       });
+		},
+		psnSizeChange(val) {
+      this.psnSize = val;
+    },
+    psnCurrentChange(val) {
+      this.psnPage = val;
     },
     handleClose(item, index) {
       this.joiners.splice(index, 1);
@@ -294,7 +339,7 @@ export default {
 						this.joiners.forEach((a) => {
 							this.tableData.forEach((b) => {
 								if (a.usrId == b.usrId) {
-									console.log(b);
+									// console.log(b);
 									this.$refs.multipleTable.toggleRowSelection(b, true);
 								}
 							});
@@ -495,6 +540,9 @@ export default {
 };
 </script>
 <style>
+.itemwidth {
+  width: 100% !important;
+}
 .mt30 {
   margin-top: 35px;
 }
@@ -545,14 +593,14 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
+  width: 150px !important;
+  height: 150px !important;
+  line-height: 150px !important;
   text-align: center;
 }
 .avatar {
-  width: 178px;
-  height: 178px;
+  width: 150px !important;
+  height: 150px !important;
   display: block;
 }
 </style>

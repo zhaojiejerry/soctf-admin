@@ -25,6 +25,7 @@
         <el-table :header-cell-style="{background:'#f7f7f7', color:'#333333', fontWeight: 'bold'}" :cell-style="{fontSize: '12px'}" :data="tableList" class="list-table" tooltip-effect="dark">
           <el-table-column v-if="mold!='1'" prop="gamename" align="center" label="赛事名称" show-overflow-tooltip />
           <el-table-column prop="username" align="center" label="用户名" show-overflow-tooltip />
+          <el-table-column prop="correctanswer" align="center" label="正确答案" show-overflow-tooltip />
           <el-table-column prop="useranswer" align="center" label="用户答案" show-overflow-tooltip />
           <el-table-column prop="correct" align="center" label="是否正确">
             <template slot-scope="{row}">

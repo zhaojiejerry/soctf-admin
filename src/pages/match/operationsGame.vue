@@ -3,7 +3,7 @@
     <el-card class="box-card" style="position: relative;">
       <div style="position: absolute;right: 20px;z-index: 999;">
         <el-button v-if="ruleForm.gameStatus==1" size="small" type="primary" @click="startGame">发布比赛</el-button>
-        <!-- <el-button v-if="ruleForm.gameStatus!=3" size="small" type="primary" @click="sendGameToken">发送通知</el-button> -->
+        <el-button v-if="ruleForm.gameStatus!=3" size="small" type="primary" @click="sendGameToken">发送通知</el-button>
         <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="endGame">结束比赛</el-button>
         <el-button v-if="ruleForm.gameStatus==2" size="small" type="primary" @click="reviseGame">修改成绩</el-button>
         <el-button size="small" type="primary" @click="seeDescription">比赛说明</el-button>

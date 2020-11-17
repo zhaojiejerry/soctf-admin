@@ -212,12 +212,14 @@ export default {
             limitPerson: 1
           };
         }
-      }
+			}
+			this.$nextTick(() => {
+				this.getUserInfoList();
+			});
     }
   },
   mounted() {
     this.$nextTick(() => {
-      // this.$refs.multipleTable.clearSelection();
       this.getUserInfoList();
     });
   },
@@ -287,15 +289,17 @@ export default {
       }).then((res) => {
         if (res.success) {
           this.tableData = res.data;
-          console.log(this.joiners);
-          this.joiners.forEach((a) => {
-            this.tableData.forEach((b) => {
-              if (a.usrId == b.usrId) {
-                console.log(b);
-                this.$refs.multipleTable.toggleRowSelection(b, true);
-              }
-            });
-          });
+					console.log(this.joiners);
+					this.$nextTick(() => {
+						this.joiners.forEach((a) => {
+							this.tableData.forEach((b) => {
+								if (a.usrId == b.usrId) {
+									console.log(b);
+									this.$refs.multipleTable.toggleRowSelection(b, true);
+								}
+							});
+						});
+					})
           this.subTotal = res.count;
         }
       });

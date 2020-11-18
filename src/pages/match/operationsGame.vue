@@ -327,7 +327,7 @@ export default {
   },
   methods: {
     handleClick(tab, event) {
-      if (this.activeName == '2' || this.activeName == '7') {
+      if (this.activeName == '2') {
 				this.psnPage = 1
         this.getGameInfoDetail();
       } else if (this.activeName == '7') {
@@ -341,8 +341,9 @@ export default {
         userName: ''
       }).then((res) => {
         if (res.success) {
-					this.teamList = res.data.teamInfos ? res.data.teamInfos : [];
-					this.teamTotal = this.teamList.length
+					var list = res.data.teamInfos ? res.data.teamInfos : []
+					this.teamList = list;
+					this.teamTotal = list.length
         }
       });
 		},

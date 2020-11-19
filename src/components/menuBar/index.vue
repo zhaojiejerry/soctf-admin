@@ -1,26 +1,13 @@
 <template>
   <div>
     <div class="sys-name">
-      <img class="icon-logo" src="./logo.png">
+      <img class="icon-logo" :src="window.ctfjson.logo">
       SOCTF管理系统
     </div>
     <div style="height:calc( 100vh - 60px )">
       <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%">
-        <el-menu
-          :default-active="activeMenu"
-          :unique-opened="true"
-          class="hb-menu"
-          mode="vertical"
-          background-color="#323638"
-          text-color="#fff"
-          active-text-color="#B69858"
-        >
-          <menu-one
-            v-for="route in navRoutes"
-            :key="route.path"
-            :item="route"
-            :base-path="route.path"
-          />
+        <el-menu :default-active="activeMenu" :unique-opened="true" class="hb-menu" mode="vertical" background-color="#323638" text-color="#fff" active-text-color="#B69858">
+          <menu-one v-for="route in navRoutes" :key="route.path" :item="route" :base-path="route.path" />
         </el-menu>
       </el-scrollbar>
     </div>
@@ -185,11 +172,12 @@ export default {
     text-decoration: none;
   }
 
-  .iconfont ,.fa{
+  .iconfont,
+  .fa {
     margin-right: 10px;
     font-size: 14px;
     color: #fff;
-		width: 15px !important;
+    width: 15px !important;
     display: inline-block;
   }
 
@@ -200,7 +188,7 @@ export default {
   }
   .el-submenu.is-opened {
     .el-submenu__title {
-      background-color:#323638 !important;
+      background-color: #323638 !important;
     }
     .nest-menu .el-menu-item {
       padding-left: 43px !important;

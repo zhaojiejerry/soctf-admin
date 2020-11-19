@@ -69,7 +69,6 @@ import { getChoiceListForAdmin, deleteChoiceQuestion } from '@/api/choice';
 import { parseTime } from '@/utils/index';
 import modify from './modify';
 import answerDetail from './answerDetail';
-import { getjson } from '@/api/common';
 export default {
   components: { modify, answerDetail },
   data() {
@@ -84,7 +83,7 @@ export default {
       choiceType: ['单选', '多选'],
       showDetail: false,
       extraParam: {},
-      subject: []
+      subject: window.ctfjson.subject
     };
   },
   computed: {
@@ -94,14 +93,8 @@ export default {
   },
   mounted() {
     this.getChoiceListForAdmin();
-    this.getjson();
   },
   methods: {
-    getjson() {
-      getjson('/home/ctf.json').then((res) => {
-        this.subject = res.subject;
-      });
-    },
     answerDetail(id) {
       this.showDetail = true;
       this.mainId = id;

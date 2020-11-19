@@ -139,7 +139,7 @@ export default {
       questionType: ['容器', '附件', '选择'],
       name: '',
       category: '',
-      subject: [],
+      subject: window.ctfjson.subject,
       gameList: [],
       gameStatus: ['未开始', '进行中', '已结束']
     };
@@ -171,7 +171,6 @@ export default {
   },
   mounted() {
     this.getAllQuestion();
-    this.getjson();
     this.getGameInfoListForPage();
   },
   methods: {
@@ -184,11 +183,6 @@ export default {
         if (res.success) {
           this.gameList = res.data;
         }
-      });
-    },
-    getjson() {
-      getjson('/home/ctf.json').then((res) => {
-        this.subject = res.subject;
       });
     },
     parseTime(time) {

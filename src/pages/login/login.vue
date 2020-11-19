@@ -251,6 +251,7 @@ export default {
   // background-color: #f4f4f4;
   background: url('https://soctf.oss-cn-hangzhou.aliyuncs.com/SoCTF/bg/20201004182308.gif')
     no-repeat;
+  background-repeat: no-repeat;
   background-size: 100%;
   height: 100vh;
   display: flex;

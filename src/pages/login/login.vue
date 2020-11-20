@@ -1,5 +1,5 @@
 <template>
-  <div class="zztjj-login">
+  <div class="zztjj-login" :style="{background: 'url('+loginbg+') no-repeat','background-size': '100% 100%'}">
     <div class="left-container">
       <div style="font-size: 40px;color: #f6b95d; margin-top: 40px;">欢迎使用SOCTF后台管理系统</div>
       <el-carousel :autoplay="false" height="100%" class="banner-pic" arrow="never" indicator-position="none">
@@ -76,7 +76,8 @@ export default {
       disabledBtn: false,
       // hack chrome表单自动填充
       readAccount: true,
-      readPassword: true
+			readPassword: true,
+			loginbg: window.ctfjson.loginbg
     };
   },
   watch: {
@@ -249,8 +250,8 @@ export default {
 <style lang="scss" scoped>
 .zztjj-login {
   // background-color: #f4f4f4;
-  background: url('https://soctf.oss-cn-hangzhou.aliyuncs.com/SoCTF/bg/20201004182308.gif')
-    no-repeat;
+  // background: url('https://soctf.oss-cn-hangzhou.aliyuncs.com/SoCTF/bg/20201004182308.gif')
+  //   no-repeat;
   background-repeat: no-repeat;
   background-size: 100%;
   height: 100vh;

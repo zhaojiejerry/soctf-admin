@@ -1,6 +1,6 @@
 window.ctfjson = {
-    "logo": "./logo.png",
-    "loginbg": "./adminlogin.gif",
+    "logo": "../logo.png",
+    "loginbg": "../adminlogin.gif",
     "partners": [],
     "subject": [{
             "name": "WEB",

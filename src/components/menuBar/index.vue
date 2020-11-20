@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="sys-name">
-      <img class="icon-logo" :src="window.ctfjson.logo">
+      <img class="icon-logo" :src="logo">
       SOCTF管理系统
     </div>
     <div style="height:calc( 100vh - 60px )">
@@ -27,7 +27,9 @@ export default {
     clickoutside
   },
   data() {
-    return {}
+    return {
+			logo: window.ctfjson.logo
+		}
   },
   computed: {
     ...mapGetters(['permission_routes']),

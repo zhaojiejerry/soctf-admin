@@ -25,10 +25,15 @@
           <el-table-column v-for="(i,j) in item" :key="j" align="center" width="100" :label="i.name" show-overflow-tooltip>
             <template slot-scope="{row}">
               <div class="order">
-                <img v-if="row.details[getIndex(i.id)] == 1" src="@/assets/images/medal1.png" alt="">
-                <img v-else-if="row.details[getIndex(i.id)] == 2" src="@/assets/images/medal2.png" alt="">
-                <img v-else-if="row.details[getIndex(i.id)] == 3" src="@/assets/images/medal3.png" alt="">
-                <span v-else-if="row.details[getIndex(i.id)] != 'N'" class="el-icon-check" style="font-size: 25px;color: #2a842a;" />
+                <div v-if="item[0].id=='123456'">
+                  {{ row.details[0]!='N'?row.details[0]:'' }}
+                </div>
+                <div v-else>
+                  <img v-if="row.details[getIndex(i.id)] == 1" src="@/assets/images/medal1.png" alt="">
+                  <img v-else-if="row.details[getIndex(i.id)] == 2" src="@/assets/images/medal2.png" alt="">
+                  <img v-else-if="row.details[getIndex(i.id)] == 3" src="@/assets/images/medal3.png" alt="">
+                  <span v-else-if="row.details[getIndex(i.id)] != 'N'" class="el-icon-check" style="font-size: 25px;color: #2a842a;" />
+                </div>
               </div>
             </template>
           </el-table-column>

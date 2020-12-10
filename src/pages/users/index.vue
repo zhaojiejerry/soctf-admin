@@ -48,7 +48,7 @@
             </el-table-column>
             <el-table-column prop="createAt" align="center" label="用户状态">
               <template slot-scope="scope">
-                {{ scope.row.usrStatus == '1' ?'正常':'不可用' }}
+                {{ scope.row.usrStatus == '2' ?'不可用':'正常' }}
               </template>
             </el-table-column>
             <el-table-column prop="phone" align="center" label="手机号" />
@@ -178,7 +178,7 @@ export default {
         score: this.reward.score,
         userId: this.ruleForm.usrId
       };
-      addScoreToUser(data).then((res) => {
+      addScoreToUser(data).then(res => {
         if (res.success) {
           this.$message({
             type: 'success',
@@ -202,7 +202,7 @@ export default {
       return parseTime(time);
     },
     getRoleInfoList() {
-      getRoleInfoList().then((res) => {
+      getRoleInfoList().then(res => {
         if (res.success) {
           this.roleInfoList = res.data;
         }
@@ -260,8 +260,8 @@ export default {
       this.$nextTick(() => {
         this.$refs.multipleTable.clearSelection();
         if (row.roleIds) {
-          row.roleIds.forEach((a) => {
-            this.roleInfoList.forEach((b) => {
+          row.roleIds.forEach(a => {
+            this.roleInfoList.forEach(b => {
               if (a == b.roleId) {
                 this.$refs.multipleTable.toggleRowSelection(b, true);
               }
@@ -272,13 +272,13 @@ export default {
     },
     onSubmit() {
       var roleIds = [];
-      this.multipleSelection.forEach((element) => {
+      this.multipleSelection.forEach(element => {
         roleIds.push(element.roleId);
       });
       linkUserRole({
         usrId: this.usrId,
         roleIds: roleIds
-      }).then((res) => {
+      }).then(res => {
         if (res.success) {
           this.$message({
             type: 'success',
@@ -303,7 +303,7 @@ export default {
         .then(() => {
           deleteUser({
             usrId: id
-          }).then((res) => {
+          }).then(res => {
             if (res.success) {
               this.$message({
                 type: 'success',
@@ -337,7 +337,7 @@ export default {
         currentPage: this.currentPage,
         extraParam: extraParam,
         pageSize: this.pageSize
-      }).then((res) => {
+      }).then(res => {
         if (res.success) {
           this.tableList = res.data;
           this.tableTotal = res.count;

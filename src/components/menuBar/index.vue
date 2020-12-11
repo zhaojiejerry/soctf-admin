@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="sys-name">
-      <img class="icon-logo" :src="logo">
+      <!-- <img class="icon-logo" :src="logo"> -->
       SOCTF管理系统
     </div>
     <div style="height:calc( 100vh - 60px )">
@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import menuOne from './menuOne'
-import { clickoutside } from '@/utils/directives'
+import { mapGetters } from 'vuex';
+import menuOne from './menuOne';
+import { clickoutside } from '@/utils/directives';
 // import { navRoutes } from '@/router'
 export default {
   components: {
@@ -28,25 +28,25 @@ export default {
   },
   data() {
     return {
-			logo: window.ctfjson.logo
-		}
+      logo: window.ctfjson.logo
+    };
   },
   computed: {
     ...mapGetters(['permission_routes']),
     activeMenu() {
-      const route = this.$route
-      const { meta, path } = route
+      const route = this.$route;
+      const { meta, path } = route;
       if (meta.activeMenu) {
-        return meta.activeMenu
+        return meta.activeMenu;
       }
-      return path
+      return path;
     }
   },
   created() {
-    this.navRoutes = this.permission_routes
+    this.navRoutes = this.permission_routes;
   },
   methods: {}
-}
+};
 </script>
 
 <style lang="scss">

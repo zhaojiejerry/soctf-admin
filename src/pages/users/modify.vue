@@ -108,10 +108,8 @@ export default {
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
-				],
-				password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
         ],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
         userTyp: [
           { required: true, message: '请选择用户类型', trigger: 'change' }
         ]
@@ -122,18 +120,18 @@ export default {
       pageSize: 10,
       currentPage: 1,
       questionRow: [],
-			questionType: ['容器', '附件', '选择'],
-			showPsw: false
+      questionType: ['容器', '附件', '选择'],
+      showPsw: false
     };
-	},
-	watch: {
-		value(val) {
-			if (val) {
-				this.ruleForm.password = ''
-				this.showPsw = false
-			}
-		}
-	},
+  },
+  watch: {
+    value(val) {
+      if (val) {
+        this.ruleForm.password = '';
+        this.showPsw = false;
+      }
+    }
+  },
   mounted() {
     this.areaOptions = areajson;
   },
@@ -160,7 +158,7 @@ export default {
       this.$emit('input', false);
     },
     onSubmit() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         if (valid) {
           if (!this.addSign) {
             modifyUser({
@@ -180,10 +178,10 @@ export default {
               company: this.ruleForm.company,
               gender: this.ruleForm.gender,
               school: this.ruleForm.school,
-							signature: this.ruleForm.signature,
-							password: this.ruleForm.password,
-							userTyp: this.ruleForm.userTyp
-            }).then((res) => {
+              signature: this.ruleForm.signature,
+              password: this.ruleForm.password,
+              userTyp: this.ruleForm.userTyp
+            }).then(res => {
               if (res.success) {
                 this.$message({
                   type: 'success',
@@ -228,7 +226,7 @@ export default {
               teamOwner: false,
               userTyp: this.ruleForm.userTyp,
               username: this.ruleForm.username
-            }).then((res) => {
+            }).then(res => {
               if (res.success) {
                 this.$message({
                   type: 'success',

@@ -1,36 +1,39 @@
 <template>
   <div class="zztjj-login" :style="{background: 'url('+loginbg+') no-repeat','background-size': '100% 100%'}">
     <div class="left-container">
-      <div style="font-size: 40px;color: #f6b95d; margin-top: 40px;">欢迎使用SOCTF后台管理系统</div>
+      <!-- <div style="font-size: 40px;color: #f6b95d; margin-top: 40px;">欢迎使用SOCTF后台管理系统</div>
       <el-carousel :autoplay="false" height="100%" class="banner-pic" arrow="never" indicator-position="none">
         <el-carousel-item>
-          <!-- <img src="./login-bg.png"> -->
+          <img src="./login-bg.png">
         </el-carousel-item>
-      </el-carousel>
+      </el-carousel> -->
     </div>
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-      <h3 class="title">账户登录</h3>
-      <el-form-item prop="username">
-        <el-input v-model="loginForm.username" :readonly="readAccount" class="login-input" type="text" autocomplete="off" placeholder="请输入用户名" @focus="readAccount = false" @keyup.enter.native="handleLogin">
-          <i slot="prefix" class="icon-pic user" />
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input v-model="loginForm.password" :readonly="readPassword" class="login-input" type="password" autocomplete="off" placeholder="请输入密码" @focus="readPassword = false" @keyup.enter.native="handleLogin">
-          <i slot="prefix" class="icon-pic password" />
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="verifyCode">
-        <el-input v-model="loginForm.verifyCode" class="login-input" type="text" autocomplete="off" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
-          <img slot="suffix" :src="chartCode" style="width: 100px; vertical-align: bottom; padding-top: 6px; padding-right: 10px;" alt="" @click="getChartCode">
-        </el-input>
-      </el-form-item>
-      <div class="check-line">
-        <!-- <el-checkbox v-model="rememberPass" class="remember-pass" @change="handleChangeAuto">记住密码</el-checkbox> -->
-        <!-- <el-checkbox v-model="autoLogin" @change="handleChangePass" class="auto-login">自动登录</el-checkbox> -->
-      </div>
-      <el-button :loading="loading" type="primary" style="width:100%;" round class="login-btn" @click.native.prevent="handleLogin">登录</el-button>
-    </el-form>
+    <div>
+      <div style="font-size: 30px;color: #f6b95d; margin-bottom: 10px;text-align: center;">SOCTF管理系统</div>
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="demo-ruleForm login-container">
+        <h3 class="title">账户登录</h3>
+        <el-form-item prop="username">
+          <el-input v-model="loginForm.username" :readonly="readAccount" class="login-input" type="text" autocomplete="off" placeholder="请输入用户名" @focus="readAccount = false" @keyup.enter.native="handleLogin">
+            <i slot="prefix" class="icon-pic user" />
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input v-model="loginForm.password" :readonly="readPassword" class="login-input" type="password" autocomplete="off" placeholder="请输入密码" @focus="readPassword = false" @keyup.enter.native="handleLogin">
+            <i slot="prefix" class="icon-pic password" />
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="verifyCode">
+          <el-input v-model="loginForm.verifyCode" class="login-input" type="text" autocomplete="off" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
+            <img slot="suffix" :src="chartCode" style="width: 100px; vertical-align: bottom; padding-top: 6px; padding-right: 10px;" alt="" @click="getChartCode">
+          </el-input>
+        </el-form-item>
+        <div class="check-line">
+          <!-- <el-checkbox v-model="rememberPass" class="remember-pass" @change="handleChangeAuto">记住密码</el-checkbox> -->
+          <!-- <el-checkbox v-model="autoLogin" @change="handleChangePass" class="auto-login">自动登录</el-checkbox> -->
+        </div>
+        <el-button :loading="loading" type="primary" style="width:100%;" round class="login-btn" @click.native.prevent="handleLogin">登录</el-button>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -76,8 +79,8 @@ export default {
       disabledBtn: false,
       // hack chrome表单自动填充
       readAccount: true,
-			readPassword: true,
-			loginbg: window.ctfjson.loginbg
+      readPassword: true,
+      loginbg: window.ctfjson.loginbg
     };
   },
   watch: {
@@ -118,7 +121,7 @@ export default {
   },
   methods: {
     getChartCode() {
-      getLoginCode().then((data) => {
+      getLoginCode().then(data => {
         this.chartCode =
           'data:image/png;base64,' +
           btoa(
@@ -141,7 +144,7 @@ export default {
     },
     handleLogin() {
       console.log(123);
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
           this.$store
@@ -150,7 +153,7 @@ export default {
               password: this.loginForm.password,
               verifyCode: this.loginForm.verifyCode
             })
-            .then((res) => {
+            .then(res => {
               if (res.success) {
                 setCookie('Token', res.data.accessToken);
                 // setCookie('Account', this.loginForm.username)
@@ -172,7 +175,7 @@ export default {
               }
               this.loading = false;
             })
-            .catch((error) => {
+            .catch(error => {
               console.log(error);
               this.loading = false;
             });

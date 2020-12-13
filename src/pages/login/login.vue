@@ -9,6 +9,7 @@
       </el-carousel> -->
     </div>
     <div>
+      <img id="login-logo" :src="dataJson.logo" alt>
       <div style="font-size: 30px;color: #f6b95d; margin-bottom: 10px;text-align: center;">SOCTF管理系统</div>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="demo-ruleForm login-container">
         <h3 class="title">账户登录</h3>
@@ -60,6 +61,7 @@ export default {
     //   }
     // };
     return {
+      dataJson: window.ctfjson,
       loginForm: {
         username: '',
         password: '',
@@ -251,6 +253,11 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+#login-logo {
+  display: block;
+  max-width: 400px;
+  margin: 0 auto;
+}
 .zztjj-login {
   // background-color: #f4f4f4;
   // background: url('https://soctf.oss-cn-hangzhou.aliyuncs.com/SoCTF/bg/20201004182308.gif')

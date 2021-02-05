@@ -49,10 +49,10 @@
                 {{ scope.row.endTime?parseTime(scope.row.endTime):'' }}
               </template>
             </el-table-column>
-            <el-table-column fixed="right" align="left" label="操作" width="200">
+            <el-table-column fixed="right" align="left" label="操作" width="210">
               <template slot-scope="scope">
-                <el-button v-if="scope.row.gameStatus!=3&&buttons.indexOf('33')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.gameId)">编辑</el-button>
-                <el-button v-if="scope.row.gameStatus==1&&buttons.indexOf('32')!=-1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
+                <el-button v-if="buttons.indexOf('33')!=-1" size="small" type="text" @click.native.prevent="handleEdit(scope.row.gameId)">编辑</el-button>
+                <el-button v-if="buttons.indexOf('32')!=-1" size="small" type="text" @click="deleteGame(scope.row.gameId)">删除</el-button>
                 <!-- <el-button v-if="scope.row.gameStatus==3" size="small" type="text" @click="seeDetail(scope.row)">查看详情</el-button> -->
                 <el-button v-if="buttons.indexOf('38')!=-1" size="small" type="text" @click="seeOperations(scope.row)">运维管理</el-button>
                 <el-button v-if="scope.row.gameStatus==2&&buttons.indexOf('30')!=-1" size="small" type="text" @click="seeLive(scope.row)">观看比赛</el-button>

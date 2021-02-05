@@ -69,7 +69,6 @@ import { getFileQuestion, delFileQuestion } from '@/api/file';
 import { parseTime } from '@/utils/index';
 import modify from './modify';
 import answerDetail from './answerDetail';
-import { getjson } from '@/api/common';
 export default {
   components: { modify, answerDetail },
   data() {
@@ -88,7 +87,7 @@ export default {
         category: '',
         difficultyLevel: ''
       },
-      subject: []
+       subject: window.ctfjson.subject
     };
   },
   computed: {
@@ -98,14 +97,8 @@ export default {
   },
   mounted() {
     this.getFileQuestion();
-    this.getjson();
   },
   methods: {
-    getjson() {
-      getjson('/home/ctf.json').then((res) => {
-        this.subject = res.subject;
-      });
-    },
     answerDetail(id) {
       this.showDetail = true;
       this.mainId = id;

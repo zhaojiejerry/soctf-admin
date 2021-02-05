@@ -1,26 +1,13 @@
 <template>
   <div>
     <div class="sys-name">
-      <img class="icon-logo" src="./logo.png">
+      <!-- <img class="icon-logo" :src="logo"> -->
       SOCTF管理系统
     </div>
     <div style="height:calc( 100vh - 60px )">
       <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%">
-        <el-menu
-          :default-active="activeMenu"
-          :unique-opened="true"
-          class="hb-menu"
-          mode="vertical"
-          background-color="#323638"
-          text-color="#fff"
-          active-text-color="#B69858"
-        >
-          <menu-one
-            v-for="route in navRoutes"
-            :key="route.path"
-            :item="route"
-            :base-path="route.path"
-          />
+        <el-menu :default-active="activeMenu" :unique-opened="true" class="hb-menu" mode="vertical" background-color="#323638" text-color="#fff" active-text-color="#B69858">
+          <menu-one v-for="route in navRoutes" :key="route.path" :item="route" :base-path="route.path" />
         </el-menu>
       </el-scrollbar>
     </div>
@@ -28,9 +15,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import menuOne from './menuOne'
-import { clickoutside } from '@/utils/directives'
+import { mapGetters } from 'vuex';
+import menuOne from './menuOne';
+import { clickoutside } from '@/utils/directives';
 // import { navRoutes } from '@/router'
 export default {
   components: {
@@ -40,24 +27,26 @@ export default {
     clickoutside
   },
   data() {
-    return {}
+    return {
+      logo: window.ctfjson.logo
+    };
   },
   computed: {
     ...mapGetters(['permission_routes']),
     activeMenu() {
-      const route = this.$route
-      const { meta, path } = route
+      const route = this.$route;
+      const { meta, path } = route;
       if (meta.activeMenu) {
-        return meta.activeMenu
+        return meta.activeMenu;
       }
-      return path
+      return path;
     }
   },
   created() {
-    this.navRoutes = this.permission_routes
+    this.navRoutes = this.permission_routes;
   },
   methods: {}
-}
+};
 </script>
 
 <style lang="scss">
@@ -185,11 +174,12 @@ export default {
     text-decoration: none;
   }
 
-  .iconfont ,.fa{
+  .iconfont,
+  .fa {
     margin-right: 10px;
     font-size: 14px;
     color: #fff;
-		width: 15px !important;
+    width: 15px !important;
     display: inline-block;
   }
 
@@ -200,7 +190,7 @@ export default {
   }
   .el-submenu.is-opened {
     .el-submenu__title {
-      background-color:#323638 !important;
+      background-color: #323638 !important;
     }
     .nest-menu .el-menu-item {
       padding-left: 43px !important;

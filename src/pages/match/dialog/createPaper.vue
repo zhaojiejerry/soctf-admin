@@ -24,7 +24,6 @@ import { createPaperInfo } from '@/api/match';
 import choice from './choice';
 import docker from './docker';
 import file from './file';
-import { getjson } from '@/api/common';
 export default {
   components: { choice, docker, file },
   props: {
@@ -47,7 +46,7 @@ export default {
     return {
       activeName: 'first',
       questions: [],
-      subject: []
+       subject: window.ctfjson.subject
     };
   },
   watch: {
@@ -63,14 +62,8 @@ export default {
     }
   },
   mounted() {
-    this.getjson();
   },
   methods: {
-    getjson() {
-      getjson('/home/ctf.json').then((res) => {
-        this.subject = res.subject;
-      });
-    },
     handleClick(tab, event) {
       // console.log(tab, event)
     },
